@@ -1,0 +1,35 @@
+<?php
+
+
+return [
+    'home' => 'الرئيسية',
+    'all_roles' => 'جميع الأدوار',
+    'are_you' => 'هل أنت',
+    'cancel' => 'إلغاء',
+    'delete' => 'حذف',
+    'dashboard' => "لوحة التحكم",
+    'set_status' => "تغيير الحالة",
+    'update'     => "تحديث",
+    'create'    => "اضافة",
+    'edit'      => "تعديل",
+    'show'      => "عرض",
+    'active'    => "نشط",
+    'disactive' => "غير نشط",
+    'save'  =>"حفظ",
+    'created_successfully' => "تم الاضافة بنجاح",
+    'arabic'               => "العربية",
+    'english'               => "English",
+    'deleted_successfully'  => "تم الحذف بنجاح",
+    'edited_at'  => 'تم التعديل في',
+    'edited_by'  => 'تم التعديل بواسطة',
+    'created_at'  => 'اضيف في',
+    'created_by'  => 'اضيف بواسطة',
+    'print'                 => 'طباعة',
+    'clear'                 => "مسح التوقيع",
+    'archive'               => "اضافة الي الارشيف",
+    'share'                 => "المشاركة مع اقسام اخري",
+    'main_archive'          => "الارشيف",
+    'delete_archive'        => "الغاء الارشفة",
+    'follow'                => "تتبع الملف",
+    
+];

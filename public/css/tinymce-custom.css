@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'AE_AlMohanad';
+    src: url('../fonts/ae_AlMohanad.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'AE_AlMohanad';
+    src: url('../fonts/AL-Mohanad-Extra-Bold.ttf') format('truetype');
+    font-weight: 800;  /* Extra Bold */
+}
+body {
+    font-family: 'AE_AlMohanad', Arial, sans-serif;
+}
