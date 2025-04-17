@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 @section('title')
-    {{ __('roles.edit_broker') }}
+    {{ __('roles.edit_hotel') }}
 @endsection
 @section('content')
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.edit_broker') }}</h4>
+                <h4 class="page-title">{{ __('roles.edit_hotel') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -32,7 +32,7 @@
         <!-- ============================================================== -->
         <!-- Start Page Content -->
         <!-- ============================================================== -->
-        <form action="{{ route('admin.broker.update', $broker->id) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('admin.hotel.update', $hotel->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('patch')
             <div class="row">
@@ -40,51 +40,56 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
+
                                 <div class="col-md-6 col-lg-4 col-xl-6">
+
                                     <div class="form-group">
                                         <label for="">{{ __('roles.name') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" name="name" class="form-control"
-                                            value="{{ $broker->name }}">
+                                        <input type="text" name="name" class="form-control" value="{{ $hotel->name }}">
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">
-
                                     <div class="form-group">
-                                        <label for="">{{ __('roles.email') }} <span
+                                        <label for="">{{ __('general.country') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" name="email" class="form-control"
-                                            value="{{ $broker->email }}">
-                                        @error('email')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('login.phone') }}</label>
-                                        <input type="text" name="phone" class="form-control"
-                                            value="{{ $broker->phone }}">
-                                        @error('phone')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('general.nationality') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="nationality_id" class="form-control js-select2-custom ">
+                                        <select name="country_id" class="form-control js-select2-custom ">
                                             @foreach ($countries as $countries_item)
-                                                <option value="{{ $countries_item->id }}"
-                                                    {{ $countries_item->id == $broker->country_id ? 'selected' : '' }}>
-                                                    {{ $countries_item->name }}</option>
+                                                <option value="{{ $countries_item->id }}" {{ ($countries_item->id == $hotel->country_id) ? 'selected' : '' }}>{{ $countries_item->name }}
+                                                </option>
                                             @endforeach
                                         </select>
-                                        @error('nationality_id')
+                                        @error('country_id')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="">{{ __('general.city') }} <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="city" class="form-control" value="{{ $hotel->city }}">
+                                        @error('city')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="">{{ __('roles.all_unit_types') }} <span class="text-danger">*</span></label>
+                                        <select name="unit_type_ids[]" class="form-control js-select2-custom " multiple   >
+                                            <option disabled selected hidden>{{ __('general.select_unit_type') }}</option> 
+                                            @foreach ($unit_types as $unit_types_item)
+                                                <option value="{{ $unit_types_item->id }}" 
+                                                    {{ ($hotel->unit_types) ? selected($hotel->unit_types->contains($unit_types_item->id))  : '' }}
+                                                    >{{ $unit_types_item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('unit_type_id')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>

@@ -1,12 +1,12 @@
 @extends('layouts.dashboard')
 @section('title')
-    {{ __('roles.edit_broker') }}
+    {{ __('roles.edit_customer') }}
 @endsection
 @section('content')
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.edit_broker') }}</h4>
+                <h4 class="page-title">{{ __('roles.edit_customer') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -32,7 +32,7 @@
         <!-- ============================================================== -->
         <!-- Start Page Content -->
         <!-- ============================================================== -->
-        <form action="{{ route('admin.broker.update', $broker->id) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('admin.customer.update', $customer->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('patch')
             <div class="row">
@@ -45,7 +45,7 @@
                                         <label for="">{{ __('roles.name') }} <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control"
-                                            value="{{ $broker->name }}">
+                                            value="{{ $customer->name }}">
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -57,7 +57,7 @@
                                         <label for="">{{ __('roles.email') }} <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="email" class="form-control"
-                                            value="{{ $broker->email }}">
+                                            value="{{ $customer->email }}">
                                         @error('email')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -67,7 +67,7 @@
                                     <div class="form-group">
                                         <label for="">{{ __('login.phone') }}</label>
                                         <input type="text" name="phone" class="form-control"
-                                            value="{{ $broker->phone }}">
+                                            value="{{ $customer->phone }}">
                                         @error('phone')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -80,7 +80,7 @@
                                         <select name="nationality_id" class="form-control js-select2-custom ">
                                             @foreach ($countries as $countries_item)
                                                 <option value="{{ $countries_item->id }}"
-                                                    {{ $countries_item->id == $broker->country_id ? 'selected' : '' }}>
+                                                    {{ $countries_item->id == $customer->country_id ? 'selected' : '' }}>
                                                     {{ $countries_item->name }}</option>
                                             @endforeach
                                         </select>

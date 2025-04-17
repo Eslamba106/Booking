@@ -5,8 +5,11 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\general\HotelController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\general\BrokerController;
+use App\Http\Controllers\general\CustomerController;
+use App\Http\Controllers\general\UnitTypeController;
 use App\Http\Controllers\Admin\UserManagmentController;
 
 // // Translation
@@ -54,6 +57,39 @@ Route::group(['prefix' => 'broker'], function () {
     Route::get('/delete/{id}', [BrokerController::class ,'destroy'])->name('admin.broker.delete');
 
    
+});
+
+// Customer Managment
+Route::group(['prefix' => 'customer'], function () {
+
+    Route::get('/', [CustomerController::class, 'index'])->name('admin.customer');
+    Route::get('/create', [CustomerController::class , 'create'])->name('admin.customer.create');
+    Route::post('/create', [CustomerController::class , 'store'])->name('admin.customer.store');
+    Route::get('/edit/{id}' , [CustomerController::class , 'edit'])->name('admin.customer.edit');
+    Route::patch('/update/{id}' , [CustomerController::class , 'update'])->name('admin.customer.update');
+    Route::get('/delete/{id}', [CustomerController::class ,'destroy'])->name('admin.customer.delete'); 
+});
+
+// UnitType Managment
+Route::group(['prefix' => 'unit_type'], function () {
+
+    Route::get('/', [UnitTypeController::class, 'index'])->name('admin.unit_type');
+    Route::get('/create', [UnitTypeController::class , 'create'])->name('admin.unit_type.create');
+    Route::post('/create', [UnitTypeController::class , 'store'])->name('admin.unit_type.store');
+    Route::get('/edit/{id}' , [UnitTypeController::class , 'edit'])->name('admin.unit_type.edit');
+    Route::patch('/update/{id}' , [UnitTypeController::class , 'update'])->name('admin.unit_type.update');
+    Route::get('/delete/{id}', [UnitTypeController::class ,'destroy'])->name('admin.unit_type.delete'); 
+});
+
+// Hotel Managment
+Route::group(['prefix' => 'hotel'], function () {
+
+    Route::get('/', [HotelController::class, 'index'])->name('admin.hotel');
+    Route::get('/create', [HotelController::class , 'create'])->name('admin.hotel.create');
+    Route::post('/create', [HotelController::class , 'store'])->name('admin.hotel.store');
+    Route::get('/edit/{id}' , [HotelController::class , 'edit'])->name('admin.hotel.edit');
+    Route::patch('/update/{id}' , [HotelController::class , 'update'])->name('admin.hotel.update');
+    Route::get('/delete/{id}', [HotelController::class ,'destroy'])->name('admin.hotel.delete'); 
 });
 
 // Roles

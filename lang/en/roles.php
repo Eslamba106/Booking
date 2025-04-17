@@ -43,6 +43,30 @@ return [
     'delete_broker'                                           => "Delete Broker",
     'edit_broker'                                             => "Edit Broker",
     'create_broker'                                           => "Create Broker",
+    'customer_management'                                     => 'Customer Management',
+    'all_customers'                                           => 'All Customers',
+
+    'show_all_customers'                                        => "Show All Customers",
+    'change_customers_status'                                   => "Change Customer Status",
+    'delete_customer'                                           => "Delete Customer",
+    'edit_customer'                                             => "Edit Customer",
+    'create_customer'                                           => "Create Customer",
+
+    'unit_type_management'                                       => 'Unit Type Management',
+    'all_unit_types'                                             => 'All Unit Types', 
+    'show_all_unit_types'                                        => "Show All Unit Types",
+    'change_unit_types_status'                                   => "Change Unit Type Status",
+    'delete_unit_type'                                           => "Delete Unit Type",
+    'edit_unit_type'                                             => "Edit Unit Type",
+    'create_unit_type'                                           => "Create Unit Type",
+
+    'hotel_management'                                       => 'Hotel Management',
+    'all_hotels'                                             => 'All Hotels', 
+    'show_all_hotels'                                        => "Show All Hotels",
+    'change_hotels_status'                                   => "Change Hotel Status",
+    'delete_hotel'                                           => "Delete Hotel",
+    'edit_hotel'                                             => "Edit Hotel",
+    'create_hotel'                                           => "Create Hotel",
  
  
     'moved_to_archive' => 'Moved to Archive',

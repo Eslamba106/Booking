@@ -48,3 +48,24 @@ if (!function_exists('clean_html')) {
         return $text;
     }
 }
+if (!function_exists('selected')) {
+    function selected($selected, $current = true, $echo = true)
+    {
+        return __checked_selected_helper($selected, $current, $echo, 'selected');
+    }
+}
+
+if (!function_exists('__checked_selected_helper')) {
+    function __checked_selected_helper($helper, $current, $echo, $type)
+    {
+        if ((string) $helper === (string) $current)
+            $result = " $type='$type'";
+        else
+            $result = '';
+
+        if ($echo)
+            echo $result;
+
+        return $result;
+    }
+}

@@ -134,7 +134,6 @@
         $(document).ready(function() {
             $('.js-select2-custom').select2({
                 width: '100%',
-                placeholder: "{{ __('general.select_nationality') }}",
                 allowClear: true
             });
         });

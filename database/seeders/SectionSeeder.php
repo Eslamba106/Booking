@@ -34,13 +34,34 @@ class SectionSeeder extends Seeder
         Section::updateOrCreate(['id' => 14], ['name' => 'edit_user', 'section_group_id' => 9, 'caption' => 'edit_user']);
         Section::updateOrCreate(['id' => 15], ['name' => 'create_user', 'section_group_id' => 9, 'caption' => 'create_user']);
         
-        // Users Management 16 - 22 
+        // Broker Management 16 - 21 
         Section::updateOrCreate(['id' => 16], ['name' => 'broker_management', 'caption' => 'broker_management']);
         Section::updateOrCreate(['id' => 17], ['name' => 'all_brokers', 'section_group_id' => 16, 'caption' => 'show_all_brokers']);
         Section::updateOrCreate(['id' => 18], ['name' => 'change_brokers_status', 'section_group_id' => 16, 'caption' => 'change_brokers_status']);
         Section::updateOrCreate(['id' => 19], ['name' => 'create_broker', 'section_group_id' => 16, 'caption' => 'create_broker']);
         Section::updateOrCreate(['id' => 20], ['name' => 'delete_broker', 'section_group_id' => 16, 'caption' => 'delete_broker']);
         Section::updateOrCreate(['id' => 21], ['name' => 'edit_broker', 'section_group_id' => 16, 'caption' => 'edit_broker']);
+        // Customer Management 22 - 27 
+        Section::updateOrCreate(['id' => 22], ['name' => 'customer_management', 'caption' => 'customer_management']);
+        Section::updateOrCreate(['id' => 23], ['name' => 'all_customers', 'section_group_id' => 22, 'caption' => 'show_all_customers']);
+        Section::updateOrCreate(['id' => 24], ['name' => 'change_customers_status', 'section_group_id' => 22, 'caption' => 'change_customers_status']);
+        Section::updateOrCreate(['id' => 25], ['name' => 'create_customer', 'section_group_id' => 22, 'caption' => 'create_customer']);
+        Section::updateOrCreate(['id' => 26], ['name' => 'delete_customer', 'section_group_id' => 22, 'caption' => 'delete_customer']);
+        Section::updateOrCreate(['id' => 27], ['name' => 'edit_customer', 'section_group_id' => 22, 'caption' => 'edit_customer']);
+        // Unit Type Management 28 - 33 
+        Section::updateOrCreate(['id' => 28], ['name' => 'unit_type_management', 'caption' => 'unit_type_management']);
+        Section::updateOrCreate(['id' => 29], ['name' => 'all_unit_types', 'section_group_id' => 28, 'caption' => 'show_all_unit_types']);
+        Section::updateOrCreate(['id' => 30], ['name' => 'change_unit_types_status', 'section_group_id' => 28, 'caption' => 'change_unit_types_status']);
+        Section::updateOrCreate(['id' => 31], ['name' => 'create_unit_type', 'section_group_id' => 28, 'caption' => 'create_unit_type']);
+        Section::updateOrCreate(['id' => 32], ['name' => 'delete_unit_type', 'section_group_id' => 28, 'caption' => 'delete_unit_type']);
+        Section::updateOrCreate(['id' => 33], ['name' => 'edit_unit_type', 'section_group_id' => 28, 'caption' => 'edit_unit_type']);
+        // Hotel Management 34 - 39
+        Section::updateOrCreate(['id' => 34], ['name' => 'hotel_management', 'caption' => 'hotel_management']);
+        Section::updateOrCreate(['id' => 35], ['name' => 'all_hotels', 'section_group_id' => 34, 'caption' => 'show_all_hotels']);
+        Section::updateOrCreate(['id' => 36], ['name' => 'change_hotels_status', 'section_group_id' => 34, 'caption' => 'change_hotels_status']);
+        Section::updateOrCreate(['id' => 37], ['name' => 'create_hotel', 'section_group_id' => 34, 'caption' => 'create_hotel']);
+        Section::updateOrCreate(['id' => 38], ['name' => 'delete_hotel', 'section_group_id' => 34, 'caption' => 'delete_hotel']);
+        Section::updateOrCreate(['id' => 39], ['name' => 'edit_hotel', 'section_group_id' => 34, 'caption' => 'edit_hotel']);
  
     }
 }

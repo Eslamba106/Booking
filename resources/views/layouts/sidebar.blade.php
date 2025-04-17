@@ -7,12 +7,64 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
-                <!-- User Profile-->
+                <!-- User Profile--> 
 
+                @can('hotel_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fa fa-users"></i>
 
+                            <span class="hide-menu">{{ __('roles.hotel_management') }} </span>
+                        </a>
+                        @can('all_hotels')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.hotel') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.all_hotels') }}</span>
+                                    </a>
+                                </li>
+                                @can('create_hotel')
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.hotel.create') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.create_hotel') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
+                @can('customer_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fa fa-users"></i>
 
-
-
+                            <span class="hide-menu">{{ __('roles.customer_management') }} </span>
+                        </a>
+                        @can('all_customers')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.customer') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.all_customers') }}</span>
+                                    </a>
+                                </li>
+                                @can('create_customer')
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.customer.create') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.create_customer') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
                 @can('broker_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
@@ -62,7 +114,34 @@
                         @endcan
                     </li>
                 @endcan
+                @can('unit_type_management')
+                <li class="sidebar-item">
+                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                        aria-expanded="false">
+                        <i class="fa fa-users"></i>
 
+                        <span class="hide-menu">{{ __('roles.unit_type_management') }} </span>
+                    </a>
+                    @can('all_unit_types')
+                        <ul aria-expanded="false" class="collapse  first-level">
+                            <li class="sidebar-item">
+                                <a href="{{ route('admin.unit_type') }}" class="sidebar-link">
+                                    <i class="mdi mdi-email"></i>
+                                    <span class="hide-menu">{{ __('roles.all_unit_types') }}</span>
+                                </a>
+                            </li>
+                            @can('create_unit_type')
+                            <li class="sidebar-item">
+                                <a href="{{ route('admin.unit_type.create') }}" class="sidebar-link">
+                                    <i class="mdi mdi-email"></i>
+                                    <span class="hide-menu">{{ __('roles.create_unit_type') }}</span>
+                                </a>
+                            </li>
+                        @endcan
+                        </ul>
+                    @endcan
+                </li>
+            @endcan
                 @can('admin_roles')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
