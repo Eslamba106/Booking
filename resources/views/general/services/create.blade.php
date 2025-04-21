@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('title')
-    {{ __('roles.create_customer') }}
+    {{ __('roles.create_service') }}
 @endsection
 @section('css')
     {{-- <link href="{{ asset('css/tags-input.min.css') }}" rel="stylesheet"> --}}
@@ -22,7 +22,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.create_customer') }}</h4>
+                <h4 class="page-title">{{ __('roles.create_service') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -48,7 +48,7 @@
         <!-- ============================================================== -->
         <!-- Start Page Content -->
         <!-- ============================================================== -->
-        <form action="{{ route('admin.customer.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('admin.service.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -62,60 +62,14 @@
                                         <label for="">{{ __('roles.name') }} <span
                                                 class="text-danger">*</span></label>
                                                 <input type="text" name="name" class="form-control" id="clientName" 
-                                                oninput="validateName(this)" style="text-transform:uppercase;" />
+                                                 style="text-transform:uppercase;" />
                                          
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('roles.email') }} </label>
-                                        <input type="text" name="email" class="form-control">
-                                        @error('email')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-2">
-                                    <div class="form-group">
-                                        <label for="phone_dail_code" class="title-color">{{ __('general.dial_code') }}</label>
-                                        <select class="js-select2-custom form-control" name="phone_dial_code">
-                                            <option selected>{{ __('general.select') }}</option>
-                                            @foreach ($dail_code_main as $item_dail_code)
-                                                <option value="{{ '+' . $item_dail_code->dial_code }}">
-                                                    {{ '+' . $item_dail_code->dial_code }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-    
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-4">
-                                    <div class="form-group">
-                                        <label for="">{{ __('login.phone') }}</label>
-                                        <input type="text" name="phone" class="form-control">
-                                        @error('phone')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('general.nationality') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="nationality_id" class="form-control js-select2-custom ">
-                                            @foreach ($countries as $countries_item)
-                                                <option value="{{ $countries_item->id }}">{{ $countries_item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('nationality_id')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
+                               
                             </div>
                             <div class="form-group mt-2"
                                 style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">

@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('country_id')->constrained('countries')->onDelete('cascade'); 
+            $table->string('hotel_type')->nullable();
+            $table->string('hotel_rate')->nullable();
             $table->string('city', 150)->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lag')->nullable();
             $table->enum('status' ,  ['active' , 'disactive' ])->default('active');     
             $table->timestamps();
         });

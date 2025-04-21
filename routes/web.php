@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\general\HotelController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\general\BrokerController;
+use App\Http\Controllers\general\DriverController;
+use App\Http\Controllers\general\ServiceController;
 use App\Http\Controllers\general\CustomerController;
 use App\Http\Controllers\general\UnitTypeController;
 use App\Http\Controllers\Admin\UserManagmentController;
@@ -91,6 +93,29 @@ Route::group(['prefix' => 'hotel'], function () {
     Route::patch('/update/{id}' , [HotelController::class , 'update'])->name('admin.hotel.update');
     Route::get('/delete/{id}', [HotelController::class ,'destroy'])->name('admin.hotel.delete'); 
 });
+
+// Driver Managment
+Route::group(['prefix' => 'driver'], function () {
+
+    Route::get('/', [DriverController::class, 'index'])->name('admin.driver');
+    Route::get('/create', [DriverController::class , 'create'])->name('admin.driver.create');
+    Route::post('/create', [DriverController::class , 'store'])->name('admin.driver.store');
+    Route::get('/edit/{id}' , [DriverController::class , 'edit'])->name('admin.driver.edit');
+    Route::patch('/update/{id}' , [DriverController::class , 'update'])->name('admin.driver.update');
+    Route::get('/delete/{id}', [DriverController::class ,'destroy'])->name('admin.driver.delete'); 
+});
+
+// Service Managment
+Route::group(['prefix' => 'service'], function () {
+
+    Route::get('/', [ServiceController::class, 'index'])->name('admin.service');
+    Route::get('/create', [ServiceController::class , 'create'])->name('admin.service.create');
+    Route::post('/create', [ServiceController::class , 'store'])->name('admin.service.store');
+    Route::get('/edit/{id}' , [ServiceController::class , 'edit'])->name('admin.service.edit');
+    Route::patch('/update/{id}' , [ServiceController::class , 'update'])->name('admin.service.update');
+    Route::get('/delete/{id}', [ServiceController::class ,'destroy'])->name('admin.service.delete'); 
+});
+
 
 // Roles
 Route::group(['prefix' => 'admin/roles'], function () {

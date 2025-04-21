@@ -13,7 +13,8 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
-                            <i class="fa fa-users"></i>
+                            <i class="mdi mdi-hotel"></i>
+
 
                             <span class="hide-menu">{{ __('roles.hotel_management') }} </span>
                         </a>
@@ -37,11 +38,41 @@
                         @endcan
                     </li>
                 @endcan
+                @can('service_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fas fa-plus-circle"></i>
+
+
+
+                            <span class="hide-menu">{{ __('roles.service_management') }} </span>
+                        </a>
+                        @can('all_services')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.service') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.all_services') }}</span>
+                                    </a>
+                                </li>
+                                @can('create_service')
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.service.create') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.create_service') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
                 @can('customer_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
-                            <i class="fa fa-users"></i>
+                            <i class="fas fa-user"></i>
 
                             <span class="hide-menu">{{ __('roles.customer_management') }} </span>
                         </a>
@@ -65,12 +96,38 @@
                         @endcan
                     </li>
                 @endcan
+                @can('driver_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fas fa-taxi"></i> 
+                            <span class="hide-menu">{{ __('roles.driver_management') }} </span>
+                        </a>
+                        @can('all_drivers')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.driver') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.all_drivers') }}</span>
+                                    </a>
+                                </li>
+                                @can('create_driver')
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.driver.create') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.create_driver') }}</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
                 @can('broker_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
-                            <i class="fa fa-users"></i>
-
+                            <i class="fas fa-user-tie"></i> 
                             <span class="hide-menu">{{ __('roles.broker_management') }} </span>
                         </a>
                         @can('all_brokers')
@@ -118,7 +175,7 @@
                 <li class="sidebar-item">
                     <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                         aria-expanded="false">
-                        <i class="fa fa-users"></i>
+                        <i class="fas fa-th-large"></i>
 
                         <span class="hide-menu">{{ __('roles.unit_type_management') }} </span>
                     </a>

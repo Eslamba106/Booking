@@ -54,6 +54,31 @@
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
+                                        <label for="">{{ __('general.hotel_type') }} <span
+                                                class="text-danger">*</span></label>
+                                        <select name="hotel_type" class="form-control js-select2-custom ">  
+                                            <option value="Hotel" {{ ('Hotel' == $hotel->hotel_type) ? 'selected' : '' }}>Hotel</option> 
+                                            <option value="Villa" {{ ('Villa' == $hotel->hotel_type) ? 'selected' : '' }}>Villa</option> 
+                                            <option value="Bungalov" {{ ( 'Bungalov'== $hotel->hotel_type) ? 'selected' : '' }}>Bungalov</option> 
+                                            <option value="Hotel Apartments Resort" {{ ( "Hotel Apartments Resort" == $hotel->hotel_type) ? 'selected' : '' }}>Hotel Apartments Resort</option>  
+                                        </select>
+                                        @error('hotel_type')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 col-xl-6">
+
+                                    <div class="form-group">
+                                        <label for="">{{ __('general.hotel_rate') }}  </label>
+                                        <input type="number" min="0" value="{{ $hotel->hotel_rate }}" name="hotel_rate" class="form-control">
+                                        @error('hotel_rate')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                    <div class="form-group">
                                         <label for="">{{ __('general.country') }} <span
                                                 class="text-danger">*</span></label>
                                         <select name="country_id" class="form-control js-select2-custom ">

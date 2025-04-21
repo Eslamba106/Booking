@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); 
-            $table->string('email', 150)->unique();
-            $table->string('dial_code', 20)->nullable(); 
-            $table->string('phone', 20)->nullable(); 
-            $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
+            $table->string('name');
+            $table->decimal('price')->nullable();
+            $table->unsignedBigInteger('qyt')->nullable();
+            $table->string('known')->nullable();
             $table->enum('status' ,  ['active' , 'disactive' ])->default('active');     
+            
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('services');
     }
 };

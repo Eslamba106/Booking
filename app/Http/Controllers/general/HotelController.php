@@ -67,6 +67,8 @@ class HotelController extends Controller
         $hotel = Hotel::create([
             'name' => $request->name, 
             'city' => $request->city ?? null,
+            'hotel_type' => $request->hotel_type ?? null,
+            'hotel_rate' => $request->hotel_rate ?? null,
             'country_id' =>  $request->country_id ,
         ]);
         if ($request->has('unit_type_ids')) {
@@ -99,7 +101,9 @@ class HotelController extends Controller
 
         $hotel->update([
             'name' => $request->name, 
-            'city' => $request->city ?? null,
+            'city' => $request->city  ,
+            'hotel_type' => $request->hotel_type  ,
+            'hotel_rate' => $request->hotel_rate ,
             'country_id' =>  $request->country_id , 
         ]);
         $hotel->unit_types()->sync($request->unit_type_ids);

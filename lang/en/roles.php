@@ -77,4 +77,23 @@ return [
    
     'uploadpdf'                         => "Upload External File",
     'external_files'                         => "External File",
+
+
+    'driver_management'                                       => 'Driver Management',
+    'all_drivers'                                             => 'All Drivers', 
+    'show_all_drivers'                                        => "Show All Drivers",
+    'change_drivers_status'                                   => "Change Driver Status",
+    'delete_driver'                                           => "Delete Driver",
+    'edit_driver'                                             => "Edit Driver",
+    'create_driver'                                           => "Create Driver",
+
+    'qyt'                                                      => "Qyt",
+    'price'                                                    => "Price",
+    'service_management'                                       => 'Service Management',
+    'all_services'                                             => 'All Services', 
+    'show_all_services'                                        => "Show All Services",
+    'change_services_status'                                   => "Change Service Status",
+    'delete_service'                                           => "Delete Service",
+    'edit_service'                                             => "Edit Service",
+    'create_service'                                           => "Create Service",
 ];  

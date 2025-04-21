@@ -62,6 +62,21 @@ class SectionSeeder extends Seeder
         Section::updateOrCreate(['id' => 37], ['name' => 'create_hotel', 'section_group_id' => 34, 'caption' => 'create_hotel']);
         Section::updateOrCreate(['id' => 38], ['name' => 'delete_hotel', 'section_group_id' => 34, 'caption' => 'delete_hotel']);
         Section::updateOrCreate(['id' => 39], ['name' => 'edit_hotel', 'section_group_id' => 34, 'caption' => 'edit_hotel']);
- 
+        // Driver Management 40 - 45
+        Section::updateOrCreate(['id' => 40], ['name' => 'driver_management', 'caption' => 'driver_management']);
+        Section::updateOrCreate(['id' => 41], ['name' => 'all_drivers', 'section_group_id' => 40, 'caption' => 'show_all_drivers']);
+        Section::updateOrCreate(['id' => 42], ['name' => 'change_drivers_status', 'section_group_id' => 40, 'caption' => 'change_drivers_status']);
+        Section::updateOrCreate(['id' => 43], ['name' => 'create_driver', 'section_group_id' => 40, 'caption' => 'create_driver']);
+        Section::updateOrCreate(['id' => 44], ['name' => 'delete_driver', 'section_group_id' => 40, 'caption' => 'delete_driver']);
+        Section::updateOrCreate(['id' => 45], ['name' => 'edit_driver', 'section_group_id' => 40, 'caption' => 'edit_driver']);
+        
+        // Service Management 46 - 51
+        Section::updateOrCreate(['id' => 46], ['name' => 'service_management', 'caption' => 'service_management']);
+        Section::updateOrCreate(['id' => 47], ['name' => 'all_services', 'section_group_id' => 46, 'caption' => 'show_all_services']);
+        Section::updateOrCreate(['id' => 48], ['name' => 'change_services_status', 'section_group_id' => 46, 'caption' => 'change_services_status']);
+        Section::updateOrCreate(['id' => 49], ['name' => 'create_service', 'section_group_id' => 46, 'caption' => 'create_service']);
+        Section::updateOrCreate(['id' => 50], ['name' => 'delete_service', 'section_group_id' => 46, 'caption' => 'delete_service']);
+        Section::updateOrCreate(['id' => 51], ['name' => 'edit_service', 'section_group_id' => 46, 'caption' => 'edit_service']);
+        
     }
 }

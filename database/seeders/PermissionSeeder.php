@@ -13,6 +13,7 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
 
+        // extral services : name , description , price , qyt 
         \App\Models\Permission::updateOrCreate(['id' => 1], ['role_id' => 2, 'section_id' => 1, 'allow' => 1]);
         \App\Models\Permission::updateOrCreate(['id' => 2], ['role_id' => 2, 'section_id' => 2, 'allow' => 1]);
         \App\Models\Permission::updateOrCreate(['id' => 3], ['role_id' => 2, 'section_id' => 3, 'allow' => 1]);
@@ -52,6 +53,20 @@ class PermissionSeeder extends Seeder
         \App\Models\Permission::updateOrCreate(['id' => 37], ['role_id' => 2, 'section_id' => 37, 'allow' => 1]);
         \App\Models\Permission::updateOrCreate(['id' => 38], ['role_id' => 2, 'section_id' => 38, 'allow' => 1]);
         \App\Models\Permission::updateOrCreate(['id' => 39], ['role_id' => 2, 'section_id' => 39, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 40], ['role_id' => 2, 'section_id' => 40, 'allow' => 1]);
+
+        \App\Models\Permission::updateOrCreate(['id' => 41], ['role_id' => 2, 'section_id' => 41, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 42], ['role_id' => 2, 'section_id' => 42, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 43], ['role_id' => 2, 'section_id' => 43, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 44], ['role_id' => 2, 'section_id' => 44, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 45], ['role_id' => 2, 'section_id' => 45, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 46], ['role_id' => 2, 'section_id' => 46, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 47], ['role_id' => 2, 'section_id' => 47, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 48], ['role_id' => 2, 'section_id' => 48, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 49], ['role_id' => 2, 'section_id' => 49, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 50], ['role_id' => 2, 'section_id' => 50, 'allow' => 1]);
+        \App\Models\Permission::updateOrCreate(['id' => 51], ['role_id' => 2, 'section_id' => 51, 'allow' => 1]);
+         
 
 
     }

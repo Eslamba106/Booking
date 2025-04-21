@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('title')
-    {{ __('roles.create_hotel') }}
+    {{ __('roles.create_driver') }}
 @endsection
 @section('css')
     {{-- <link href="{{ asset('css/tags-input.min.css') }}" rel="stylesheet"> --}}
@@ -22,7 +22,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.create_hotel') }}</h4>
+                <h4 class="page-title">{{ __('roles.create_driver') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -48,7 +48,7 @@
         <!-- ============================================================== -->
         <!-- Start Page Content -->
         <!-- ============================================================== -->
-        <form action="{{ route('admin.hotel.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('admin.driver.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -61,7 +61,9 @@
                                     <div class="form-group">
                                         <label for="">{{ __('roles.name') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" name="name" class="form-control">
+                                                <input type="text" name="name" class="form-control" id="clientName" 
+                                                oninput="validateName(this)" style="text-transform:uppercase;" />
+                                         
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -69,66 +71,47 @@
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('general.hotel_type') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="hotel_type" class="form-control js-select2-custom ">  
-                                            <option value="Hotel">Hotel</option> 
-                                            <option value="Villa">Villa</option> 
-                                            <option value="Bungalov">Bungalov</option> 
-                                            <option value="Hotel Apartments Resort">Hotel Apartments Resort</option>  
+                                        <label for="">{{ __('roles.email') }} </label>
+                                        <input type="text" name="email" class="form-control">
+                                        @error('email')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 col-xl-2">
+                                    <div class="form-group">
+                                        <label for="phone_dail_code" class="title-color">{{ __('general.dial_code') }}</label>
+                                        <select class="js-select2-custom form-control" name="phone_dial_code">
+                                            <option selected>{{ __('general.select') }}</option>
+                                            @foreach ($dail_code_main as $item_dail_code)
+                                                <option value="{{ '+' . $item_dail_code->dial_code }}">
+                                                    {{ '+' . $item_dail_code->dial_code }}
+                                                </option>
+                                            @endforeach
                                         </select>
-                                        @error('hotel_type')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
+    
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-
+                                <div class="col-md-6 col-lg-4 col-xl-4">
                                     <div class="form-group">
-                                        <label for="">{{ __('general.hotel_rate') }}  </label>
-                                        <input type="number" min="0" name="hotel_rate" class="form-control">
-                                        @error('hotel_rate')
+                                        <label for="">{{ __('login.phone') }}</label>
+                                        <input type="text" name="phone" class="form-control">
+                                        @error('phone')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('general.country') }} <span
+                                        <label for="">{{ __('general.nationality') }} <span
                                                 class="text-danger">*</span></label>
-                                        <select name="country_id" class="form-control js-select2-custom ">
+                                        <select name="nationality_id" class="form-control js-select2-custom ">
                                             @foreach ($countries as $countries_item)
                                                 <option value="{{ $countries_item->id }}">{{ $countries_item->name }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                        @error('country_id')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('general.city') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="city" class="form-control">
-                                        @error('city')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('roles.all_unit_types') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="unit_type_ids[]" class="form-control js-select2-custom " multiple>
-                                            <option disabled selected hidden>{{ __('general.select_unit_type') }}</option>
-                                            @foreach ($unit_types as $unit_types_item)
-                                                <option value="{{ $unit_types_item->id }}">{{ $unit_types_item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('unit_type_id')
+                                        @error('nationality_id')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -147,4 +130,15 @@
 @endsection
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
+    <script>
+        function validateName(input) {
+             let regex = /^[A-Za-z\s]*$/;
+            if (!regex.test(input.value)) {
+                input.value = input.value.replace(/[^A-Za-z\s]/g, '');
+            }
+    
+             input.value = input.value.toUpperCase();
+        }
+    </script>
+    
 @endsection

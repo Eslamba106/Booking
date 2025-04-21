@@ -54,13 +54,26 @@
                                 <div class="col-md-6 col-lg-4 col-xl-6">
 
                                     <div class="form-group">
-                                        <label for="">{{ __('roles.email') }} <span
-                                                class="text-danger">*</span></label>
+                                        <label for="">{{ __('roles.email') }} </label>
                                         <input type="text" name="email" class="form-control"
                                             value="{{ $customer->email }}">
                                         @error('email')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-4 col-xl-2">
+                                    <div class="form-group">
+                                        <label for="phone_dail_code" class="title-color">{{ __('general.dial_code') }}</label>
+                                        <select class="js-select2-custom form-control" name="phone_dial_code">
+                                            <option selected>{{ __('general.select') }}</option>
+                                            @foreach ($dail_code_main as $item_dail_code)
+                                                <option value="{{ '+' . $item_dail_code->dial_code }}" {{ $item_dail_code->dial_code == $customer->dial_code ? 'selected' : '' }}>
+                                                    {{ '+' . $item_dail_code->dial_code }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+    
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">

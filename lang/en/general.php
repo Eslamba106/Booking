@@ -9,4 +9,8 @@ return [
     'country'                                                                           => 'Country',
     'city'                                                                              => 'City',
     'select_unit_type'                                                                  => 'select unit type', 
+    'hotel_type'                                                                        => 'Hotel Type', 
+    'hotel_rate'                                                                        => 'Hotel Rate', 
+    'dial_code'                                                                         => 'Dial Code', 
+    'select'                                                                            => 'Select', 
 ];

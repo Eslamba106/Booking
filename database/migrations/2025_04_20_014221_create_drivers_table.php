@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('drivers', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); 
-            $table->string('email', 150)->unique();
+            $table->string('name');
+            $table->string('email')->unique()->nullable();
             $table->string('dial_code', 20)->nullable(); 
             $table->string('phone', 20)->nullable(); 
             $table->foreignId('country_id')->constrained('countries')->onDelete('cascade');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('drivers');
     }
 };
