@@ -4,6 +4,10 @@
     </IfModule>
 
     RewriteEngine On
+    RewriteCond %{HTTPS} !=on    
+    RewriteCond %{REQUEST_URI} !^public
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    RewriteRule ^(.*)$ public/$1 [L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -17,5 +21,6 @@
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+    RewriteRule ^ index.php [L] 
+
 </IfModule>
