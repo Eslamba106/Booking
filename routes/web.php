@@ -68,6 +68,7 @@ Route::group(['prefix' => 'customer'], function () {
     Route::get('/', [CustomerController::class, 'index'])->name('admin.customer');
     Route::get('/create', [CustomerController::class , 'create'])->name('admin.customer.create');
     Route::post('/create', [CustomerController::class , 'store'])->name('admin.customer.store');
+    Route::post('/store_for_any', [CustomerController::class , 'store_for_any'])->name('admin.customer.store_for_any');
     Route::get('/edit/{id}' , [CustomerController::class , 'edit'])->name('admin.customer.edit');
     Route::patch('/update/{id}' , [CustomerController::class , 'update'])->name('admin.customer.update');
     Route::get('/delete/{id}', [CustomerController::class ,'destroy'])->name('admin.customer.delete'); 
@@ -92,7 +93,9 @@ Route::group(['prefix' => 'hotel'], function () {
     Route::post('/create', [HotelController::class , 'store'])->name('admin.hotel.store');
     Route::get('/edit/{id}' , [HotelController::class , 'edit'])->name('admin.hotel.edit');
     Route::patch('/update/{id}' , [HotelController::class , 'update'])->name('admin.hotel.update');
-    Route::get('/delete/{id}', [HotelController::class ,'destroy'])->name('admin.hotel.delete'); 
+    Route::get('/delete/{id}', [HotelController::class ,'destroy'])->name('admin.hotel.delete');
+    Route::post('/store_for_any', [HotelController::class , 'store_for_any'])->name('admin.hotel.store_for_any');
+ 
 });
 
 // Driver Managment
@@ -121,10 +124,13 @@ Route::group(['prefix' => 'service'], function () {
 Route::group(['prefix' => 'booking'], function () {
 
     Route::get('/', [BookingController::class, 'index'])->name('admin.booking');
+    Route::get('/coming_soon', [BookingController::class, 'coming_soon'])->name('admin.booking.coming_soon');
+    Route::get('/live_booking', [BookingController::class, 'live_booking'])->name('admin.booking.live_booking');
     Route::get('/create', [BookingController::class , 'create'])->name('admin.booking.create');
     Route::post('/create', [BookingController::class , 'store'])->name('admin.booking.store');
     Route::get('/edit/{id}' , [BookingController::class , 'edit'])->name('admin.booking.edit');
     Route::patch('/update/{id}' , [BookingController::class , 'update'])->name('admin.booking.update');
+    Route::get('/cancel/{id}' , [BookingController::class , 'cancel'])->name('admin.booking.cancel');
     Route::get('/delete/{id}', [BookingController::class ,'destroy'])->name('admin.booking.delete'); 
 
 

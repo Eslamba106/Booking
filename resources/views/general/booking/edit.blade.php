@@ -81,7 +81,7 @@
                                     <div class="form-group">
                                         <label for="">{{ __('booking.check_in_date') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="date" id="arrival_date" value="{{ $booking->arrival_date }}" name="arrival_date" class="form-control">
+                                        <input type="date" id="arrival_date" onchange="calculate_earn()" value="{{ $booking->arrival_date }}" name="arrival_date" class="form-control">
                                         @error('arrival_date')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -92,7 +92,7 @@
                                     <div class="form-group">
                                         <label for="">{{ __('booking.check_out_date') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="date" id="check_out_date"  value="{{ $booking->check_out_date }}" name="check_out_date"
+                                        <input type="date" id="check_out_date" onchange="calculate_earn()"  value="{{ $booking->check_out_date }}" name="check_out_date"
                                             class="form-control">
                                         @error('check_out_date')
                                             <span class="error text-danger">{{ $message }}</span>

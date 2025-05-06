@@ -80,6 +80,30 @@ class CustomerController extends Controller
 
     }
     }
+    public function store_for_any(Request $request){
+        $this->authorize('create_customer');
+       
+        try{
+
+            $request->validate([
+                'name'              => "required",
+                'phone'              => "required",
+                'nationality_id'              => "required",
+                'email'             => "nullable|unique:customers,email",
+             ] );
+        $customer = Customer::create([
+            'name' => $request->name,
+            'phone' =>  $request->phone,
+            'dial_code' =>  $request->phone_dial_code,
+            'email' => $request->email ?? null,
+            'country_id' =>  $request->nationality_id ,
+        ]);
+        return redirect()->back()->with("success", __('general.added_successfully'));
+    } catch (Throwable $e) {
+        return redirect()->back()->with("error", $e->getMessage());
+
+    }
+    }
     public function update(Request $request , $id){
         $this->authorize('edit_customer');
         $customer = Customer::findOrFail($id);

@@ -43,6 +43,63 @@ class BookingController extends Controller
         $bookings = Booking::orderBy("created_at", "desc")->paginate(10);
         return view("general.booking.all_bookings", compact("bookings"));
     }
+    public function live_booking(Request $request)
+    {
+
+        $this->authorize('booking_management');
+
+
+        $ids = $request->bulk_ids;
+        $now = Carbon::now()->toDateTimeString();
+        $fiveDaysLater = Carbon::today()->addDays(5);
+        $today = Carbon::today();
+
+        if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($ids) && count($ids)) {
+            $data = ['status' => $request->status];
+            $this->authorize('change_bookings_status');
+
+            Booking::whereIn('id', $ids)->update($data);
+            return back()->with('success', __('general.updated_successfully'));
+        }
+        if ($request->bulk_action_btn === 'delete' &&  is_array($ids) && count($ids)) {
+
+
+            Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->whereIn('id', $ids)->delete();
+            return back()->with('success', __('general.deleted_successfully'));
+        }
+
+        $bookings = Booking::where('arrival_date', '<=', $today)
+        ->where('check_out_date', '>=', $today)->where('status' , '!=' ,'cancel')->orderBy("created_at", "desc")->paginate(10);
+        return view("general.booking.all_bookings", compact("bookings"));
+    }
+    public function coming_soon(Request $request)
+    {
+
+        $this->authorize('booking_management');
+
+
+        $ids = $request->bulk_ids;
+        $now = Carbon::now()->toDateTimeString();
+        $fiveDaysLater = Carbon::today()->addDays(5);
+        $today = Carbon::today()->addDay();
+
+        if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($ids) && count($ids)) {
+            $data = ['status' => $request->status];
+            $this->authorize('change_bookings_status');
+
+            Booking::whereIn('id', $ids)->update($data);
+            return back()->with('success', __('general.updated_successfully'));
+        }
+        if ($request->bulk_action_btn === 'delete' &&  is_array($ids) && count($ids)) {
+
+
+            Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->whereIn('id', $ids)->delete();
+            return back()->with('success', __('general.deleted_successfully'));
+        }
+
+        $bookings = Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->where('status' , '!=' ,'cancel')->orderBy("created_at", "desc")->paginate(10);
+        return view("general.booking.all_bookings", compact("bookings"));
+    }
     public function create()
     {
         $this->authorize('create_hotel');
@@ -51,12 +108,16 @@ class BookingController extends Controller
         $brokers = Broker::select('id', 'name')->get();
         $drivers = Driver::select('id', 'name')->get();
         $customers = Customer::select('id', 'name')->get();
+        $countries = Countries::select('id', 'name' , 'nationality')->get();
+        $dail_code_main = Countries::select('id', 'dial_code')->get();
         $date = [
             'hotels' => $hotels,
             'unit_types' => $unit_types,
             'brokers' => $brokers,
             'drivers' => $drivers,
             'customers' => $customers,
+            'countries' => $countries,
+            'dail_code_main' => $dail_code_main,
         ];
         return view("general.booking.create", $date);
     }
@@ -192,6 +253,7 @@ class BookingController extends Controller
                 'sub_total' => $request->sub_total,
                 'broker_id' => $request->broker_id,
                 'total' => $request->total,
+                'status' => 'pending',
             ]);
     
             $booking->booking_details()->update([
@@ -235,6 +297,19 @@ class BookingController extends Controller
             return back()->with('error', $e->getMessage());
         }
     } 
+    public function cancel($id)
+    { 
+        DB::beginTransaction();
+        try {
+            $booking = Booking::findOrFail($id);
+            $booking->update(['status' => 'cancel']);
+            DB::commit();
+            return redirect()->route('admin.booking')->with('success', __('general.updated_successfully'));
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', $e->getMessage());
+        }
+    }
     public function get_country($id)
     {
         $this->authorize('create_booking');
@@ -243,31 +318,4 @@ class BookingController extends Controller
         return response()->json($hotel);
     }
 }
-// "_token" => "fLZEwXIP8Udb2vmvvtdtF7CTpXiQ6MchHoPhYSRJ"
-// "country_id" => "1"
-// "arrival_date" => "2025-05-05"
-// "check_out_date" => "2025-05-07"
-// "days_count" => "2"
-// "canceled_period" => "15"
-// "adults_count" => "2"
-// "childerns_count" => "1"
-// "babes_count" => "1"
-// "total_person_count" => "4"
-// "hotel_id" => "1"
-// "city" => "Istanbule"
-// "booking_no" => "BOO-0001"
-// "unit_type_id" => "3"
-// "food_type" => "any"
-// "units_count" => "2"
-// "buy_price" => "100"
-// "price" => "120"
-// "currency" => "euro"
-// "commission" => "yes"
-// "commission_type" => "percentage"
-// "commission_percentage" => "5"
-// "commission_night" => null
-// "broker" => "2"
-// "broker_amount" => "10"
-// "earn" => "70.00"
-// "total" => "250.00"
-// ]
+ 

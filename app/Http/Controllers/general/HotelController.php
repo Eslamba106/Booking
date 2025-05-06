@@ -80,6 +80,32 @@ class HotelController extends Controller
 
     }
     }
+    public function store_for_any(Request $request){
+        $this->authorize('create_hotel');
+       
+        try{
+
+            $request->validate([
+                'name'                          => "required",
+                'unit_type_ids'                 => "required",
+                'country_id'                    => "required", 
+             ] );
+        $hotel = Hotel::create([
+            'name' => $request->name, 
+            'city' => $request->city ?? null,
+            'hotel_type' => $request->hotel_type ?? null,
+            'hotel_rate' => $request->hotel_rate ?? null,
+            'country_id' =>  $request->country_id ,
+        ]);
+        if ($request->has('unit_type_ids')) {
+            $hotel->unit_types()->sync($request->unit_type_ids);
+        }
+        return redirect()->back()->with("success", __('general.added_successfully'));
+    } catch (Throwable $e) {
+        return redirect()->back()->with("error", $e->getMessage());
+
+    }
+    }
     public function update(Request $request , $id){
         $this->authorize('edit_hotel');
         $hotel = Hotel::findOrFail($id);

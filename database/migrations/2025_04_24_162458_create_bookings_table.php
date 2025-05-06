@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('sub_total')->nullable();
             $table->integer('broker_id')->nullable();
             $table->string('total')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

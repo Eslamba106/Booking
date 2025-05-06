@@ -7,7 +7,7 @@
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
-                <!-- User Profile--> 
+                <!-- User Profile-->
 
                 @can('booking_management')
                     <li class="sidebar-item">
@@ -27,13 +27,26 @@
                                     </a>
                                 </li>
                                 @can('create_booking')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.booking.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_booking') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
                                 <li class="sidebar-item">
-                                    <a href="{{ route('admin.booking.create') }}" class="sidebar-link">
+                                    <a href="{{ route('admin.booking.live_booking') }}" class="sidebar-link">
                                         <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('roles.create_booking') }}</span>
+                                        <span class="hide-menu">{{ __('booking.live_booking') }}</span>
                                     </a>
                                 </li>
-                            @endcan
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.booking.coming_soon') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('booking.coming_soon') }}</span>
+                                    </a>
+                                </li>
+
                             </ul>
                         @endcan
                     </li>
@@ -57,13 +70,13 @@
                                     </a>
                                 </li>
                                 @can('create_hotel')
-                                <li class="sidebar-item">
-                                    <a href="{{ route('admin.hotel.create') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('roles.create_hotel') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.hotel.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_hotel') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         @endcan
                     </li>
@@ -87,13 +100,13 @@
                                     </a>
                                 </li>
                                 @can('create_service')
-                                <li class="sidebar-item">
-                                    <a href="{{ route('admin.service.create') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('roles.create_service') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.service.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_service') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         @endcan
                     </li>
@@ -115,13 +128,13 @@
                                     </a>
                                 </li>
                                 @can('create_customer')
-                                <li class="sidebar-item">
-                                    <a href="{{ route('admin.customer.create') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('roles.create_customer') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.customer.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_customer') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         @endcan
                     </li>
@@ -130,7 +143,7 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
-                            <i class="fas fa-taxi"></i> 
+                            <i class="fas fa-taxi"></i>
                             <span class="hide-menu">{{ __('roles.driver_management') }} </span>
                         </a>
                         @can('all_drivers')
@@ -142,13 +155,13 @@
                                     </a>
                                 </li>
                                 @can('create_driver')
-                                <li class="sidebar-item">
-                                    <a href="{{ route('admin.driver.create') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('roles.create_driver') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.driver.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_driver') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         @endcan
                     </li>
@@ -157,7 +170,7 @@
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
-                            <i class="fas fa-user-tie"></i> 
+                            <i class="fas fa-user-tie"></i>
                             <span class="hide-menu">{{ __('roles.broker_management') }} </span>
                         </a>
                         @can('all_brokers')
@@ -169,67 +182,67 @@
                                     </a>
                                 </li>
                                 @can('create_broker')
-                                <li class="sidebar-item">
-                                    <a href="{{ route('admin.broker.create') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('roles.create_broker') }}</span>
-                                    </a>
-                                </li>
-                            @endcan
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.broker.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_broker') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         @endcan
                     </li>
                 @endcan
-               
+
                 @can('unit_type_management')
-                <li class="sidebar-item">
-                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
-                        aria-expanded="false">
-                        <i class="fas fa-th-large"></i>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fas fa-th-large"></i>
 
-                        <span class="hide-menu">{{ __('roles.unit_type_management') }} </span>
-                    </a>
-                    @can('all_unit_types')
-                        <ul aria-expanded="false" class="collapse  first-level">
-                            <li class="sidebar-item">
-                                <a href="{{ route('admin.unit_type') }}" class="sidebar-link">
-                                    <i class="mdi mdi-email"></i>
-                                    <span class="hide-menu">{{ __('roles.all_unit_types') }}</span>
-                                </a>
-                            </li>
-                            @can('create_unit_type')
-                            <li class="sidebar-item">
-                                <a href="{{ route('admin.unit_type.create') }}" class="sidebar-link">
-                                    <i class="mdi mdi-email"></i>
-                                    <span class="hide-menu">{{ __('roles.create_unit_type') }}</span>
-                                </a>
-                            </li>
+                            <span class="hide-menu">{{ __('roles.unit_type_management') }} </span>
+                        </a>
+                        @can('all_unit_types')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.unit_type') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.all_unit_types') }}</span>
+                                    </a>
+                                </li>
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.unit_type.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('roles.create_unit_type') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
                         @endcan
-                        </ul>
-                    @endcan
-                </li>
-            @endcan
-            @can('user_management')
-            <li class="sidebar-item">
-                <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
-                    aria-expanded="false">
-                    <i class="fa fa-users"></i>
-
-                    <span class="hide-menu">{{ __('roles.user_management') }} </span>
-                </a>
-                @can('all_users')
-                    <ul aria-expanded="false" class="collapse  first-level">
-                        <li class="sidebar-item">
-                            <a href="{{ route('admin.user_managment') }}" class="sidebar-link">
-                                <i class="mdi mdi-email"></i>
-                                <span class="hide-menu">{{ __('roles.all_users') }}</span>
-                            </a>
-                        </li>
-                   
-                    </ul>
+                    </li>
                 @endcan
-            </li>
-        @endcan
+                @can('user_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fa fa-users"></i>
+
+                            <span class="hide-menu">{{ __('roles.user_management') }} </span>
+                        </a>
+                        @can('all_users')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.user_managment') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('roles.all_users') }}</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
                 @can('admin_roles')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"

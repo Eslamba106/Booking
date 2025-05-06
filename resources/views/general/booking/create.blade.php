@@ -62,8 +62,11 @@
                             <div class="row">
                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('booking.customer_name') }} <span
-                                                class="text-danger">*</span></label>
+                                        <label for="">{{ __('booking.customer_name') }} <button type="button"
+                                                data-target="#add_tenant" data-add_tenant="" data-toggle="modal"
+                                                class="btn btn--primary btn-sm">
+                                                <i class="fa fa-plus-square"></i>
+                                            </button> <span class="text-danger">*</span> </label>
                                         <select name="customer_id" class="form-control js-select2-custom ">
                                             @foreach ($customers as $customers_item)
                                                 <option value="{{ $customers_item->id }}">{{ $customers_item->name }}
@@ -80,7 +83,7 @@
                                     <div class="form-group">
                                         <label for="">{{ __('booking.check_in_date') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="date" id="arrival_date" name="arrival_date" class="form-control">
+                                        <input type="date" id="arrival_date" name="arrival_date" onchange="calculate_earn()" class="form-control">
                                         @error('arrival_date')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -91,7 +94,7 @@
                                     <div class="form-group">
                                         <label for="">{{ __('booking.check_out_date') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="date" id="check_out_date" name="check_out_date"
+                                        <input type="date" id="check_out_date" onchange="calculate_earn()" name="check_out_date"
                                             class="form-control">
                                         @error('check_out_date')
                                             <span class="error text-danger">{{ $message }}</span>
@@ -137,7 +140,8 @@
                                     <div class="form-group">
                                         <label for="">{{ __('booking.number_of_adults') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="number" required id="adults_count" name="adults_count" class="form-control">
+                                        <input type="number" required id="adults_count" name="adults_count"
+                                            class="form-control">
                                         @error('adults_count')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -168,7 +172,7 @@
                                     <div class="form-group">
                                         <label for="">{{ __('booking.total_person_count') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input  type="number" readonly id="total_person_count" name="total_person_count"
+                                        <input type="number" readonly id="total_person_count" name="total_person_count"
                                             class="form-control">
                                         @error('total_person_count')
                                             <span class="error text-danger">{{ $message }}</span>
@@ -188,7 +192,11 @@
                             <div class="row">
                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('general.hotel') }} <span
+                                        <label for="">{{ __('general.hotel') }}<button type="button"
+                                            data-target="#add_hotel" data-add_hotel="" data-toggle="modal"
+                                            class="btn btn--primary btn-sm">
+                                            <i class="fa fa-plus-square"></i>
+                                        </button> <span
                                                 class="text-danger">*</span></label>
                                         <select required name="hotel_id" class="form-control js-select2-custom ">
                                             <option value="">{{ __('general.select') }}</option>
@@ -430,6 +438,221 @@
             </div>
         </form>
     </div>
+
+    <div class="modal fade" id="add_tenant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ __('roles.create_customer') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <form action="{{ route('admin.customer.store_for_any') }}" method="post"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('roles.name') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" name="name" class="form-control"
+                                                            id="clientName" oninput="validateName(this)"
+                                                            style="text-transform:uppercase;" />
+
+                                                        @error('name')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('roles.email') }} </label>
+                                                        <input type="text" name="email" class="form-control">
+                                                        @error('email')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-2">
+                                                    <div class="form-group">
+                                                        <label for="phone_dail_code"
+                                                            class="title-color">{{ __('general.dial_code') }}</label>
+                                                        <select class="js-select2-custom form-control"
+                                                            name="phone_dial_code">
+                                                            <option selected>{{ __('general.select') }}</option>
+                                                            @foreach ($dail_code_main as $item_dail_code)
+                                                                <option value="{{ '+' . $item_dail_code->dial_code }}">
+                                                                    {{ '+' . $item_dail_code->dial_code }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-4">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('login.phone') }}</label>
+                                                        <input type="text" name="phone" class="form-control">
+                                                        @error('phone')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('general.nationality') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <select name="nationality_id"
+                                                            class="form-control js-select2-custom ">
+                                                            @foreach ($countries as $countries_item)
+                                                                <option value="{{ $countries_item->id }}">
+                                                                    {{ $countries_item->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('nationality_id')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-2"
+                                                style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
+                                                <button type="submit"
+                                                    class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="add_hotel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ __('roles.create_hotel') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <form action="{{ route('admin.hotel.store_for_any') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('roles.name') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" name="name" class="form-control">
+                                                        @error('name')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('general.hotel_type') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <select name="hotel_type" class="form-control js-select2-custom ">  
+                                                            <option value="Hotel">Hotel</option> 
+                                                            <option value="Villa">Villa</option> 
+                                                            <option value="Bungalov">Bungalov</option> 
+                                                            <option value="Hotel Apartments Resort">Hotel Apartments Resort</option>  
+                                                        </select>
+                                                        @error('hotel_type')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('general.hotel_rate') }}  </label>
+                                                        <input type="number" min="0" name="hotel_rate" class="form-control">
+                                                        @error('hotel_rate')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('general.country') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <select name="country_id" class="form-control js-select2-custom ">
+                                                            @foreach ($countries as $countries_item)
+                                                                <option value="{{ $countries_item->id }}">{{ $countries_item->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('country_id')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('general.city') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <input type="text" name="city" class="form-control">
+                                                        @error('city')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                                    <div class="form-group">
+                                                        <label for="">{{ __('roles.all_unit_types') }} <span
+                                                                class="text-danger">*</span></label>
+                                                        <select name="unit_type_ids[]" class="form-control js-select2-custom " multiple>
+                                                            <option disabled selected hidden>{{ __('general.select_unit_type') }}</option>
+                                                            @foreach ($unit_types as $unit_types_item)
+                                                                <option value="{{ $unit_types_item->id }}">{{ $unit_types_item->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('unit_type_id')
+                                                            <span class="error text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-2"
+                                                style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
+                                                <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
@@ -444,12 +667,12 @@
             var commission_type = $('#commission_type').val();
             if (commission_type === 'percentage') {
                 var commission = (buyPrice * commission_percentage) / 100;
-                var earn = ((salePrice - (buyPrice - commission) ) * night_count);
-                var total = (salePrice * night_count) + broker_amount;
+                var earn = ((salePrice - (buyPrice - commission) - broker_amount) * night_count);
+                var total = (salePrice * night_count);
             } else if (commission_type == 'night') {
                 var commission = commission_night;
-                var earn = ((salePrice - (buyPrice - commission) ) * night_count)
-                var total = (salePrice * night_count) + broker_amount;
+                var earn = ((salePrice - (buyPrice - commission)  - broker_amount) * night_count)
+                var total = (salePrice * night_count) ;
             } else {
                 var commission = 0;
             }
@@ -548,12 +771,13 @@
                         },
                         dataType: "json",
                         success: function(response) {
-                            $('select[name="country"]').empty(); 
-                            $('input[name="city"]').empty(); 
+                            $('select[name="country"]').empty();
+                            $('input[name="city"]').empty();
                             // console.log(response.city);
-                            $('input[name="city"]').val(response.city); 
-                            $('select[name="country"]').append('<option value="' + response.country.id +
-                                '">' + response.country.name + '</option>'); 
+                            $('input[name="city"]').val(response.city);
+                            $('select[name="country"]').append('<option value="' + response
+                                .country.id +
+                                '">' + response.country.name + '</option>');
                         },
                         error: function(xhr, status, error) {
                             console.error("Error occurred:", error);

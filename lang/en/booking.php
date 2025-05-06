@@ -52,4 +52,6 @@ return [
     'earn'                  => 'Earned',
     'total' => 'Total', 
     'broker_amount' => 'Broker Amount',
+    'coming_soon'   => 'Coming Soon',
+    'live_booking'   => 'Live Booking',
 ];

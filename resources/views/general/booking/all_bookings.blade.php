@@ -93,7 +93,7 @@
                                 <td class="text-center">{{ $booking->total .' ' . $booking->currency   }}</td> 
                               
                                 <td class="text-center"> <span
-                                        class="badge badge-pill {{ $booking->status == 'active' ? 'badge-success' : 'badge-danger' }}">{{ $booking->status }}</span>
+                                        class="badge badge-pill {{ $booking->status == 'pending' ? 'badge-success' : 'badge-danger' }}">{{ $booking->status }}</span>
                                 </td>
                                
                                 <td class="text-center">
@@ -106,6 +106,10 @@
                                         <a href="{{ route('admin.booking.edit', $booking->id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
                                                 class="mdi mdi-pencil"></i> </a>
+                                    @endcan
+                                    @can('edit_booking') 
+                                        <a href="{{ route('admin.booking.cancel', $booking->id) }}"
+                                            class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')">{{ __('dashboard.cancel') }} </a>
                                     @endcan
                                 </td>
                             </tr>
