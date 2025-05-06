@@ -96,4 +96,13 @@ return [
     'delete_service'                                           => "Delete Service",
     'edit_service'                                             => "Edit Service",
     'create_service'                                           => "Create Service",
+
+    
+    'booking_management'                                       => 'Booking Management',
+    'all_bookings'                                             => 'All Bookings', 
+    'show_all_bookings'                                        => "Show All Bookings",
+    'change_bookings_status'                                   => "Change Booking Status",
+    'delete_booking'                                           => "Delete Booking",
+    'edit_booking'                                             => "Edit Booking",
+    'create_booking'                                           => "Create Booking",
 ];  

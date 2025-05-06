@@ -12,5 +12,6 @@ return [
     'hotel_type'                                                                        => 'Hotel Type', 
     'hotel_rate'                                                                        => 'Hotel Rate', 
     'dial_code'                                                                         => 'Dial Code', 
-    'select'                                                                            => 'Select', 
+    'select'                                                                            => 'Select',
+    'hotel'                                                                             => 'Hotel', 
 ];

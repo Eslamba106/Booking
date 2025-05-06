@@ -9,6 +9,7 @@ use App\Http\Controllers\general\HotelController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\general\BrokerController;
 use App\Http\Controllers\general\DriverController;
+use App\Http\Controllers\booking\BookingController;
 use App\Http\Controllers\general\ServiceController;
 use App\Http\Controllers\general\CustomerController;
 use App\Http\Controllers\general\UnitTypeController;
@@ -114,6 +115,20 @@ Route::group(['prefix' => 'service'], function () {
     Route::get('/edit/{id}' , [ServiceController::class , 'edit'])->name('admin.service.edit');
     Route::patch('/update/{id}' , [ServiceController::class , 'update'])->name('admin.service.update');
     Route::get('/delete/{id}', [ServiceController::class ,'destroy'])->name('admin.service.delete'); 
+});
+
+// Booking Managment
+Route::group(['prefix' => 'booking'], function () {
+
+    Route::get('/', [BookingController::class, 'index'])->name('admin.booking');
+    Route::get('/create', [BookingController::class , 'create'])->name('admin.booking.create');
+    Route::post('/create', [BookingController::class , 'store'])->name('admin.booking.store');
+    Route::get('/edit/{id}' , [BookingController::class , 'edit'])->name('admin.booking.edit');
+    Route::patch('/update/{id}' , [BookingController::class , 'update'])->name('admin.booking.update');
+    Route::get('/delete/{id}', [BookingController::class ,'destroy'])->name('admin.booking.delete'); 
+
+
+    Route::get('/get_country/{id}', [BookingController::class ,'get_country'])->name('booking.get_country'); 
 });
 
 

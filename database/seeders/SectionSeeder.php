@@ -78,5 +78,14 @@ class SectionSeeder extends Seeder
         Section::updateOrCreate(['id' => 50], ['name' => 'delete_service', 'section_group_id' => 46, 'caption' => 'delete_service']);
         Section::updateOrCreate(['id' => 51], ['name' => 'edit_service', 'section_group_id' => 46, 'caption' => 'edit_service']);
         
+        // Booking Management  51 - 57
+
+        Section::updateOrCreate(['id' => 52], ['name' => 'booking_management', 'caption' => 'booking_management']);
+        Section::updateOrCreate(['id' => 53], ['name' => 'all_bookings', 'section_group_id' => 52, 'caption' => 'show_all_bookings']);
+        Section::updateOrCreate(['id' => 54], ['name' => 'change_bookings_status', 'section_group_id' => 52, 'caption' => 'change_bookings_status']);
+        Section::updateOrCreate(['id' => 55], ['name' => 'create_booking', 'section_group_id' => 52, 'caption' => 'create_booking']);
+        Section::updateOrCreate(['id' => 56], ['name' => 'delete_booking', 'section_group_id' => 52, 'caption' => 'delete_booking']);
+        Section::updateOrCreate(['id' => 57], ['name' => 'edit_booking', 'section_group_id' => 52, 'caption' => 'edit_booking']);
+        
     }
 }
