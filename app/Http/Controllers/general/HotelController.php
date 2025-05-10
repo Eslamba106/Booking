@@ -5,7 +5,7 @@ namespace App\Http\Controllers\general;
 use App\Models\Countries;
 use Throwable;
 use Carbon\Carbon;
-use App\Models\Hotel; 
+use App\Models\Hotel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
@@ -25,10 +25,10 @@ class HotelController extends Controller
         if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($ids) && count($ids)) {
             $data = ['status' => $request->status];
             $this->authorize('change_hotels_status');
-          
+
             Hotel::whereIn('id', $ids)->update($data);
             return back()->with('success', __('general.updated_successfully'));
-        }  
+        }
         if ($request->bulk_action_btn === 'delete' &&  is_array($ids) && count($ids)) {
 
 
@@ -56,16 +56,16 @@ class HotelController extends Controller
     }
     public function store(Request $request){
         $this->authorize('create_hotel');
-       
+
         try{
 
             $request->validate([
                 'name'                          => "required",
                 'unit_type_ids'                 => "required",
-                'country_id'                    => "required", 
+                'country_id'                    => "required",
              ] );
         $hotel = Hotel::create([
-            'name' => $request->name, 
+            'name' => $request->name,
             'city' => $request->city ?? null,
             'hotel_type' => $request->hotel_type ?? null,
             'hotel_rate' => $request->hotel_rate ?? null,
@@ -82,16 +82,16 @@ class HotelController extends Controller
     }
     public function store_for_any(Request $request){
         $this->authorize('create_hotel');
-       
+
         try{
 
             $request->validate([
                 'name'                          => "required",
                 'unit_type_ids'                 => "required",
-                'country_id'                    => "required", 
+                'country_id'                    => "required",
              ] );
         $hotel = Hotel::create([
-            'name' => $request->name, 
+            'name' => $request->name,
             'city' => $request->city ?? null,
             'hotel_type' => $request->hotel_type ?? null,
             'hotel_rate' => $request->hotel_rate ?? null,
@@ -111,26 +111,26 @@ class HotelController extends Controller
         $hotel = Hotel::findOrFail($id);
         try{
         $validatedData = $request->validate([
-              
+
                 'unit_type_ids'                 => "required",
-                'country_id'                    => "required", 
-              
+                'country_id'                    => "required",
+
             'name' => [
                 'required',
                 'string',
                 'max:255',
                 Rule::unique('hotels')->ignore($hotel->id),
             ],
-           
+
         ] );
-       
+
 
         $hotel->update([
-            'name' => $request->name, 
+            'name' => $request->name,
             'city' => $request->city  ,
             'hotel_type' => $request->hotel_type  ,
             'hotel_rate' => $request->hotel_rate ,
-            'country_id' =>  $request->country_id , 
+            'country_id' =>  $request->country_id ,
         ]);
         $hotel->unit_types()->sync($request->unit_type_ids);
 
@@ -147,6 +147,6 @@ class HotelController extends Controller
         $hotel->delete();
         return redirect()->route("admin.hotel")->with("success", __(   'general.deleted_successfully'));
     }
- 
-  
+
+
 }

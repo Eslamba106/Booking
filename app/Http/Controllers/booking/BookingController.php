@@ -13,6 +13,8 @@ use App\Models\Countries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Cancelation;
+use App\Models\Meals;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BookingController extends Controller
@@ -100,9 +102,21 @@ class BookingController extends Controller
         $bookings = Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->where('status' , '!=' ,'cancel')->orderBy("created_at", "desc")->paginate(10);
         return view("general.booking.all_bookings", compact("bookings"));
     }
+    public function show($id){
+        $booking = Booking::where('id', $id)->with('booking_details')->first();
+        $hotels = Hotel::select('id', 'name')->with('unit_types')->get();
+        $unit_types = UnitType::select('id', 'name')->get();
+        $brokers = Broker::where('id', $booking->broker_id)->first();
+        $drivers = Driver::select('id', 'name')->get();
+        $customers = Customer::select('id', 'name')->get();
+        return view('general.booking.show', compact("booking", "hotels", "unit_types", "brokers", "drivers", "customers"));
+
+    }
     public function create()
     {
         $this->authorize('create_hotel');
+        $cancels = Cancelation::all();
+        $meals = Meals::all();
         $hotels = Hotel::select('id', 'name')->with('unit_types')->get();
         $unit_types = UnitType::select('id', 'name')->get();
         $brokers = Broker::select('id', 'name')->get();
@@ -118,22 +132,24 @@ class BookingController extends Controller
             'customers' => $customers,
             'countries' => $countries,
             'dail_code_main' => $dail_code_main,
+            'cancels'=>$cancels,
+            'meals'=>$meals
         ];
         return view("general.booking.create", $date);
     }
 
     public function store(Request $request)
     {
-        $this->authorize('create_booking'); 
-    
+        $this->authorize('create_booking');
+
         DB::beginTransaction();
-        try { 
+        try {
             $request->validate([
                 'customer_id' => 'required',
                 'arrival_date' => 'required|date',
-                'check_out_date' => 'required|date',
+                'check_out_date' => 'required|date|after:today',
                 'days_count' => 'required|integer',
-                'canceled_period' => 'required|integer',
+                'canceled_period' => 'required',
                 'adults_count' => 'required|integer',
                 'childerns_count' => 'nullable|integer',
                 'babes_count' => 'nullable|integer',
@@ -146,7 +162,7 @@ class BookingController extends Controller
                 'units_count' => 'required|integer',
                 'buy_price' => 'required|numeric',
                 'price' => 'required|numeric',
-                'currency' => 'required|string|max:255', 
+                'currency' => 'required|string|max:255',
             ]);
             $booking = Booking::create([
                 'customer_id' => $request->customer_id,
@@ -169,8 +185,8 @@ class BookingController extends Controller
                 'sub_total' => $request->sub_total,
                 'broker_id' => $request->broker_id,
                 'total' => $request->total,
-                 
-            ]); 
+
+            ]);
             $booking->booking_details()->create([
                 'adults_count' => $request->adults_count ?? 0,
                 'babes_count' => $request->babes_count ?? 0,
@@ -184,7 +200,7 @@ class BookingController extends Controller
                 'unit_type' => $request->unit_type_id,
                 'price' => $request->price,
                 'currency' => $request->currency,
-            ]); 
+            ]);
             DB::commit();
             return redirect()->route('admin.booking')->with('success', __('general.added_successfully'));
         } catch (\Exception $e) {
@@ -205,8 +221,8 @@ class BookingController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $this->authorize('edit_booking'); 
-    
+        $this->authorize('edit_booking');
+
         DB::beginTransaction();
         try {
             $request->validate([
@@ -227,11 +243,11 @@ class BookingController extends Controller
                 'units_count' => 'required|integer',
                 'buy_price' => 'required|numeric',
                 'price' => 'required|numeric',
-                'currency' => 'required|string|max:255', 
+                'currency' => 'required|string|max:255',
             ]);
-    
+
             $booking = Booking::findOrFail($id);
-    
+
             $booking->update([
                 'customer_id' => $request->customer_id,
                 'arrival_date' => $request->arrival_date,
@@ -255,7 +271,7 @@ class BookingController extends Controller
                 'total' => $request->total,
                 'status' => 'pending',
             ]);
-    
+
             $booking->booking_details()->update([
                 'adults_count' => $request->adults_count ?? 0,
                 'babes_count' => $request->babes_count ?? 0,
@@ -264,17 +280,17 @@ class BookingController extends Controller
                 'units_count' => $request->units_count ?? 0,
                 'food_type' => $request->food_type,
             ]);
-    
+
             $booking->booking_unit()->update([
                 'hotel_id' => $request->hotel_id,
                 'unit_type' => $request->unit_type_id,
                 'price' => $request->price,
                 'currency' => $request->currency,
             ]);
-    
+
             DB::commit();
             return redirect()->route('admin.booking')->with('success', __('general.updated_successfully'));
-    
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -283,22 +299,22 @@ class BookingController extends Controller
     public function destroy($id)
     {
         $this->authorize('delete_booking');
-    
+
         DB::beginTransaction();
         try {
-            $booking = Booking::findOrFail($id); 
+            $booking = Booking::findOrFail($id);
             $booking->booking_details()->delete();
-            $booking->booking_unit()->delete(); 
-            $booking->delete(); 
+            $booking->booking_unit()->delete();
+            $booking->delete();
             DB::commit();
             return redirect()->route('admin.booking')->with('success', __('general.deleted_successfully'));
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
         }
-    } 
+    }
     public function cancel($id)
-    { 
+    {
         DB::beginTransaction();
         try {
             $booking = Booking::findOrFail($id);
@@ -318,4 +334,3 @@ class BookingController extends Controller
         return response()->json($hotel);
     }
 }
- 

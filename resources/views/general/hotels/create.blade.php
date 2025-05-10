@@ -71,11 +71,11 @@
                                     <div class="form-group">
                                         <label for="">{{ __('general.hotel_type') }} <span
                                                 class="text-danger">*</span></label>
-                                        <select name="hotel_type" class="form-control js-select2-custom ">  
-                                            <option value="Hotel">Hotel</option> 
-                                            <option value="Villa">Villa</option> 
-                                            <option value="Bungalov">Bungalov</option> 
-                                            <option value="Hotel Apartments Resort">Hotel Apartments Resort</option>  
+                                        <select name="hotel_type" class="form-control js-select2-custom ">
+                                            <option value="Hotel">Hotel</option>
+                                            <option value="Villa">Villa</option>
+                                            <option value="Bungalov">Bungalov</option>
+                                            <option value="Hotel Apartments Resort">Hotel Apartments Resort</option>
                                         </select>
                                         @error('hotel_type')
                                             <span class="error text-danger">{{ $message }}</span>
@@ -83,10 +83,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">
-
                                     <div class="form-group">
-                                        <label for="">{{ __('general.hotel_rate') }}  </label>
-                                        <input type="number" min="0" name="hotel_rate" class="form-control">
+                                        <label for="">{{ __('general.hotel_rate') }} </label>
+                                        <select name="hotel_rate" class="form-control js-select2-custom">
+
+                                            <option value="3 stars"> ⭐⭐⭐</option>
+                                            <option value="4 stars"> ⭐⭐⭐⭐</option>
+                                            <option value="5 stars"> ⭐⭐⭐⭐⭐</option>
+                                        </select>
                                         @error('hotel_rate')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -96,12 +100,12 @@
                                     <div class="form-group">
                                         <label for="">{{ __('general.country') }} <span
                                                 class="text-danger">*</span></label>
-                                        <select name="country_id" class="form-control js-select2-custom ">
-                                            @foreach ($countries as $countries_item)
-                                                <option value="{{ $countries_item->id }}">{{ $countries_item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                                <select name="country_id" class="form-control js-select2-custom" id="country_select">
+                                                    <option value="">{{ __('select country') }}</option>
+                                                    @foreach ($countries as $countries_item)
+                                                        <option value="{{ $countries_item->id }}">{{ $countries_item->name }}</option>
+                                                    @endforeach
+                                                </select>
                                         @error('country_id')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -111,7 +115,9 @@
                                     <div class="form-group">
                                         <label for="">{{ __('general.city') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" name="city" class="form-control">
+                                                <select name="city" class="form-control" id="city_select">
+                                                    <option value="">{{ __('select city') }}</option>
+                                                </select>
                                         @error('city')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -147,4 +153,29 @@
 @endsection
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#country_select').on('change', function () {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.ajax({
+                    url: '/get-cities/' + countryId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
+                        $.each(data, function (key, value) {
+                            $('#city_select').append('<option value="' + value.name + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
+            }
+        });
+    });
+</script>
+
+
 @endsection

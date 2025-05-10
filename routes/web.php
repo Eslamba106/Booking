@@ -14,6 +14,10 @@ use App\Http\Controllers\general\ServiceController;
 use App\Http\Controllers\general\CustomerController;
 use App\Http\Controllers\general\UnitTypeController;
 use App\Http\Controllers\Admin\UserManagmentController;
+use App\Http\Controllers\CancelController;
+use App\Http\Controllers\LoactionController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\MealController;
 
 // // Translation
 Route::get('language/{locale}', function ($locale) {
@@ -25,7 +29,7 @@ Route::get('language/{locale}', function ($locale) {
 
 // Auth
 Route::get('/', [AuthController::class, 'loginPage'])->name('login-page');
- 
+
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register-page', [AuthController::class, 'registerPage'])->name('register-page');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -59,7 +63,7 @@ Route::group(['prefix' => 'broker'], function () {
     Route::patch('/update/{id}' , [BrokerController::class , 'update'])->name('admin.broker.update');
     Route::get('/delete/{id}', [BrokerController::class ,'destroy'])->name('admin.broker.delete');
 
-   
+
 });
 
 // Customer Managment
@@ -71,7 +75,8 @@ Route::group(['prefix' => 'customer'], function () {
     Route::post('/store_for_any', [CustomerController::class , 'store_for_any'])->name('admin.customer.store_for_any');
     Route::get('/edit/{id}' , [CustomerController::class , 'edit'])->name('admin.customer.edit');
     Route::patch('/update/{id}' , [CustomerController::class , 'update'])->name('admin.customer.update');
-    Route::get('/delete/{id}', [CustomerController::class ,'destroy'])->name('admin.customer.delete'); 
+    Route::get('/delete/{id}', [CustomerController::class ,'destroy'])->name('admin.customer.delete');
+    Route::get('/show/{id}', [CustomerController::class ,'show'])->name('admin.customer.show');
 });
 
 // UnitType Managment
@@ -82,7 +87,7 @@ Route::group(['prefix' => 'unit_type'], function () {
     Route::post('/create', [UnitTypeController::class , 'store'])->name('admin.unit_type.store');
     Route::get('/edit/{id}' , [UnitTypeController::class , 'edit'])->name('admin.unit_type.edit');
     Route::patch('/update/{id}' , [UnitTypeController::class , 'update'])->name('admin.unit_type.update');
-    Route::get('/delete/{id}', [UnitTypeController::class ,'destroy'])->name('admin.unit_type.delete'); 
+    Route::get('/delete/{id}', [UnitTypeController::class ,'destroy'])->name('admin.unit_type.delete');
 });
 
 // Hotel Managment
@@ -95,7 +100,7 @@ Route::group(['prefix' => 'hotel'], function () {
     Route::patch('/update/{id}' , [HotelController::class , 'update'])->name('admin.hotel.update');
     Route::get('/delete/{id}', [HotelController::class ,'destroy'])->name('admin.hotel.delete');
     Route::post('/store_for_any', [HotelController::class , 'store_for_any'])->name('admin.hotel.store_for_any');
- 
+
 });
 
 // Driver Managment
@@ -106,7 +111,7 @@ Route::group(['prefix' => 'driver'], function () {
     Route::post('/create', [DriverController::class , 'store'])->name('admin.driver.store');
     Route::get('/edit/{id}' , [DriverController::class , 'edit'])->name('admin.driver.edit');
     Route::patch('/update/{id}' , [DriverController::class , 'update'])->name('admin.driver.update');
-    Route::get('/delete/{id}', [DriverController::class ,'destroy'])->name('admin.driver.delete'); 
+    Route::get('/delete/{id}', [DriverController::class ,'destroy'])->name('admin.driver.delete');
 });
 
 // Service Managment
@@ -117,7 +122,7 @@ Route::group(['prefix' => 'service'], function () {
     Route::post('/create', [ServiceController::class , 'store'])->name('admin.service.store');
     Route::get('/edit/{id}' , [ServiceController::class , 'edit'])->name('admin.service.edit');
     Route::patch('/update/{id}' , [ServiceController::class , 'update'])->name('admin.service.update');
-    Route::get('/delete/{id}', [ServiceController::class ,'destroy'])->name('admin.service.delete'); 
+    Route::get('/delete/{id}', [ServiceController::class ,'destroy'])->name('admin.service.delete');
 });
 
 // Booking Managment
@@ -129,12 +134,13 @@ Route::group(['prefix' => 'booking'], function () {
     Route::get('/create', [BookingController::class , 'create'])->name('admin.booking.create');
     Route::post('/create', [BookingController::class , 'store'])->name('admin.booking.store');
     Route::get('/edit/{id}' , [BookingController::class , 'edit'])->name('admin.booking.edit');
+    Route::get('/show/{id}' , [BookingController::class , 'show'])->name('admin.booking.show');
     Route::patch('/update/{id}' , [BookingController::class , 'update'])->name('admin.booking.update');
     Route::get('/cancel/{id}' , [BookingController::class , 'cancel'])->name('admin.booking.cancel');
-    Route::get('/delete/{id}', [BookingController::class ,'destroy'])->name('admin.booking.delete'); 
+    Route::get('/delete/{id}', [BookingController::class ,'destroy'])->name('admin.booking.delete');
 
 
-    Route::get('/get_country/{id}', [BookingController::class ,'get_country'])->name('booking.get_country'); 
+    Route::get('/get_country/{id}', [BookingController::class ,'get_country'])->name('booking.get_country');
 });
 
 
@@ -157,4 +163,6 @@ Route::group(['prefix' => 'settings'], function () {
     Route::put('/update/{setting}', [SettingsController::class, 'update'])->name('admin.settings.update');
 });
 
- 
+ Route::resource('meal', MealController::class);
+ Route::resource('cancel', CancelController::class);
+ Route::get('/get-cities/{country}', [LocationController::class, 'getCities']);

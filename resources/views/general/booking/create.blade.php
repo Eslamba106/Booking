@@ -1,10 +1,14 @@
+
+
 @extends('layouts.dashboard')
+
 @section('title')
     {{ __('roles.create_booking') }}
 @endsection
+
 @section('css')
-    {{-- <link href="{{ asset('css/tags-input.min.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+    <!-- Link to Bootstrap 5 CSS -->
 
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -16,428 +20,264 @@
             gap: 4px;
             align-items: center;
         }
+        .card-body {
+        padding: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+
+        .step {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Currency Toggle Container */
+.currency-toggle {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Hide default radio buttons */
+.currency-toggle input[type="radio"] {
+    display: none;
+}
+
+/* Styled labels as toggle buttons */
+.currency-toggle label {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    background-color: #f1f1f1;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+/* Active (checked) state */
+.currency-toggle input[type="radio"]:checked + label {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Hover effect */
+.currency-toggle label:hover {
+    background-color: #e9ecef;
+}
+input[name="days_count"],
+input[name="canceled_period"] {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem !important; /* أو استخدم 0.25rem حسب الشكل العام */
+}
+.input-group input.form-control {
+    height: 38px;
+    padding: 0 10px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    box-shadow: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.input-group .btn-outline-third {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    width: 40px;
+    height: 38px; /* نفس ارتفاع input */
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0; /* بدون زوايا لو داخل input-group */
+    transition: all 0.2s ease-in-out;
+}
+
+.input-group .btn-outline-third:first-child {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
+.input-group .btn-outline-third:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+.input-group input.form-control {
+    height: 38px;
+    padding: 0;
+    text-align: center;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    font-weight: bold;
+}
+
+        /* Form Container */
+
+
+/* Form Group */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Label */
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* Input & Select */
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 12px;
+    width: 100%;
+    font-size: 14px;
+    transition: border 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Radio Toggle Buttons */
+.btn-group-toggle {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-check {
+    display: none;
+}
+
+.btn-outline-primary,
+.btn-outline-secondary,
+.btn-outline-info {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: 2px solid #ccc;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-secondary:hover,
+.btn-outline-info:hover {
+    background-color: #e9ecef;
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.btn-check:checked + .btn-outline-secondary {
+    background-color: #6c757d;
+    color: white;
+    border-color: #6c757d;
+}
+
+.btn-check:checked + .btn-outline-info {
+    background-color: #17a2b8;
+    color: white;
+    border-color: #17a2b8;
+}
+
+/* Error Text */
+.text-danger {
+    color: #dc3545;
+    font-size: 12px;
+}
+
+/* Section spacing */
+.card-body .row > div {
+    margin-bottom: 20px;
+}
+
     </style>
 @endsection
-@section('content')
-    <div class="page-breadcrumb">
-        <div class="row">
-            <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.create_booking') }}</h4>
-                <div class="d-flex align-items-center">
 
-                </div>
-            </div>
-            <div class="col-7 align-self-center">
-                <div class="d-flex no-block justify-content-end align-items-center">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('dashboard') }}">{{ __('dashboard.home') }} </a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.dashboard') }}</li>
-                        </ol>
-                    </nav>
-                </div>
+@section('content')
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">{{ __('roles.create_booking') }}</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex no-block justify-content-end align-items-center">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="{{ route('dashboard') }}">{{ __('dashboard.home') }}</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.dashboard') }}</li>
+                    </ol>
+                </nav>
             </div>
         </div>
     </div>
+</div>
+
+<div class="mb-5"></div>
+
+<div class="container-fluid">
+    <form action="{{ route('admin.booking.store') }}" method="post" enctype="multipart/form-data">
+        @csrf
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
 
 
-    <div class="mb-5"></div>
-    <div class="container-fluid">
-        <!-- ============================================================== -->
-        <!-- Start Page Content -->
-        <!-- ============================================================== -->
-        <form action="{{ route('admin.booking.store') }}" method="post" enctype="multipart/form-data">
-            @csrf
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex gap-2">
-                                <h4 class="mb-0">{{ __('booking.booking_details') }}</h4>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.customer_name') }} <button type="button"
-                                                data-target="#add_tenant" data-add_tenant="" data-toggle="modal"
-                                                class="btn btn--primary btn-sm">
-                                                <i class="fa fa-plus-square"></i>
-                                            </button> <span class="text-danger">*</span> </label>
-                                        <select name="customer_id" class="form-control js-select2-custom ">
-                                            @foreach ($customers as $customers_item)
-                                                <option value="{{ $customers_item->id }}">{{ $customers_item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('customer_id')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-3">
 
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.check_in_date') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="date" id="arrival_date" name="arrival_date" onchange="calculate_earn()" class="form-control">
-                                        @error('arrival_date')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-3">
-
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.check_out_date') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="date" id="check_out_date" onchange="calculate_earn()" name="check_out_date"
-                                            class="form-control">
-                                        @error('check_out_date')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-3">
-
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.days_count') }} </label>
-                                        <input type="number" name="days_count" id="days_count" readonly
-                                            class="form-control">
-                                        @error('days_count')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.cancellation_period') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" name="canceled_period" class="form-control">
-                                        @error('canceled_period')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-
-                            </div>
-                        </div>
-
+                    <div class="card-body" id="form-steps">
+                        <div class="step">@include('general.booking.customer_details')</div>
+                        <div class="step">@include('general.booking.hotel_details')</div>
+                        <div class="step">@include('general.booking.finance_details')</div>
                     </div>
-                    <div class="card mt-2">
-                        <div class="card-header">
-                            <div class="d-flex gap-2">
-                                <h4 class="mb-0">{{ __('booking.guest_details') }}</h4>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.number_of_adults') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" required id="adults_count" name="adults_count"
-                                            class="form-control">
-                                        @error('adults_count')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.number_of_children') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" id="childerns_count" name="childerns_count"
-                                            class="form-control">
-                                        @error('childerns_count')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.number_of_infants') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" id="babes_count" name="babes_count" class="form-control">
-                                        @error('babes_count')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.total_person_count') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" readonly id="total_person_count" name="total_person_count"
-                                            class="form-control">
-                                        @error('total_person_count')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card mt-2">
-                        <div class="card-header">
-                            <div class="d-flex gap-2">
-                                <h4 class="mb-0">{{ __('booking.hotel_details') }}</h4>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('general.hotel') }}<button type="button"
-                                            data-target="#add_hotel" data-add_hotel="" data-toggle="modal"
-                                            class="btn btn--primary btn-sm">
-                                            <i class="fa fa-plus-square"></i>
-                                        </button> <span
-                                                class="text-danger">*</span></label>
-                                        <select required name="hotel_id" class="form-control js-select2-custom ">
-                                            <option value="">{{ __('general.select') }}</option>
-                                            @foreach ($hotels as $hotel_item)
-                                                <option value="{{ $hotel_item->id }}">{{ $hotel_item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('hotel_id')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('general.country') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="country" disabled class="form-control js-select2-custom ">
-                                        </select>
-                                        @error('country')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('general.city') }} </label>
-                                        <input type="text" name="city" readonly class="form-control">
-                                        @error('city')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.booking_no') }}<span class="text-danger">
-                                                *</span> </label>
-                                        <input type="text" required name="booking_no" class="form-control">
-                                        @error('booking_no')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('roles.all_unit_types') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="unit_type_id" required class="form-control js-select2-custom ">
-                                            @foreach ($unit_types as $unit_type_item)
-                                                <option value="{{ $unit_type_item->id }}">{{ $unit_type_item->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('unit_type_id')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.food_type') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="food_type" required class="form-control">
 
-                                        @error('food_type')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.number_of_units') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" name="units_count" class="form-control">
-                                        @error('units_count')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <button type="button" id="prevBtn" class="btn btn-secondary" onclick="nextPrev(-1)">Previous</button>
+                        <button type="button" id="nextBtn" class="btn btn-primary" onclick="nextPrev(1)">Next</button>
+                        <button type="submit" id="submitBtn" class="btn btn-success d-none">{{ __('dashboard.save') }}</button>
                     </div>
-                    <div class="card mt-2">
-                        <div class="card-header">
-                            <div class="d-flex gap-2">
-                                <h4 class="mb-0">{{ __('booking.finance_details') }}</h4>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.buy_price') }} </label>
-                                        <input type="number" onkeyup="calculate_earn()" name="buy_price"
-                                            class="form-control">
-                                        @error('buy_price')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.sale_price') }} </label>
-                                        <input type="number" onkeyup="calculate_earn()" name="price"
-                                            class="form-control">
-                                        @error('price')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.currency') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="currency" class="form-control js-select2-custom ">
-                                            <option value="euro">{{ __('booking.euro') }}</option>
-                                            <option value="dolar">{{ __('booking.dolar') }}</option>
-                                            <option value="lira">{{ __('booking.lira') }}</option>
-                                        </select>
-                                        @error('currency')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.commission') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="commission" id="commission"
-                                            class="form-control js-select2-custom ">
-                                            <option value="no">{{ __('booking.no') }}</option>
-                                            <option value="yes">{{ __('booking.yes') }}</option>
-                                        </select>
-                                        @error('commission')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6 commission_html">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.commission_type') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="commission_type" onchange="calculate_earn()" id="commission_type"
-                                            class="form-control js-select2-custom ">
-                                            <option value="percentage">{{ __('booking.percentage') }}</option>
-                                            <option value="night">{{ __('booking.night') }}</option>
-                                        </select>
-                                        @error('commission_type')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6 commission_html percentage_html">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.commission_percentage') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" name="commission_percentage" onkeyup="calculate_earn()"
-                                            class="form-control">
 
-                                        @error('commission_percentage')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6 commission_html night_html">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.days_count') }} <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" name="commission_night" onkeyup="calculate_earn()"
-                                            class="form-control">
-
-                                        @error('commission_night')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.broker') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="broker" id="has_broker" class="form-control js-select2-custom ">
-                                            <option value="no">{{ __('booking.no') }}</option>
-                                            <option value="yes">{{ __('booking.yes') }}</option>
-                                        </select>
-                                        @error('broker')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6 broker_html">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.broker_name') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="broker" class="form-control js-select2-custom ">
-                                            @foreach ($brokers as $broker_item)
-                                                <option value="{{ $broker_item->id }}">{{ $broker_item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('broker')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6 broker_html">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.broker_amount') }} </label>
-                                        <input type="number" name="broker_amount" class="form-control"
-                                            onkeyup="calculate_earn()">
-                                        @error('broker_amount')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.earn') }} </label>
-                                        <input type="number" name="earn" class="form-control" readonly>
-                                        @error('earn')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="">{{ __('booking.total') }} </label>
-                                        <input type="number" readonly name="total" class="form-control">
-                                        @error('total')
-                                            <span class="error text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-            <div class="form-group mt-2"
-                style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
-                <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
 
     <div class="modal fade" id="add_tenant" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -483,26 +323,12 @@
                                                         @enderror
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-lg-4 col-xl-2">
-                                                    <div class="form-group">
-                                                        <label for="phone_dail_code"
-                                                            class="title-color">{{ __('general.dial_code') }}</label>
-                                                        <select class="js-select2-custom form-control"
-                                                            name="phone_dial_code">
-                                                            <option selected>{{ __('general.select') }}</option>
-                                                            @foreach ($dail_code_main as $item_dail_code)
-                                                                <option value="{{ '+' . $item_dail_code->dial_code }}">
-                                                                    {{ '+' . $item_dail_code->dial_code }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
 
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-lg-4 col-xl-4">
+                                                <div class="col-md-6 col-lg-4 col-xl-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('login.phone') }}</label>
-                                                        <input type="text" name="phone" class="form-control">
+
+                                                        <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">
                                                         @error('phone')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -520,6 +346,7 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
+
                                                         @error('nationality_id')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -560,9 +387,9 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
-                
+
                                                 <div class="col-md-6 col-lg-4 col-xl-6">
-                
+
                                                     <div class="form-group">
                                                         <label for="">{{ __('roles.name') }} <span
                                                                 class="text-danger">*</span></label>
@@ -576,11 +403,11 @@
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.hotel_type') }} <span
                                                                 class="text-danger">*</span></label>
-                                                        <select name="hotel_type" class="form-control js-select2-custom ">  
-                                                            <option value="Hotel">Hotel</option> 
-                                                            <option value="Villa">Villa</option> 
-                                                            <option value="Bungalov">Bungalov</option> 
-                                                            <option value="Hotel Apartments Resort">Hotel Apartments Resort</option>  
+                                                        <select name="hotel_type" class="form-control js-select2-custom ">
+                                                            <option value="Hotel">Hotel</option>
+                                                            <option value="Villa">Villa</option>
+                                                            <option value="Bungalov">Bungalov</option>
+                                                            <option value="Hotel Apartments Resort">Hotel Apartments Resort</option>
                                                         </select>
                                                         @error('hotel_type')
                                                             <span class="error text-danger">{{ $message }}</span>
@@ -588,15 +415,21 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-lg-4 col-xl-6">
-                
                                                     <div class="form-group">
-                                                        <label for="">{{ __('general.hotel_rate') }}  </label>
-                                                        <input type="number" min="0" name="hotel_rate" class="form-control">
+                                                        <label for="">{{ __('general.hotel_rate') }} </label>
+                                                        <select name="hotel_rate" class="form-control js-select2-custom">
+                                                            <option value="1"> ⭐</option>
+                                                            <option value="2"> ⭐⭐</option>
+                                                            <option value="3"> ⭐⭐⭐</option>
+                                                            <option value="4"> ⭐⭐⭐⭐</option>
+                                                            <option value="5"> ⭐⭐⭐⭐⭐</option>
+                                                        </select>
                                                         @error('hotel_rate')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.country') }} <span
@@ -616,7 +449,9 @@
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.city') }} <span
                                                                 class="text-danger">*</span></label>
-                                                        <input type="text" name="city" class="form-control">
+                                                                <select name="city" class="form-control" id="city_select">
+                                                                    <option value="">{{ __('select city') }}</option>
+                                                                </select>
                                                         @error('city')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -656,6 +491,38 @@
 @endsection
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
+    <script>
+        let currentStep = 0;
+        const steps = document.querySelectorAll('.step');
+        showStep(currentStep);
+
+        function showStep(n) {
+            steps.forEach((step, i) => step.style.display = i === n ? 'block' : 'none');
+            document.getElementById('prevBtn').style.display = n === 0 ? 'none' : 'inline-block';
+            document.getElementById('nextBtn').style.display = n === steps.length - 1 ? 'none' : 'inline-block';
+            document.getElementById('submitBtn').classList.toggle('d-none', n !== steps.length - 1);
+        }
+
+        function nextPrev(n) {
+            if (n === 1 && !validateStep()) return;
+            currentStep += n;
+            showStep(currentStep);
+        }
+
+        function validateStep() {
+            const inputs = steps[currentStep].querySelectorAll('input, select, textarea');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    input.classList.add('is-invalid');
+                    valid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            return valid;
+        }
+    </script>
     <script>
         function calculate_earn() {
             var buyPrice = parseFloat($('input[name="buy_price"]').val()) || 0;
@@ -704,18 +571,40 @@
 
         $('#arrival_date, #check_out_date').on('change', calculateNights);
     </script>
-    <script>
-        function calculateTotalPersons() {
-            const adults = parseInt($('#adults_count').val()) || 0;
-            const children = parseInt($('#childerns_count').val()) || 0;
-            const babies = parseInt($('#babes_count').val()) || 0;
+<script>
+    function updateTotal() {
+        const adults = parseInt(document.getElementById("adults_count").value) || 0;
+        const children = parseInt(document.getElementById("childerns_count").value) || 0;
+        const infants = parseInt(document.getElementById("babes_count").value) || 0;
+        const total = adults + children + infants;
+        document.getElementById("total_person_count").value = total;
+    }
 
-            const total = adults + children + babies;
-            $('#total_person_count').val(total);
+    function increase(id) {
+        const input = document.getElementById(id);
+        input.value = parseInt(input.value || 0) + 1;
+        updateTotal();
+    }
+
+    function decrease(id) {
+        const input = document.getElementById(id);
+        const min = parseInt(input.min || 0);
+        if (parseInt(input.value || 0) > min) {
+            input.value = parseInt(input.value) - 1;
         }
+        updateTotal();
+    }
 
-        $('#adults_count, #childerns_count, #babes_count').on('input', calculateTotalPersons);
-    </script>
+    document.addEventListener('DOMContentLoaded', function () {
+        updateTotal();
+        ["adults_count", "childerns_count", "babes_count"].forEach(id => {
+            document.getElementById(id).addEventListener("input", updateTotal);
+        });
+    });
+</script>
+
+
+
     <script>
         function toggleCommissionFields() {
             let commission = $('#commission').val();
@@ -787,5 +676,170 @@
                 }
             });
         })
+        document.addEventListener('DOMContentLoaded', function () {
+    const input = document.querySelector("#phone");
+
+    const iti = window.intlTelInput(input, {
+        nationalMode: false,
+        autoHideDialCode: false,
+        separateDialCode: false,
+        utilsScript: "{{ asset('intel/js/utils.js') }}"  // تأكد من المسار الصحيح
+    });
+
+    // تحديث العلم يدويًا عند كتابة كود الدولة
+    input.addEventListener('input', function () {
+        const val = input.value;
+        const countryData = window.intlTelInputGlobals.getCountryData();
+
+        for (let i = 0; i < countryData.length; i++) {
+            const code = '+' + countryData[i].dialCode;
+            if (val.startsWith(code)) {
+                iti.setCountry(countryData[i].iso2);
+                break;
+            }
+        }
+    });
+});
+function keepPlusSign(input) {
+    if (!input.value.startsWith("+")) {
+        input.value = "+" + input.value.replace(/[^0-9]/g, '');
+    }
+}
+function validateDate() {
+    const arrivalInput = document.getElementById('arrival_date');
+    const checkoutInput = document.getElementById('check_out_date');
+
+    const arrivalError = document.getElementById('arrivalDateError');
+    const checkoutError = document.getElementById('checkoutDateError');
+
+    const arrivalDate = new Date(arrivalInput.value);
+    const checkoutDate = new Date(checkoutInput.value);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // إخفاء الأخطاء أولاً
+    arrivalError.style.display = 'none';
+    checkoutError.style.display = 'none';
+
+    let hasError = false;
+
+    // التحقق من تاريخ الوصول
+    if (!arrivalInput.value || arrivalDate < today) {
+        arrivalError.style.display = 'inline';
+        hasError = true;
+    }
+
+    // التحقق من تاريخ المغادرة
+    if (!checkoutInput.value || checkoutDate <= arrivalDate) {
+        checkoutError.style.display = 'inline';
+        hasError = true;
+    }
+
+    return !hasError;
+}
+
+
     </script>
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // إظهار أو إخفاء حقول العمولة بناءً على اختيار نعم أو لا
+        document.querySelectorAll('input[name="commission"]').forEach(el => {
+            el.addEventListener("change", function () {
+                const isYes = this.value === 'yes';
+                document.querySelectorAll('.commission_html').forEach(div => {
+                    div.style.display = isYes ? 'block' : 'none';
+                });
+
+                // استدعاء دالة لتحديث الحقول الخاصة بنوع العمولة
+                toggleCommissionFields();
+            });
+        });
+
+        // إظهار أو إخفاء حقول الوسيط بناءً على اختيار نعم أو لا
+        document.querySelectorAll('input[name="broker"]').forEach(el => {
+            el.addEventListener("change", function () {
+                const isYes = this.value === 'yes';
+                document.querySelectorAll('.broker_html').forEach(div => {
+                    div.style.display = isYes ? 'block' : 'none';
+                });
+            });
+        });
+
+        // تفعيل الحالة الافتراضية
+        document.querySelector('input[name="commission"]:checked')?.dispatchEvent(new Event('change'));
+        document.querySelector('input[name="broker"]:checked')?.dispatchEvent(new Event('change'));
+    });
+
+    // دالة لتبديل الحقول بناءً على نوع العمولة (نسبة أو ليالي)
+    function toggleCommissionFields() {
+    var commission = document.querySelector('input[name="commission"]:checked').value;
+    var commissionType = document.getElementById('commission_type').value;
+
+    // Show or hide the commission fields based on "Yes" selection
+    if (commission === "yes") {
+        document.querySelector('.commission_html').style.display = 'block';
+
+        // Show specific fields based on commission type
+        if (commissionType === "percentage") {
+            document.querySelector('.percentage_html').style.display = 'block';
+            document.querySelector('.night_html').style.display = 'none';
+        } else {
+            document.querySelector('.night_html').style.display = 'block';
+            document.querySelector('.percentage_html').style.display = 'none';
+        }
+    } else {
+        document.querySelector('.commission_html').style.display = 'none';
+        document.querySelector('.percentage_html').style.display = 'none';
+        document.querySelector('.night_html').style.display = 'none';
+    }
+}
+
+// Call the function on load to set the initial state
+toggleCommissionFields();
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#country_select').on('change', function () {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.ajax({
+                    url: '/get-cities/' + countryId,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
+                        $.each(data, function (key, value) {
+                            $('#city_select').append('<option value="' + value.name + '">' + value.name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
+            }
+        });
+    });
+</script>
+<script>
+    function checkCurrencyMatch() {
+        const buyCurrency = document.querySelector('input[name="currency_buy"]:checked').value;
+        const saleCurrency = document.querySelector('input[name="currency"]:checked').value;
+
+        const errorSpan = document.getElementById('currency-error');
+
+        if (buyCurrency !== saleCurrency) {
+            errorSpan.classList.remove('d-none');
+        } else {
+            errorSpan.classList.add('d-none');
+        }
+    }
+
+    // في حال تغيّر العملة، نفذ التحقق أيضاً
+    document.querySelectorAll('input[name="currency_buy"], input[name="currency"]').forEach((input) => {
+        input.addEventListener('change', checkCurrencyMatch);
+    });
+</script>
+
+
 @endsection

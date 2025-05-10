@@ -45,15 +45,15 @@
                                     <option value="2">{{ __('dashboard.disactive') }}</option>
                                 </select>
                             </div>
-                        
-                    
-                        
+
+
+
                         <button type="submit" name="bulk_action_btn" value="update_status"
                             class="btn btn-primary mt-3 mr-2">
                             <i class="la la-refresh"></i> {{ __('dashboard.update') }}
                         </button>
                         @endcan
-                        @can('delete_booking') 
+                        @can('delete_booking')
                         <button type="submit" name="bulk_action_btn" value="delete"
                             class="btn btn-danger delete_confirm mt-3 mr-2"> <i class="la la-trash"></i>
                             {{ __('dashboard.delete') }}</button>
@@ -61,7 +61,7 @@
                         {{-- @can('create_booking') --}}
                         <a href="{{ route('admin.booking.create') }}" class="btn btn-secondary mt-3 mr-2">
                             <i class="la la-refresh"></i> {{ __('dashboard.create') }}
-                        </a> 
+                        </a>
                         {{-- @endcan --}}
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                             <th><input class="bulk_check_all" type="checkbox" /></th>
                             <th class="text-center" scope="col">@lang('booking.customer_name')</th>
                             <th class="text-center" scope="col">@lang('booking.hotel_name')</th>
-                            <th class="text-center" scope="col">{{ __('roles.name') }}</th> 
+                            <th class="text-center" scope="col">{{ __('roles.name') }}</th>
                             <th class="text-center" scope="col">@lang('roles.status')</th>
                             <th class="text-center" scope="col">{{ __('roles.Actions') }}</th>
                         </tr>
@@ -90,27 +90,37 @@
                                 </th>
                                 <td class="text-center">{{ $booking->customer->name }}</td>
                                 <td class="text-center">{{ $booking->hotel->name }} </td>
-                                <td class="text-center">{{ $booking->total .' ' . $booking->currency   }}</td> 
-                              
+                                <td class="text-center">{{ $booking->total .' ' . $booking->currency   }}</td>
+
                                 <td class="text-center"> <span
                                         class="badge badge-pill {{ $booking->status == 'pending' ? 'badge-success' : 'badge-danger' }}">{{ $booking->status }}</span>
                                 </td>
-                               
+
                                 <td class="text-center">
-                                    @can('delete_booking') 
+                                    @can('delete_booking')
                                         <a href="{{ route('admin.booking.delete', $booking->id) }}"
                                             class="btn btn-danger btn-sm" title="@lang('dashboard.delete')"><i
                                                 class="fa fa-trash"></i></a>
                                     @endcan
-                                    @can('edit_booking') 
+                                    @can('edit_booking')
                                         <a href="{{ route('admin.booking.edit', $booking->id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
                                                 class="mdi mdi-pencil"></i> </a>
                                     @endcan
-                                    @can('edit_booking') 
+                                    @can('edit_booking')
+                                        <a href="{{ route('admin.booking.show', $booking->id) }}"
+                                            class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
+                                                class="mdi mdi-eye"></i> </a>
+                                    @endcan
+                                    @can('edit_booking')
                                         <a href="{{ route('admin.booking.cancel', $booking->id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')">{{ __('dashboard.cancel') }} </a>
                                     @endcan
+
+                                        <a href="{{ route('admin.customer.show', $booking->customer_id) }}"
+                                            class="btn btn-outline-info btn-sm" title="@lang('dashboard.show')"><i
+                                               class="mdi mdi-account"></i>  </a>
+
                                 </td>
                             </tr>
                         @empty

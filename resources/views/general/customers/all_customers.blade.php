@@ -36,35 +36,65 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <div class="input-group mb-3 d-flex justify-content-end">
-                        @can('change_customers_status')
-                            <div class="remv_control mr-2">
-                                <select name="status" class="mr-3 mt-3 form-control ">
-                                    <option value="">{{ __('dashboard.set_status') }}</option>
-                                    <option value="1">{{ __('dashboard.active') }}</option>
-                                    <option value="2">{{ __('dashboard.disactive') }}</option>
-                                </select>
-                            </div>
-                        @endcan
-                    
-                        
-                        <button type="submit" name="bulk_action_btn" value="update_status"
-                            class="btn btn-primary mt-3 mr-2">
-                            <i class="la la-refresh"></i> {{ __('dashboard.update') }}
-                        </button>
-                        @can('delete_customer') 
-                        <button type="submit" name="bulk_action_btn" value="delete"
-                            class="btn btn-danger delete_confirm mt-3 mr-2"> <i class="la la-trash"></i>
-                            {{ __('dashboard.delete') }}</button>
-                            @endcan
-                        @can('create_customer')
-                        <a href="{{ route('admin.customer.create') }}" class="btn btn-secondary mt-3 mr-2">
-                            <i class="la la-refresh"></i> {{ __('dashboard.create') }}
-                        </a> 
-                        @endcan
+
+                    {{-- فورم البحث --}}
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <form method="get" action="{{ route('admin.customer') }}">
+                                <div class="input-group">
+                                    <input type="text" name="search" class="form-control"
+                                           placeholder="Search"
+                                           value="{{ request('search') }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="la la-search"></i> Search
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+                    {{-- أدوات التحكم الجماعي --}}
+                    <form method="get" action="{{ route('admin.customer') }}">
+                        <div class="row align-items-center">
+                            @can('change_customers_status')
+                                <div class="col-md-3 mb-2">
+                                    <select name="status" class="form-control">
+                                        <option value="">{{ __('dashboard.set_status') }}</option>
+                                        <option value="1">{{ __('dashboard.active') }}</option>
+                                        <option value="2">{{ __('dashboard.disactive') }}</option>
+                                    </select>
+                                </div>
+                            @endcan
+
+                            <div class="col-md-9 d-flex justify-content-end flex-wrap">
+                                <button type="submit" name="bulk_action_btn" value="update_status"
+                                        class="btn btn-primary mr-2 mb-2">
+                                    <i class="la la-refresh"></i> {{ __('dashboard.update') }}
+                                </button>
+
+                                @can('delete_customer')
+                                    <button type="submit" name="bulk_action_btn" value="delete"
+                                            class="btn btn-danger delete_confirm mr-2 mb-2">
+                                        <i class="la la-trash"></i> {{ __('dashboard.delete') }}
+                                    </button>
+                                @endcan
+
+                                @can('create_customer')
+                                    <a href="{{ route('admin.customer.create') }}"
+                                       class="btn btn-secondary mb-2">
+                                        <i class="la la-plus"></i> {{ __('dashboard.create') }}
+                                    </a>
+                                @endcan
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
             </div>
+        </div>
+
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
@@ -92,22 +122,25 @@
                                 <td class="text-center">{{ $customer->email   }}</td>
                                 <td class="text-center">{{ $customer->phone }} </td>
                                 <td class="text-center">{{ $customer->country->nationality }} </td>
-                              
+
                                 <td class="text-center"> <span
                                         class="badge badge-pill {{ $customer->status == 'active' ? 'badge-success' : 'badge-danger' }}">{{ $customer->status }}</span>
                                 </td>
-                               
+
                                 <td class="text-center">
-                                    @can('delete_customer') 
+                                    @can('delete_customer')
                                         <a href="{{ route('admin.customer.delete', $customer->id) }}"
                                             class="btn btn-danger btn-sm" title="@lang('dashboard.delete')"><i
                                                 class="fa fa-trash"></i></a>
                                     @endcan
-                                    @can('edit_customer') 
+                                    @can('edit_customer')
                                         <a href="{{ route('admin.customer.edit', $customer->id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
                                                 class="mdi mdi-pencil"></i> </a>
                                     @endcan
+                                    <a href="{{ route('admin.customer.show', $customer->id) }}"
+                                        class="btn btn-outline-info btn-sm" title="@lang('dashboard.show')"><i
+                                     class="mdi mdi-eye"></i> </a>
                                 </td>
                             </tr>
                         @empty

@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
+
 @section('title')
     {{ __('roles.create_customer') }}
 @endsection
-@section('css')
-    {{-- <link href="{{ asset('css/tags-input.min.css') }}" rel="stylesheet"> --}}
-    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
             background-color: #dedede;
@@ -18,21 +18,19 @@
         }
     </style>
 @endsection
+
 @section('content')
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
                 <h4 class="page-title">{{ __('roles.create_customer') }}</h4>
-                <div class="d-flex align-items-center">
-
-                </div>
             </div>
             <div class="col-7 align-self-center">
-                <div class="d-flex no-block justify-content-end align-items-center">
+                <div class="d-flex justify-content-end align-items-center">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="{{ route('dashboard') }}">{{ __('dashboard.home') }} </a>
+                                <a href="{{ route('dashboard') }}">{{ __('dashboard.home') }}</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.dashboard') }}</li>
                         </ol>
@@ -42,12 +40,9 @@
         </div>
     </div>
 
-
     <div class="mb-5"></div>
+
     <div class="container-fluid">
-        <!-- ============================================================== -->
-        <!-- Start Page Content -->
-        <!-- ============================================================== -->
         <form action="{{ route('admin.customer.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
@@ -55,60 +50,47 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-
-                                <div class="col-md-6 col-lg-4 col-xl-6">
-
+                                {{-- الاسم --}}
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('roles.name') }} <span
-                                                class="text-danger">*</span></label>
-                                                <input type="text" name="name" class="form-control" id="clientName" 
-                                                oninput="validateName(this)" style="text-transform:uppercase;" />
-                                         
+                                        <label>{{ __('roles.name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control" id="clientName"
+                                            oninput="validateName(this)" style="text-transform: uppercase;">
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
+
+                                {{-- البريد الإلكتروني --}}
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('roles.email') }} </label>
+                                        <label>{{ __('roles.email') }}</label>
                                         <input type="text" name="email" class="form-control">
                                         @error('email')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-2">
+
+                                {{-- رقم الهاتف --}}
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="phone_dail_code" class="title-color">{{ __('general.dial_code') }}</label>
-                                        <select class="js-select2-custom form-control" name="phone_dial_code">
-                                            <option selected>{{ __('general.select') }}</option>
-                                            @foreach ($dail_code_main as $item_dail_code)
-                                                <option value="{{ '+' . $item_dail_code->dial_code }}">
-                                                    {{ '+' . $item_dail_code->dial_code }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-    
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-4">
-                                    <div class="form-group">
-                                        <label for="">{{ __('login.phone') }}</label>
-                                        <input type="text" name="phone" class="form-control">
-                                        @error('phone')
+                                        <label>{{ __('login.phone') }}</label>
+                                        <br>
+                                        <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">                                        @error('phone')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-6">
+
+                                {{-- الجنسية --}}
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="">{{ __('general.nationality') }} <span
-                                                class="text-danger">*</span></label>
-                                        <select name="nationality_id" class="form-control js-select2-custom ">
+                                        <label>{{ __('general.nationality') }} <span class="text-danger">*</span></label>
+                                        <select name="nationality_id" class="form-control js-select2-custom">
                                             @foreach ($countries as $countries_item)
-                                                <option value="{{ $countries_item->id }}">{{ $countries_item->name }}
-                                                </option>
+                                                <option value="{{ $countries_item->id }}">{{ $countries_item->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('nationality_id')
@@ -117,8 +99,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group mt-2"
-                                style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
+
+                            {{-- زر الحفظ --}}
+                            <div class="form-group mt-4 text-end"
+                                style="{{ Session::get('locale') == 'en' ? 'margin-right:10px' : 'margin-left:10px' }}">
                                 <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
                             </div>
                         </div>
@@ -128,17 +112,49 @@
         </form>
     </div>
 @endsection
+
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
+    <script src="{{ asset('intel/js/utils.js') }}"></script>
+
     <script>
+        // دالة التحقق من الاسم
         function validateName(input) {
-             let regex = /^[A-Za-z\s]*$/;
+            const regex = /^[A-Za-z\s]*$/;
             if (!regex.test(input.value)) {
                 input.value = input.value.replace(/[^A-Za-z\s]/g, '');
             }
-    
-             input.value = input.value.toUpperCase();
+            input.value = input.value.toUpperCase();
         }
+
+        // إعداد الهاتف الدولي
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.querySelector("#phone");
+
+            const iti = window.intlTelInput(input, {
+                nationalMode: false,
+                autoHideDialCode: false,
+                separateDialCode: false,
+                utilsScript: "{{ asset('intel/js/utils.js') }}"
+            });
+
+            input.addEventListener('input', function () {
+                const val = input.value;
+                const countryData = window.intlTelInputGlobals.getCountryData();
+
+                for (let i = 0; i < countryData.length; i++) {
+                    const code = '+' + countryData[i].dialCode;
+                    if (val.startsWith(code)) {
+                        iti.setCountry(countryData[i].iso2);
+                        break;
+                    }
+                }
+            });
+        });
+        function keepPlusSign(input) {
+    if (!input.value.startsWith("+")) {
+        input.value = "+" + input.value.replace(/[^0-9]/g, '');
+    }
+}
     </script>
-    
 @endsection

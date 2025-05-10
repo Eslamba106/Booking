@@ -46,13 +46,13 @@
                                 </select>
                             </div>
                         @endcan
-                    
-                        
+
+
                         <button type="submit" name="bulk_action_btn" value="update_status"
                             class="btn btn-primary mt-3 mr-2">
                             <i class="la la-refresh"></i> {{ __('dashboard.update') }}
                         </button>
-                        @can('delete_hotel') 
+                        @can('delete_hotel')
                         <button type="submit" name="bulk_action_btn" value="delete"
                             class="btn btn-danger delete_confirm mt-3 mr-2"> <i class="la la-trash"></i>
                             {{ __('dashboard.delete') }}</button>
@@ -60,7 +60,7 @@
                         @can('create_hotel')
                         <a href="{{ route('admin.hotel.create') }}" class="btn btn-secondary mt-3 mr-2">
                             <i class="la la-refresh"></i> {{ __('dashboard.create') }}
-                        </a> 
+                        </a>
                         @endcan
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                     <thead>
                         <tr>
                             <th><input class="bulk_check_all" type="checkbox" /></th>
-                            <th class="text-center" scope="col">{{ __('roles.name') }}</th> 
+                            <th class="text-center" scope="col">{{ __('roles.name') }}</th>
                             <th class="text-center" scope="col">@lang('general.country')</th>
                             <th class="text-center" scope="col">@lang('general.city')</th>
                             <th class="text-center" scope="col">@lang('roles.status')</th>
@@ -79,6 +79,10 @@
                     </thead>
                     <tbody>
                         @forelse ($hotels as $hotel)
+                        @php
+                            $country = $hotel->country;
+                            $city = $country
+                        @endphp
                             <tr>
                                 <th scope="row">
                                     <label>
@@ -89,19 +93,19 @@
                                 </th>
                                 <td class="text-center">{{ $hotel->name }}</td>
                                 <td class="text-center">{{ $hotel->country->name }} </td>
-                                <td class="text-center">{{ $hotel->city   }}</td> 
-                              
+                                <td class="text-center">{{ $hotel->city }} </td>
+
                                 <td class="text-center"> <span
                                         class="badge badge-pill {{ $hotel->status == 'active' ? 'badge-success' : 'badge-danger' }}">{{ $hotel->status }}</span>
                                 </td>
-                               
+
                                 <td class="text-center">
-                                    @can('delete_hotel') 
+                                    @can('delete_hotel')
                                         <a href="{{ route('admin.hotel.delete', $hotel->id) }}"
                                             class="btn btn-danger btn-sm" title="@lang('dashboard.delete')"><i
                                                 class="fa fa-trash"></i></a>
                                     @endcan
-                                    @can('edit_hotel') 
+                                    @can('edit_hotel')
                                         <a href="{{ route('admin.hotel.edit', $hotel->id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
                                                 class="mdi mdi-pencil"></i> </a>

@@ -77,6 +77,38 @@
                                         </a>
                                     </li>
                                 @endcan
+                                {{-- @can('all_meal') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('meal.index') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">All Meals</span>
+                                        </a>
+                                    </li>
+                                {{-- @endcan --}}
+                                {{-- @can('create_meal') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('meal.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">create meal</span>
+                                        </a>
+                                    </li>
+                                {{-- @endcan --}}
+                                {{-- @can('cancel_periods') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('cancel.index') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">ALL Canecelation</span>
+                                        </a>
+                                    </li>
+                                {{-- @endcan --}}
+                                {{-- @can('create_cancel_periods') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('cancel.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">Ceate Cancel Period</span>
+                                        </a>
+                                    </li>
+                                {{-- @endcan --}}
                             </ul>
                         @endcan
                     </li>
