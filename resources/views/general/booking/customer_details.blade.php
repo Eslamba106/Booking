@@ -30,7 +30,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3">
-
+                                    <input type="hidden" name="user_id" value="{{auth()->id()}}">
                                     <div class="form-group">
                                         <label for="">{{ __('booking.check_in_date') }} <span
                                                 class="text-danger">*</span></label>

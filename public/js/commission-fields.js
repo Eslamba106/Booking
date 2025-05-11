@@ -1,27 +1,37 @@
 function toggleCommissionFields() {
-    var commission = document.querySelector('input[name="commission"]:checked')?.value;
-    var commissionType = document.getElementById('commission_type').value;
+    let commission = $('#commission').val();
+    let type = $('#commission_type').val();
 
-    if (commission === "yes") {
-        document.querySelector('.commission_html').style.display = 'block';
-        if (commissionType === "percentage") {
-            document.querySelector('.percentage_html').style.display = 'block';
-            document.querySelector('.night_html').style.display = 'none';
-        } else {
-            document.querySelector('.night_html').style.display = 'block';
-            document.querySelector('.percentage_html').style.display = 'none';
-        }
+    if (commission === 'yes') {
+        $('.commission_html').show();
     } else {
-        document.querySelector('.commission_html').style.display = 'none';
-        document.querySelector('.percentage_html').style.display = 'none';
-        document.querySelector('.night_html').style.display = 'none';
+        $('.commission_html').hide();
+        $('.percentage_html').hide();
+        $('.night_html').hide();
+    }
+
+    if (type === 'percentage') {
+        $('.percentage_html').show();
+        $('.night_html').hide();
+    } else if (type === 'night') {
+        $('.night_html').show();
+        $('.percentage_html').hide();
+    } else {
+        $('.percentage_html, .night_html').hide();
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('input[name="commission"]').forEach(el => {
-        el.addEventListener("change", toggleCommissionFields);
+$(document).ready(function() {
+    $('.commission_html, .percentage_html, .night_html').hide();
+    $('#commission, #commission_type').on('change', toggleCommissionFields);
+});
+$(document).ready(function() {
+    $('.broker_html').hide();
+    $('#has_broker').on('change', function() {
+        if ($(this).val() === 'yes') {
+            $('.broker_html').show();
+        } else {
+            $('.broker_html').hide();
+        }
     });
-    document.querySelector('input[name="commission"]:checked')?.dispatchEvent(new Event('change'));
-    toggleCommissionFields();
 });

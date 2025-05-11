@@ -16,7 +16,7 @@ class Booking extends Model
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);
-    } 
+    }
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -28,6 +28,10 @@ class Booking extends Model
     public function booking_unit()
     {
         return $this->hasOne(BookingUnits::class);
+    }
+
+    public function user(){
+       return $this->belongsTo(User::class);
     }
 
 }

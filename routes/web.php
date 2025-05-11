@@ -166,3 +166,4 @@ Route::group(['prefix' => 'settings'], function () {
  Route::resource('meal', MealController::class);
  Route::resource('cancel', CancelController::class);
  Route::get('/get-cities/{country}', [LocationController::class, 'getCities']);
+ Route::get('/booking/{id}/voucher-pdf', [BookingController::class, 'generateVoucherPdf'])->name('booking.voucher.pdf');

@@ -5,12 +5,14 @@ document.addEventListener('DOMContentLoaded', function () {
         nationalMode: false,
         autoHideDialCode: false,
         separateDialCode: false,
-        utilsScript: "{{ asset('intel/js/utils.js') }}"
+        utilsScript: "{{ asset('intel/js/utils.js') }}"  // تأكد من المسار الصحيح
     });
 
+    // تحديث العلم يدويًا عند كتابة كود الدولة
     input.addEventListener('input', function () {
         const val = input.value;
         const countryData = window.intlTelInputGlobals.getCountryData();
+
         for (let i = 0; i < countryData.length; i++) {
             const code = '+' + countryData[i].dialCode;
             if (val.startsWith(code)) {
@@ -20,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
 function keepPlusSign(input) {
     if (!input.value.startsWith("+")) {
         input.value = "+" + input.value.replace(/[^0-9]/g, '');

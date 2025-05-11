@@ -27,3 +27,20 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(id).addEventListener("input", updateTotal);
     });
 });
+function checkCurrencyMatch() {
+    const buyCurrency = document.querySelector('input[name="currency_buy"]:checked').value;
+    const saleCurrency = document.querySelector('input[name="currency"]:checked').value;
+
+    const errorSpan = document.getElementById('currency-error');
+
+    if (buyCurrency !== saleCurrency) {
+        errorSpan.classList.remove('d-none');
+    } else {
+        errorSpan.classList.add('d-none');
+    }
+}
+
+// في حال تغيّر العملة، نفذ التحقق أيضاً
+document.querySelectorAll('input[name="currency_buy"], input[name="currency"]').forEach((input) => {
+    input.addEventListener('change', checkCurrencyMatch);
+});

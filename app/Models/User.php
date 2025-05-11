@@ -65,6 +65,9 @@ class User extends Authenticatable
     {
         $builder->where('status', 'active');
     }
- 
+
+    public function bookings(){
+        return $this->hasMany(Booking::class);
+    }
 
 }

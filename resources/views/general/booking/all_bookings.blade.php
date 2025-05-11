@@ -116,6 +116,10 @@
                                         <a href="{{ route('admin.booking.cancel', $booking->id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')">{{ __('dashboard.cancel') }} </a>
                                     @endcan
+                                    @can('edit_booking')
+                                        <a href="{{ route('booking.voucher.pdf', $booking->id) }}"
+                                            class="btn btn-outline-info btn-sm" title="@lang('PDF')">{{ __('PDF') }} </a>
+                                    @endcan
 
                                         <a href="{{ route('admin.customer.show', $booking->customer_id) }}"
                                             class="btn btn-outline-info btn-sm" title="@lang('dashboard.show')"><i

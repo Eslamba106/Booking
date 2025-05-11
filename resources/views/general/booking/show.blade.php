@@ -1,227 +1,98 @@
 @extends('layouts.dashboard')
 @section('title')
-<?php $lang = Session::get('locale'); ?>
     {{ __('roles.booking_management') }}
 @endsection
 
 @section('content')
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h4>{{ __('booking.booking_details') }}</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <!-- Customer Name -->
-                <div class="col-md-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
-                        <label>{{ __('booking.customer_name') }}</label>
-                        <input type="text" value="{{ $booking->customer->name }}" class="form-control" readonly>
-                    </div>
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 13px; color: #003b3b; line-height: 1.5; }
+        .voucher-container { width: 100%; padding: 30px; }
+        .header, .footer { text-align: center; }
+        .header img { height: 60px; }
+        .title { text-align: center; margin: 20px 0; font-size: 20px; font-weight: bold; }
+        .row-flex { display: flex; justify-content: space-between; margin-top: 20px; font-size: 12px; }
+        .info-table { width: 100%; margin: 20px 0; border-collapse: collapse; }
+        .info-table td { padding: 6px 10px; vertical-align: top; }
+        .divider { border-top: 1px solid #000; margin: 20px 0; }
+        .hotel-address { text-align: center; font-weight: bold; margin-top: 30px; }
+        .contact { font-size: 11px; text-align: center; margin-top: 15px; }
+    </style>
+
+    <div class="voucher-container">
+        <!-- Header -->
+        <div class="header">
+            <img src="{{ public_path('images/logo.png') }}" alt="Company Logo">
+            <div class="row-flex">
+                <div>
+                    <strong>Guest Name:</strong> {{ $booking->customer->name }}<br>
+                    <strong>Phone:</strong> {{ $booking->customer->phone ?? '---' }}<br>
+                    <strong>Email:</strong> {{ $booking->customer->email ?? '---' }}
                 </div>
-
-                <!-- Arrival Date -->
-                <div class="col-md-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
-                        <label>{{ __('booking.check_in_date') }}</label>
-                        <input type="text" value="{{ $booking->arrival_date }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Check-Out Date -->
-                <div class="col-md-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
-                        <label>{{ __('booking.check_out_date') }}</label>
-                        <input type="text" value="{{ $booking->check_out_date }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Days Count -->
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="form-group">
-                        <label>{{ __('booking.days_count') }}</label>
-                        <input type="text" value="{{ $booking->days_count }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Cancellation Period -->
-                <div class="col-md-6 col-lg-4 col-xl-3">
-                    <div class="form-group">
-                        <label>{{ __('booking.cancellation_period') }}</label>
-                        <input type="text" value="{{ $booking->canceled_period }}" class="form-control" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <h4>{{ __('booking.guest_details') }}</h4>
-            <div class="row">
-                <!-- Number of Adults -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.number_of_adults') }}</label>
-                        <input type="text" value="{{ $booking->booking_details->adults_count }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Number of Children -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.number_of_children') }}</label>
-                        <input type="text" value="{{ $booking->booking_details->childerns_count }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Number of Infants -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.number_of_infants') }}</label>
-                        <input type="text" value="{{ $booking->booking_details->babes_count }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Total Person Count -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.total_person_count') }}</label>
-                        <input type="text" value="{{ $booking->booking_details->total_person_count }}" class="form-control" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <h4>{{ __('booking.hotel_details') }}</h4>
-            <div class="row">
-                <!-- Hotel -->
-                <div class="col-md-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
-                        <label>{{ __('general.hotel') }}</label>
-                        <input type="text" value="{{ $booking->hotel->name }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Country -->
-                <div class="col-md-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
-                        <label>{{ __('general.country') }}</label>
-                        <input type="text" value="{{ $booking->hotel->country->name }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- City -->
-                <div class="col-md-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
-                        <label>{{ __('general.city') }}</label>
-                        <input type="text" value="{{ $booking->hotel->city }}" class="form-control" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <hr>
-
-            <h4>{{ __('booking.finance_details') }}</h4>
-            <div class="row">
-                <!-- Buy Price -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.buy_price') }}</label>
-                        <input type="text" value="{{ $booking->buy_price }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Sale Price -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.sale_price') }}</label>
-                        <input type="text" value="{{ $booking->price }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Currency -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.currency') }}</label>
-                        <input type="text" value="{{ $booking->currency }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Commission -->
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.commission') }}</label>
-                        <input type="text" value="{{ $booking->commission == 'yes' ? __('booking.yes') : __('booking.no') }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Commission Percentage -->
-                <div class="col-md-6 col-lg-4 col-xl-6 commission_html percentage_html">
-                    <div class="form-group">
-                        <label>{{ __('booking.commission_percentage') }}</label>
-                        <input type="text" value="{{ $booking->commission_percentage }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-                <!-- Commission Night -->
-                <div class="col-md-6 col-lg-4 col-xl-6 commission_html night_html">
-                    <div class="form-group">
-                        <label>{{ __('booking.days_count') }}</label>
-                        <input type="text" value="{{ $booking->commission_night }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-
-            <!-- Broker -->
-            <div class="col-md-6 col-lg-4 col-xl-6 broker_html">
-                <div class="form-group">
-                    <label>{{ __('booking.broker') }}</label>
-                    <input type="text" value="{{ $booking->broker_id ? 'yes' : 'no' }}" class="form-control" readonly>
-                </div>
-            </div>
-
-            <!-- Broker Name -->
-            <div class="col-md-6 col-lg-4 col-xl-6 broker_html">
-                <div class="form-group">
-                    <label>{{ __('booking.broker_name') }} <span class="text-danger">*</span></label>
-
-
-                            <input type="text" value="{{  $brokers ? $brokers->name : ''}}" class="form-control" readonly>
-
-
-
-
-                </div>
-            </div>
-
-            <!-- Broker Amount -->
-            <div class="col-md-6 col-lg-4 col-xl-6 broker_html">
-                <div class="form-group">
-                    <label>{{ __('booking.broker_amount') }}</label>
-                    <input type="number" name="broker_amount" value="{{ $booking->broker_amount }}" class="form-control" readonly>
-                </div>
-            </div>
-
-            <hr>
-
-            <!-- Total -->
-
-                <div class="col-md-6 col-lg-4 col-xl-6">
-                    <div class="form-group">
-                        <label>{{ __('booking.total') }}</label>
-                        <input type="number" value="{{ $booking->total }}" class="form-control" readonly>
-                    </div>
-                </div>
-
-
-            <div class="col-md-6 col-lg-4 col-xl-6">
-                <div class="form-group">
-                    <label for="">{{ __('booking.earn') }} </label>
-                    <input type="number" name="earn" class="form-control"  value="{{ $booking->earned }}"  readonly>
-
+                <div style="text-align: right;">
+                    <strong>Date:</strong> {{ \Carbon\Carbon::now()->format('F d, Y') }}<br>
+                    <strong>Booking Date:</strong> {{ $booking->created_at->format('F d, Y') }}<br>
+                    <strong>Supplier name:</strong> {{ $booking->user->name }}<br>
+                    <strong>Ref No.:</strong> {{ $booking->booking_no }}
                 </div>
             </div>
         </div>
+
+        <!-- Title -->
+        <div class="title">HOTEL VOUCHER</div>
+        <div class="divider"></div>
+
+        <!-- Booking Info -->
+        <table class="info-table">
+            <tr>
+                <td><strong>Hotel:</strong> {{ $booking->hotel->name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Room Type:</strong> {{ $booking->hotel->unit_types->pluck('name')->join(', ') }}</td>
+            </tr>
+            <tr>
+                <td><strong>Check-in Date:</strong> {{ $booking->arrival_date }}</td>
+                <td><strong>Check-in Date:</strong> {{ $booking->check_out_date }}</td>
+            </tr>
+            <tr>
+                <td><strong>Nights:</strong> {{ $booking->days_count }}</td>
+                <td><strong>Right to Cancelation:</strong> {{ $booking->canceled_period }}</td>
+            </tr>
+            <tr>
+                <td><strong>No. of Room(s):</strong> {{ $booking->booking_details->units_count }}</td>
+            </tr>
+            <tr>
+                <td><strong>Confirmation No.:</strong> {{ $booking->booking_no }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Special Request:</strong> {{ $booking->special_request ?? '---' }}</td>
+            </tr>
+        </table>
+
+        <div class="divider"></div>
+
+        <!-- Hotel Address -->
+        <div class="hotel-address">
+            HOTEL ADDRESS:<br>
+            {{ $booking->hotel->country->name ?? '---' }},
+            {{ $booking->hotel->city ?? '---' }}<br>
+            PHONE: {{ $booking->hotel->phone ?? '---' }}
+        </div>
+
+        <!-- Footer -->
+        <div class="contact">
+            <p>hello@endlesstravels.com | www.endlesstravels.me</p>
+            <p>+965 22 0 22 555 | @endlesstravels.me</p>
+
+        </div>
+        <div class="row-flex" style="text-align: right;">
+            <a href="{{ route('admin.booking', $booking->id) }}"
+                class="btn btn-primary" title="@lang('download')">{{ __('Back') }} </a>
+                <a href="{{ route('booking.voucher.pdf', $booking->id) }}"
+                    class="btn btn-primary" title="@lang('download')">{{ __(' Download PDF') }} </a>
+        </div>
+
     </div>
-</div>
+
+
+
 @endsection

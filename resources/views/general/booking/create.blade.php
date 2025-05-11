@@ -9,6 +9,10 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <!-- Link to Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJzQd5R2E4v6l3mY7E3B1s6cS2rC0vN1OiwVwC0Fjz5Vc6T9Frr2bWvnm+2T" crossorigin="anonymous">
+
+<!-- Link to Bootstrap 5 JS (Optional, for JavaScript components) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0hXr8rxzNkdyh0I7l2zH2Lz7g/ti1Hpc5OgPUb5fX38pkhB4" crossorigin="anonymous"></script>
 
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -327,7 +331,7 @@ input[name="canceled_period"] {
                                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                                     <div class="form-group">
                                                         <label for="">{{ __('login.phone') }}</label>
-
+                                                        <br>
                                                         <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">
                                                         @error('phone')
                                                             <span class="error text-danger">{{ $message }}</span>
@@ -449,9 +453,7 @@ input[name="canceled_period"] {
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.city') }} <span
                                                                 class="text-danger">*</span></label>
-                                                                <select name="city" class="form-control" id="city_select">
-                                                                    <option value="">{{ __('select city') }}</option>
-                                                                </select>
+                                                        <input type="text" name="city" class="form-control">
                                                         @error('city')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -492,36 +494,41 @@ input[name="canceled_period"] {
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
     <script>
-        let currentStep = 0;
-        const steps = document.querySelectorAll('.step');
+       document.addEventListener('DOMContentLoaded', function () {
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+
+    function showStep(n) {
+        steps.forEach((step, i) => step.style.display = i === n ? 'block' : 'none');
+        document.getElementById('prevBtn').style.display = n === 0 ? 'none' : 'inline-block';
+        document.getElementById('nextBtn').style.display = n === steps.length - 1 ? 'none' : 'inline-block';
+        document.getElementById('submitBtn').classList.toggle('d-none', n !== steps.length - 1);
+    }
+
+    function validateStep() {
+        const inputs = steps[currentStep].querySelectorAll('input, select, textarea');
+        let valid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.classList.add('is-invalid');
+                valid = false;
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+        return valid;
+    }
+
+    window.nextPrev = function(n) {
+        if (n === 1 && !validateStep()) return;
+        currentStep += n;
         showStep(currentStep);
+    }
 
-        function showStep(n) {
-            steps.forEach((step, i) => step.style.display = i === n ? 'block' : 'none');
-            document.getElementById('prevBtn').style.display = n === 0 ? 'none' : 'inline-block';
-            document.getElementById('nextBtn').style.display = n === steps.length - 1 ? 'none' : 'inline-block';
-            document.getElementById('submitBtn').classList.toggle('d-none', n !== steps.length - 1);
-        }
+    showStep(currentStep);
+});
 
-        function nextPrev(n) {
-            if (n === 1 && !validateStep()) return;
-            currentStep += n;
-            showStep(currentStep);
-        }
 
-        function validateStep() {
-            const inputs = steps[currentStep].querySelectorAll('input, select, textarea');
-            let valid = true;
-            inputs.forEach(input => {
-                if (!input.checkValidity()) {
-                    input.classList.add('is-invalid');
-                    valid = false;
-                } else {
-                    input.classList.remove('is-invalid');
-                }
-            });
-            return valid;
-        }
     </script>
     <script>
         function calculate_earn() {
@@ -800,46 +807,24 @@ toggleCommissionFields();
 
 </script>
 <script>
-    $(document).ready(function () {
-        $('#country_select').on('change', function () {
-            var countryId = $(this).val();
-            if (countryId) {
-                $.ajax({
-                    url: '/get-cities/' + countryId,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
-                        $.each(data, function (key, value) {
-                            $('#city_select').append('<option value="' + value.name + '">' + value.name + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
-            }
-        });
-    });
-</script>
-<script>
+
     function checkCurrencyMatch() {
         const buyCurrency = document.querySelector('input[name="currency_buy"]:checked').value;
-        const saleCurrency = document.querySelector('input[name="currency"]:checked').value;
+    const saleCurrency = document.querySelector('input[name="currency"]:checked').value;
 
-        const errorSpan = document.getElementById('currency-error');
+    const errorSpan = document.getElementById('currency-error');
 
-        if (buyCurrency !== saleCurrency) {
-            errorSpan.classList.remove('d-none');
-        } else {
-            errorSpan.classList.add('d-none');
-        }
+    if (buyCurrency !== saleCurrency) {
+        errorSpan.classList.remove('d-none');
+    } else {
+        errorSpan.classList.add('d-none');
     }
+}
 
-    // في حال تغيّر العملة، نفذ التحقق أيضاً
-    document.querySelectorAll('input[name="currency_buy"], input[name="currency"]').forEach((input) => {
-        input.addEventListener('change', checkCurrencyMatch);
-    });
+// في حال تغيّر العملة، نفذ التحقق أيضاً
+document.querySelectorAll('input[name="currency_buy"], input[name="currency"]').forEach((input) => {
+    input.addEventListener('change', checkCurrencyMatch);
+});
+
 </script>
-
-
 @endsection

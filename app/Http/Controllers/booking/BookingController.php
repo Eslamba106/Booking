@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Cancelation;
 use App\Models\Meals;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -115,8 +117,8 @@ class BookingController extends Controller
     public function create()
     {
         $this->authorize('create_hotel');
-        $cancels = Cancelation::all();
-        $meals = Meals::all();
+        $cancels = Cancelation::select('period')->get();
+        $meals = Meals::select('name')->get();
         $hotels = Hotel::select('id', 'name')->with('unit_types')->get();
         $unit_types = UnitType::select('id', 'name')->get();
         $brokers = Broker::select('id', 'name')->get();
@@ -166,6 +168,7 @@ class BookingController extends Controller
             ]);
             $booking = Booking::create([
                 'customer_id' => $request->customer_id,
+                'user_id' => auth()->id(),
                 'arrival_date' => $request->arrival_date,
                 'check_out_date' => $request->check_out_date,
                 'days_count' => $request->days_count,
@@ -250,6 +253,7 @@ class BookingController extends Controller
 
             $booking->update([
                 'customer_id' => $request->customer_id,
+                'user_id' => auth()->id(),
                 'arrival_date' => $request->arrival_date,
                 'check_out_date' => $request->check_out_date,
                 'days_count' => $request->days_count,
@@ -287,7 +291,7 @@ class BookingController extends Controller
                 'price' => $request->price,
                 'currency' => $request->currency,
             ]);
-
+            dd($booking);
             DB::commit();
             return redirect()->route('admin.booking')->with('success', __('general.updated_successfully'));
 
@@ -326,6 +330,14 @@ class BookingController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+    public function generateVoucherPdf($id)
+{
+    $booking = Booking::with('hotel.unit_types', 'customer', 'booking_details')->find($id);
+
+    $pdf = Pdf::loadView('general.booking.voucher_pdf', compact('booking'));
+
+    return $pdf->download('hotel-voucher-' . $booking->id . '.pdf');
+}
     public function get_country($id)
     {
         $this->authorize('create_booking');

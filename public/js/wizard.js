@@ -1,3 +1,4 @@
+
 let currentStep = 0;
 const steps = document.querySelectorAll('.step');
 showStep(currentStep);
