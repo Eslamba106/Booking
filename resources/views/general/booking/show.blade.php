@@ -1,98 +1,265 @@
 @extends('layouts.dashboard')
 @section('title')
-    {{ __('roles.booking_management') }}
+    {{ __('Booking Details') }}
 @endsection
 
 @section('content')
-    <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 13px; color: #003b3b; line-height: 1.5; }
-        .voucher-container { width: 100%; padding: 30px; }
-        .header, .footer { text-align: center; }
-        .header img { height: 60px; }
-        .title { text-align: center; margin: 20px 0; font-size: 20px; font-weight: bold; }
-        .row-flex { display: flex; justify-content: space-between; margin-top: 20px; font-size: 12px; }
-        .info-table { width: 100%; margin: 20px 0; border-collapse: collapse; }
-        .info-table td { padding: 6px 10px; vertical-align: top; }
-        .divider { border-top: 1px solid #000; margin: 20px 0; }
-        .hotel-address { text-align: center; font-weight: bold; margin-top: 30px; }
-        .contact { font-size: 11px; text-align: center; margin-top: 15px; }
-    </style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                <h4 class="mb-sm-0">Booking Details #{{ $booking->booking_no }}</h4>
 
-    <div class="voucher-container">
-        <!-- Header -->
-        <div class="header">
-            <img src="{{ public_path('images/logo.png') }}" alt="Company Logo">
-            <div class="row-flex">
-                <div>
-                    <strong>Guest Name:</strong> {{ $booking->customer->name }}<br>
-                    <strong>Phone:</strong> {{ $booking->customer->phone ?? '---' }}<br>
-                    <strong>Email:</strong> {{ $booking->customer->email ?? '---' }}
+                <div class="page-title-right">
+                    <a href="{{ route('admin.booking') }}" class="btn btn-secondary">
+                        <i class="ri-arrow-left-line align-bottom me-1"></i> Back to List
+                    </a>
                 </div>
-                <div style="text-align: right;">
-                    <strong>Date:</strong> {{ \Carbon\Carbon::now()->format('F d, Y') }}<br>
-                    <strong>Booking Date:</strong> {{ $booking->created_at->format('F d, Y') }}<br>
-                    <strong>Supplier name:</strong> {{ $booking->user->name }}<br>
-                    <strong>Ref No.:</strong> {{ $booking->booking_no }}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Booking Info -->
+        <div class="col-lg-6">
+
+
+            <div class="card">
+                <div class="card-header bg-primary bg-opacity-10 border-bottom border-primary border-opacity-25">
+
+                    <h5 class="card-title mb-0 text-primary"><i class="ri-hotel-line align-middle me-2"></i><h4 class="mb-0">{{ __('booking.booking_details') }}</h4></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="40%">Customer:</th>
+                                    <td>{{ $booking->customer->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Arrival Date:</th>
+                                    <td>{{ date('d M Y', strtotime($booking->arrival_date)) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Check-out Date:</th>
+                                    <td>{{ date('d M Y', strtotime($booking->check_out_date)) }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Duration:</th>
+                                    <td>{{ $booking->days_count }} days</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Price:</th>
+                                    <td>{{ number_format($booking->price, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>
+                                        <span class="badge bg-{{ $booking->status == 'confirmed' ? 'success' : 'warning' }}">
+                                            {{ ucfirst($booking->status) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Title -->
-        <div class="title">HOTEL VOUCHER</div>
-        <div class="divider"></div>
-
-        <!-- Booking Info -->
-        <table class="info-table">
-            <tr>
-                <td><strong>Hotel:</strong> {{ $booking->hotel->name }}</td>
-            </tr>
-            <tr>
-                <td><strong>Room Type:</strong> {{ $booking->hotel->unit_types->pluck('name')->join(', ') }}</td>
-            </tr>
-            <tr>
-                <td><strong>Check-in Date:</strong> {{ $booking->arrival_date }}</td>
-                <td><strong>Check-in Date:</strong> {{ $booking->check_out_date }}</td>
-            </tr>
-            <tr>
-                <td><strong>Nights:</strong> {{ $booking->days_count }}</td>
-                <td><strong>Right to Cancelation:</strong> {{ $booking->canceled_period }}</td>
-            </tr>
-            <tr>
-                <td><strong>No. of Room(s):</strong> {{ $booking->booking_details->units_count }}</td>
-            </tr>
-            <tr>
-                <td><strong>Confirmation No.:</strong> {{ $booking->booking_no }}</td>
-            </tr>
-            <tr>
-                <td colspan="2"><strong>Special Request:</strong> {{ $booking->special_request ?? '---' }}</td>
-            </tr>
-        </table>
-
-        <div class="divider"></div>
-
-        <!-- Hotel Address -->
-        <div class="hotel-address">
-            HOTEL ADDRESS:<br>
-            {{ $booking->hotel->country->name ?? '---' }},
-            {{ $booking->hotel->city ?? '---' }}<br>
-            PHONE: {{ $booking->hotel->phone ?? '---' }}
+        <!-- Guest Details -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-info bg-opacity-10 border-bottom border-info border-opacity-25">
+                    <h5 class="card-title mb-0 text-info"><i class="ri-group-line align-middle me-2"></i><h4 class="mb-0">{{ __('Guest Details') }}</h4></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="40%">Adults:</th>
+                                    <td>{{ $booking->booking_details->adults_count ?? 0 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Children:</th>
+                                    <td>{{ $booking->booking_details->childerns_count ?? 0 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Infants:</th>
+                                    <td>{{ $booking->booking_details->babes_count ?? 0 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Guests:</th>
+                                    <td>{{ $booking->booking_details->total_person_count ?? 0 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Footer -->
-        <div class="contact">
-            <p>hello@endlesstravels.com | www.endlesstravels.me</p>
-            <p>+965 22 0 22 555 | @endlesstravels.me</p>
-
-        </div>
-        <div class="row-flex" style="text-align: right;">
-            <a href="{{ route('admin.booking', $booking->id) }}"
-                class="btn btn-primary" title="@lang('download')">{{ __('Back') }} </a>
-                <a href="{{ route('booking.voucher.pdf', $booking->id) }}"
-                    class="btn btn-primary" title="@lang('download')">{{ __(' Download PDF') }} </a>
-        </div>
-
     </div>
 
+    <div class="row mt-3">
+        <!-- Hotel & Unit Info -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-success bg-opacity-10 border-bottom border-success border-opacity-25">
+                    <h5 class="card-title mb-0 text-success"><i class="ri-building-line align-middle me-2"></i> <h4 class="mb-0">{{ __('Hotel & Unit Information') }}</h4></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="40%">Hotel:</th>
+                                    <td>{{ $booking->hotel->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Unit Type:</th>
+                                    <td>{{ $booking->booking_unit->unit_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Meal Plan:</th>
+                                    <td>{{ $booking->booking_details->food_type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Number of Units:</th>
+                                    <td>{{ $booking->booking_details->units_count ?? 1 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Additional Services -->
+        @if($booking->service)
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header bg-warning bg-opacity-10 border-bottom border-warning border-opacity-25">
+                    <h5 class="card-title mb-0 text-warning"><i class="ri-service-line align-middle me-2"></i> <h4 class="mb-0">{{ __('Additional Services') }}</h4></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="40%">Service:</th>
+                                    <td>{{ $booking->service->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Quantity:</th>
+                                    <td>{{ $booking->service->qyt }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Price:</th>
+                                    <td>{{ number_format($booking->service->price, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+    </div>
 
+    <!-- Financial Summary -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-purple bg-opacity-10 border-bottom border-purple border-opacity-25">
+                    <h5 class="card-title mb-0 text-purple"><i class="ri-money-dollar-circle-line align-middle me-2"></i> <h4 class="mb-0">{{ __('Financial Summary') }}</h4></h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <th width="30%">Subtotal:</th>
+                                    <td>{{ number_format($booking->sub_total, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Commission ({{ $booking->commission_type }}):</th>
+                                    <td>{{ number_format($booking->commission_amount, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Broker Amount:</th>
+                                    <td>{{ number_format($booking->broker_amount, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total Earned:</th>
+                                    <td>{{ number_format($booking->earned, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                                <tr class="fw-bold">
+                                    <th>Grand Total:</th>
+                                    <td>{{ number_format($booking->total, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ route('admin.booking.edit', $booking->id) }}" class="btn btn-warning">
+                    <i class="ri-edit-line align-bottom me-1"></i> Edit Booking
+                </a>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                    <i class="ri-close-circle-line align-bottom me-1"></i> Cancel Booking
+                </button>
+                {{-- <a href="{{ route('admin.booking.invoice', $booking->id) }}" class="btn btn-info">
+                    <i class="ri-file-text-line align-bottom me-1"></i> Generate Invoice
+                </a> --}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Booking Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Confirm Cancellation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cancel this booking? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="{{ route('admin.booking.cancel', $booking->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('styles')
+<style>
+    .card-header {
+        padding: 0.75rem 1.25rem;
+    }
+    .table th {
+        font-weight: 600;
+        color: #495057;
+    }
+    .table td {
+        color: #6c757d;
+    }
+</style>
+@endpush

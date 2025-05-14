@@ -9,10 +9,6 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <!-- Link to Bootstrap 5 CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJzQd5R2E4v6l3mY7E3B1s6cS2rC0vN1OiwVwC0Fjz5Vc6T9Frr2bWvnm+2T" crossorigin="anonymous">
-
-<!-- Link to Bootstrap 5 JS (Optional, for JavaScript components) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0hXr8rxzNkdyh0I7l2zH2Lz7g/ti1Hpc5OgPUb5fX38pkhB4" crossorigin="anonymous"></script>
 
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -758,7 +754,7 @@ input[name="canceled_period"] {
         nationalMode: false,
         autoHideDialCode: false,
         separateDialCode: false,
-        utilsScript: "{{ asset('intel/js/utils.js') }}"  // تأكد من المسار الصحيح
+        utilsScript: "{{ asset('intel/js/utils.js') }}" // تأكد من المسار الصحيح
     });
 
     // تحديث العلم يدويًا عند كتابة كود الدولة

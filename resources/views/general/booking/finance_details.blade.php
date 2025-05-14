@@ -198,7 +198,7 @@
                                         @enderror
                                     </div>
                                 </div>
-
+                     </div>
                                 <div class="form-group">
                                     <label>{{ __('Price') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="service_price" class="form-control" id="price" />

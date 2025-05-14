@@ -22,31 +22,93 @@ use Illuminate\Support\Facades\Auth;
 class BookingController extends Controller
 {
     use AuthorizesRequests;
+    // public function index(Request $request)
+    // {
+
+    //     $this->authorize('booking_management');
+
+
+    //     $ids = $request->bulk_ids;
+    //     $now = Carbon::now()->toDateTimeString();
+    //     if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($ids) && count($ids)) {
+    //         $data = ['status' => $request->status];
+    //         $this->authorize('change_bookings_status');
+
+    //         Booking::whereIn('id', $ids)->update($data);
+    //         return back()->with('success', __('general.updated_successfully'));
+    //     }
+    //     if ($request->bulk_action_btn === 'delete' &&  is_array($ids) && count($ids)) {
+
+
+    //         Booking::whereIn('id', $ids)->delete();
+    //         return back()->with('success', __('general.deleted_successfully'));
+    //     }
+
+    //     $bookings = Booking::orderBy("created_at", "desc")->paginate(10);
+    //     return view("general.booking.all_bookings", compact("bookings"));
+    // }
     public function index(Request $request)
-    {
+{
+    $this->authorize('booking_management');
 
-        $this->authorize('booking_management');
+    $query = Booking::query()->with(['customer', 'hotel']);
 
-
-        $ids = $request->bulk_ids;
-        $now = Carbon::now()->toDateTimeString();
-        if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($ids) && count($ids)) {
-            $data = ['status' => $request->status];
-            $this->authorize('change_bookings_status');
-
-            Booking::whereIn('id', $ids)->update($data);
-            return back()->with('success', __('general.updated_successfully'));
-        }
-        if ($request->bulk_action_btn === 'delete' &&  is_array($ids) && count($ids)) {
-
-
-            Booking::whereIn('id', $ids)->delete();
-            return back()->with('success', __('general.deleted_successfully'));
-        }
-
-        $bookings = Booking::orderBy("created_at", "desc")->paginate(10);
-        return view("general.booking.all_bookings", compact("bookings"));
+    // تطبيق الفلاتر
+    if ($request->has('status') && $request->status != '') {
+        $query->where('status', $request->status);
     }
+
+    if ($request->has('date_range') && $request->date_range != '') {
+        $today = Carbon::today();
+
+        switch($request->date_range) {
+            case 'today':
+                $query->whereDate('arrival_date', $today);
+                break;
+            case 'this_week':
+                $query->whereBetween('arrival_date', [
+                    $today->startOfWeek(),
+                    $today->endOfWeek()
+                ]);
+                break;
+            case 'this_month':
+                $query->whereBetween('arrival_date', [
+                    $today->startOfMonth(),
+                    $today->endOfMonth()
+                ]);
+                break;
+            case 'next_month':
+                $query->whereBetween('arrival_date', [
+                    $today->addMonth()->startOfMonth(),
+                    $today->addMonth()->endOfMonth()
+                ]);
+                break;
+        }
+    }
+
+    if ($request->has('customer') && $request->customer != '') {
+        $query->whereHas('customer', function($q) use ($request) {
+            $q->where('name', 'like', '%'.$request->customer.'%');
+        });
+    }
+
+    // Bulk Actions
+    if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($request->bulk_ids) && count($request->bulk_ids)) {
+        $this->authorize('change_bookings_status');
+        Booking::whereIn('id', $request->bulk_ids)->update(['status' => $request->status]);
+        return back()->with('success', __('general.updated_successfully'));
+    }
+
+    if ($request->bulk_action_btn === 'delete' && is_array($request->bulk_ids) && count($request->bulk_ids)) {
+        $this->authorize('delete_booking');
+        Booking::whereIn('id', $request->bulk_ids)->delete();
+        return back()->with('success', __('general.deleted_successfully'));
+    }
+
+    $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    return view("general.booking.all_bookings", compact("bookings"));
+}
     public function live_booking(Request $request)
     {
 
@@ -351,4 +413,55 @@ class BookingController extends Controller
         // $country = Countries::where('id', $id)->select('id' , 'name')->first();
         return response()->json($hotel);
     }
+
+public function bulkAction(Request $request)
+{
+    // تحقق من صلاحية المستخدم
+    if (!auth()->user()->can('change_bookings_status') && !auth()->user()->can('delete_bookings')) {
+        abort(403, __('unauthorized_action'));
+    }
+
+    // جلب البيانات من الفورم
+    $action = $request->input('bulk_action');
+    $ids = $request->input('bulk_ids', []);
+
+    // تأكد من أن هناك حجوزات محددة
+    if (empty($ids)) {
+        return redirect()->back()->with('error', __('no_bookings_selected'));
+    }
+
+    // تحديث الحالة
+    if ($action === 'update_status') {
+        if (!auth()->user()->can('change_bookings_status')) {
+            abort(403, __('unauthorized_action'));
+        }
+
+        $status = $request->input('status');
+
+        // تحقق من أن الحالة صحيحة
+        $validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+        if (!in_array($status, $validStatuses)) {
+            return redirect()->back()->with('error', __('invalid_status'));
+        }
+
+        Booking::whereIn('id', $ids)->update(['status' => $status]);
+
+        return redirect()->route('admin.booking')->with('success', __('booking_status_updated'));
+    }
+
+    // الحذف الجماعي
+    if ($action === 'delete') {
+        if (!auth()->user()->can('delete_bookings')) {
+            abort(403, __('unauthorized_action'));
+        }
+
+        Booking::whereIn('id', $ids)->delete();
+
+        return redirect()->route('admin.booking')->with('success', __('booking_deleted'));
+    }
+
+    // إذا لم يتم التعرف على الإجراء
+    return redirect()->route('admin.booking')->with('error', __('invalid_action'));
+}
+
 }

@@ -177,3 +177,7 @@ Route::group(['prefix' => 'settings'], function () {
   Route::resource('tour', TourController::class);
 Route::put('/car/{id}/status', [CarController::class, 'updateStatus'])
     ->name('car.updateStatus');
+
+
+Route::post('bookings/bulk_action', [BookingController::class, 'bulkAction'])
+    ->name('admin.booking.bulk_action');
