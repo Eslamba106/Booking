@@ -204,6 +204,12 @@ class BookingController extends Controller
                 'price' => $request->price,
                 'currency' => $request->currency,
             ]);
+            $booking->service()->create([
+                    'name' => $request->name ?? 0,
+                    'qyt' => $request->qyt ?? 0,
+                    'price' => $request->service_price ?? 0,
+            ]);
+            // dd($booking);
             DB::commit();
             return redirect()->route('admin.booking')->with('success', __('general.added_successfully'));
         } catch (\Exception $e) {

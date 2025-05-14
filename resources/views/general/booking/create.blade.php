@@ -372,6 +372,74 @@ input[name="canceled_period"] {
             </div>
         </div>
     </div>
+    <div class="modal fade" id="add_service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ __('roles.create_customer') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+           <form action="{{ route('admin.service.store_any') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+
+                                <div class="col-md-6 col-lg-4 col-xl-6">
+
+                                    <div class="form-group">
+                                        <label for="">{{ __('roles.name') }} <span
+                                                class="text-danger">*</span></label>
+                                                <input type="text" name="name" class="form-control" id="clientName"
+                                                 style="text-transform:uppercase;" />
+
+                                        @error('name')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                              <div class="form-group">
+                                    <label for="">{{ __('Price') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="price" class="form-control" id="price" style="text-transform:uppercase;" />
+                                    @error('price') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="">{{ __('Qunatity') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="qty" class="form-control" id="qty" style="text-transform:uppercase;" />
+                                    @error('qty') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('booking.total') }}</label>
+                                    <input type="number" name="total_price" class="form-control" id="total_price" readonly />
+                                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+
+                            </div>
+                            <div class="form-group mt-2"
+                                style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
+                                <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="add_hotel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
@@ -827,4 +895,52 @@ document.querySelectorAll('input[name="currency_buy"], input[name="currency"]').
 });
 
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const priceInput = document.getElementById('price');
+    const qtyInput = document.getElementById('qty');
+    const totalInput = document.getElementById('total_price');
+
+    function updateTotal() {
+        const price = parseFloat(priceInput.value) || 0;
+        const qty = parseFloat(qtyInput.value) || 0;
+        totalInput.value = (price * qty).toFixed(2); // رقم عشري من خانتين
+    }
+
+    priceInput.addEventListener('input', updateTotal);
+    qtyInput.addEventListener('input', updateTotal);
+});
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const yesBtn = document.getElementById('service_yes');
+        const noBtn = document.getElementById('service_no');
+        const formContainer = document.getElementById('serviceFormContainer');
+
+        if (yesBtn && noBtn && formContainer) {
+            // عرض النموذج إذا كان "نعم" محددة
+            if (yesBtn.checked) {
+                formContainer.style.display = 'block';
+            } else if (noBtn.checked) {
+                formContainer.style.display = 'none';
+            }
+
+            // استمع لتغيير القيمة
+            yesBtn.addEventListener('change', function () {
+                if (this.checked) {
+                    formContainer.style.display = 'block';
+                }
+            });
+
+            noBtn.addEventListener('change', function () {
+                if (this.checked) {
+                    formContainer.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+
+
+
 @endsection

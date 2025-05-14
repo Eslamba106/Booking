@@ -15,9 +15,12 @@ use App\Http\Controllers\general\CustomerController;
 use App\Http\Controllers\general\UnitTypeController;
 use App\Http\Controllers\Admin\UserManagmentController;
 use App\Http\Controllers\CancelController;
+use App\Http\Controllers\CarCategoryController;
+use App\Http\Controllers\CarController;
 use App\Http\Controllers\LoactionController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\TourController;
 
 // // Translation
 Route::get('language/{locale}', function ($locale) {
@@ -120,6 +123,7 @@ Route::group(['prefix' => 'service'], function () {
     Route::get('/', [ServiceController::class, 'index'])->name('admin.service');
     Route::get('/create', [ServiceController::class , 'create'])->name('admin.service.create');
     Route::post('/create', [ServiceController::class , 'store'])->name('admin.service.store');
+    Route::post('/create/booking', [ServiceController::class , 'store_for_any'])->name('admin.service.store_any');
     Route::get('/edit/{id}' , [ServiceController::class , 'edit'])->name('admin.service.edit');
     Route::patch('/update/{id}' , [ServiceController::class , 'update'])->name('admin.service.update');
     Route::get('/delete/{id}', [ServiceController::class ,'destroy'])->name('admin.service.delete');
@@ -167,3 +171,9 @@ Route::group(['prefix' => 'settings'], function () {
  Route::resource('cancel', CancelController::class);
  Route::get('/get-cities/{country}', [LocationController::class, 'getCities']);
  Route::get('/booking/{id}/voucher-pdf', [BookingController::class, 'generateVoucherPdf'])->name('booking.voucher.pdf');
+ Route::resource('car', CarController::class);
+ Route::get('/get-category-price/{id}', [CarController::class, 'getCategoryPrice']);
+  Route::resource('category', CarCategoryController::class);
+  Route::resource('tour', TourController::class);
+Route::put('/car/{id}/status', [CarController::class, 'updateStatus'])
+    ->name('car.updateStatus');

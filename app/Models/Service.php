@@ -47,4 +47,7 @@ class Service extends Model
     {
         $this->attributes['qyt'] = str_replace(',', '', $value);
     }
+    public function service(){
+        return $this->belongsTo(Booking::class);
+    }
 }

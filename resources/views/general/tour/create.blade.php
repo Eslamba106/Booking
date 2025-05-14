@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @section('title')
-    {{ __('roles.create_service') }}
+    {{ __('Cars`tours') }}
 @endsection
 @section('css')
     {{-- <link href="{{ asset('css/tags-input.min.css') }}" rel="stylesheet"> --}}
@@ -22,7 +22,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.create_service') }}</h4>
+                <h4 class="page-title">{{ __('Add new car`s tour') }}</h4>
                 <div class="d-flex align-items-center">
 
                 </div>
@@ -48,7 +48,7 @@
         <!-- ============================================================== -->
         <!-- Start Page Content -->
         <!-- ============================================================== -->
-        <form action="{{ route('admin.service.store') }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('tour.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -56,43 +56,35 @@
                         <div class="card-body">
                             <div class="row">
 
-                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                 <div class="col-md-6 col-lg-4 col-xl-6">
 
                                     <div class="form-group">
-                                        <label for="">{{ __('roles.name') }} <span
+                                        <label for="">{{ __('Add new tour') }} <span
                                                 class="text-danger">*</span></label>
-                                                <input type="text" name="name" class="form-control" id="clientName"
-                                                 style="text-transform:uppercase;" />
-
-                                        @error('name')
+                                        <input type="text" name="tour" class="form-control">
+                                        @error('tour')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                              <div class="form-group">
-                                    <label for="">{{ __('Price') }} <span class="text-danger">*</span></label>
-                                    <input type="number" name="price" class="form-control" id="price" style="text-transform:uppercase;" />
-                                    @error('price') <span class="error text-danger">{{ $message }}</span> @enderror
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="">{{ __('Qunatity') }} <span class="text-danger">*</span></label>
-                                    <input type="number" name="qty" class="form-control" id="qty" style="text-transform:uppercase;" />
-                                    @error('qty') <span class="error text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                 <div class="col-md-6 col-lg-4 col-xl-6">
 
-                                <div class="form-group">
-                                    <label>{{ __('booking.total') }}</label>
-                                    <input type="number" name="total_price" class="form-control" id="total_price" readonly />
-                                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
+                                    <div class="form-group">
+                                        <label for="">{{ __('Price for tour') }} <span
+                                                class="text-danger">*</span></label>
+                                        <input type="number" name="price" class="form-control" id="price">
+                                        @error('price')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
-
 
                             </div>
+
                             <div class="form-group mt-2"
                                 style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
                                 <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,32 +94,4 @@
 @endsection
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
-    <script>
-        function validateName(input) {
-             let regex = /^[A-Za-z\s]*$/;
-            if (!regex.test(input.value)) {
-                input.value = input.value.replace(/[^A-Za-z\s]/g, '');
-            }
-
-             input.value = input.value.toUpperCase();
-        }
-    </script>
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const priceInput = document.getElementById('price');
-    const qtyInput = document.getElementById('qty');
-    const totalInput = document.getElementById('total_price');
-
-    function updateTotal() {
-        const price = parseFloat(priceInput.value) || 0;
-        const qty = parseFloat(qtyInput.value) || 0;
-        totalInput.value = (price * qty).toFixed(2); // رقم عشري من خانتين
-    }
-
-    priceInput.addEventListener('input', updateTotal);
-    qtyInput.addEventListener('input', updateTotal);
-});
-</script>
-
-
 @endsection

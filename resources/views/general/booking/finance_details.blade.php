@@ -174,7 +174,57 @@
                     @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+            <div class="col-12">
+                <div class="form-group">
+                <label class="form-label">{{ __('Extra service') }}</label><br>
+                <div class="btn-group btn-group-toggle w-100" role="group">
+                    <input type="radio" class="btn-check" name="toggle_service" id="service_yes" autocomplete="off" value="yes">
+                    <label class="btn btn-outline-success" for="service_yes">Yes</label>
 
-        </div>
+                    <input type="radio" class="btn-check" name="toggle_service" id="service_no" autocomplete="off" value="no" checked>
+                    <label class="btn btn-outline-danger" for="service_no">No</label>
+                </div>
+          </div>
+
+                     <div id="serviceFormContainer" style="display: none;">
+
+
+                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="clientName">{{ __('roles.name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control" id="clientName" style="text-transform:uppercase;" />
+                                        @error('name')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('Price') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="service_price" class="form-control" id="price" />
+                                    @error('price') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('Quantity') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="qyt" class="form-control" id="qty" />
+                                    @error('qty') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('booking.total') }}</label>
+                                    <input type="number" name="total_price" class="form-control" id="total_price" readonly />
+                                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
+
+
+
+
     </div>
 </div>

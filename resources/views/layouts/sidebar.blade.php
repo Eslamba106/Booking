@@ -198,6 +198,64 @@
                         @endcan
                     </li>
                 @endcan
+                @can('driver_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fas fa-taxi"></i>
+                            <span class="hide-menu">{{ __('Car management') }} </span>
+                        </a>
+                        @can('all_drivers')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('car.index') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('Cars Reservations') }}</span>
+                                    </a>
+                                </li>
+                                @can('create_driver')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('car.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('car booking') }}</span>
+                                        </a>
+                                    </li>
+                                    {{-- @can('all_drivers') --}}
+                            {{-- <ul aria-expanded="false" class="collapse  first-level"> --}}
+                                <li class="sidebar-item">
+                                    <a href="{{ route('category.index') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('Cars Categories') }}</span>
+                                    </a>
+                                </li>
+                                 {{-- @can('create_driver') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('category.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Create Category') }}</span>
+                                        </a>
+                                    </li>
+                                <li class="sidebar-item">
+                                    <a href="{{ route('tour.index') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('Cars tours') }}</span>
+                                    </a>
+                                </li>
+                                 {{-- @can('create_driver') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('tour.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Create tour') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        @endcan
+
+
+
+                    </li>
+                @endcan
                 @can('broker_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
