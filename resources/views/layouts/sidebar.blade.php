@@ -46,6 +46,12 @@
                                         <span class="hide-menu">{{ __('booking.coming_soon') }}</span>
                                     </a>
                                 </li>
+                                <li class="sidebar-item">
+                                    <a href="{{ route('admin.booking.reports') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('Reports') }}</span>
+                                    </a>
+                                </li>
 
                             </ul>
                         @endcan

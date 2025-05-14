@@ -10,6 +10,18 @@
 <!-- DataTables -->
 
 <style>
+    /* تحسين مظهر حقول التاريخ */
+.form-control[type="date"] {
+    padding: 0.375rem 0.75rem;
+    line-height: 1.5;
+}
+
+/* جعل الفلتر متجاوبًا */
+@media (max-width: 768px) {
+    .filter-section .col-md-3 {
+        margin-bottom: 15px;
+    }
+}
     .status-badge {
         font-size: 0.8rem;
         padding: 5px 10px;
@@ -125,11 +137,7 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="page-title">{{ __('roles.booking_management') }}</h3>
-                @can('create_booking')
-                <a href="{{ route('admin.booking.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus mr-2"></i> {{ __('create') }}
-                </a>
-                @endcan
+
             </div>
         </div>
     </div>
@@ -144,13 +152,14 @@
                 <div class="card-body">
                     <!-- Filter Section -->
                     <div class="filter-section mb-4">
-                        <form id="filterForm" method="GET" action="{{ route('admin.booking') }}">
+                        <form id="filterForm" method="GET" action="{{ route('admin.booking.reports') }}">
                             <div class="row">
-                                <div class="col-md-3">
+                               <!-- في قسم الفلترة -->
+                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="filter_status">{{ __('roles.status') }}</label>
                                         <select name="status" id="filter_status" class="form-control">
-                                            <option value="">{{ __('roles.status') }}</option>
+                                            <option value="">{{ __('all_statuses') }}</option>
                                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('pending') }}</option>
                                             <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>{{ __('confirmed') }}</option>
                                             <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{ __('cancelled') }}</option>
@@ -158,7 +167,7 @@
                                         </select>
                                     </div>
                                 </div>
-                               <div class="col-md-3">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="filter_date_from">{{ __('From Date') }}</label>
                                         <input type="date" name="date_from" id="filter_date_from" class="form-control"
@@ -172,11 +181,11 @@
                                             value="{{ request('date_to') }}">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="filter_customer">{{ __('booking.customer_name') }}</label>
                                         <input type="text" name="customer" id="filter_customer" class="form-control"
-                                               placeholder="{{ __('customer') }}" value="{{ request('customer') }}">
+                                               placeholder="{{ __('search_customer') }}" value="{{ request('customer') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-3 d-flex align-items-end">
@@ -192,32 +201,6 @@
                     </div>
 
                     <!-- Bulk Actions -->
-                    <form action="{{ route('admin.booking.bulk_action') }}" method="POST" id="bulkActionForm">
-                        @csrf
-                        <div class="d-flex justify-content-between mb-3">
-                            <div class="form-inline">
-                                <select name="bulk_action" id="bulkAction" class="form-control mr-2">
-                                    <option value="">{{ __('Actions') }}</option>
-                                    @can('change_bookings_status')
-                                    <option value="update_status">{{ __('update_status') }}</option>
-                                    @endcan
-
-                                    <option value="delete">{{ __('delete') }}</option>
-
-                                </select>
-
-                                <div id="statusContainer" class="mr-2" style="display: none;">
-                                    <select name="status" class="form-control">
-                                        <option value="pending">{{ __('pending') }}</option>
-                                        <option value="confirmed">{{ __('confirmed') }}</option>
-                                        <option value="cancelled">{{ __('cancelled') }}</option>
-                                        <option value="completed">{{ __('completed') }}</option>
-                                    </select>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">{{ __('apply') }}</button>
-                            </div>
-                        </div>
 
                         <!-- Bookings Table -->
                         <div class="table-responsive">
@@ -227,11 +210,11 @@
                                         <th width="50"><input type="checkbox" id="selectAll"></th>
                                         <th>{{ __('booking_id') }}</th>
                                         <th>{{ __('booking.customer_name') }}</th>
-                                        <th>{{ __('booking.hotel_name') }}</th>
+
                                         <th>{{ __('pickup_date') }}</th>
                                         <th>{{ __('return_date') }}</th>
-                                        <th>{{ __('total') }}</th>
-                                        <th>{{ __('roles.status') }}</th>
+                                        <th>{{ __('Status') }}</th>
+
                                         <th>{{ __('roles.Actions') }}</th>
                                     </tr>
                                 </thead>
@@ -241,10 +224,10 @@
                                         <td><input type="checkbox" name="bulk_ids[]" value="{{ $booking->id }}"></td>
                                         <td>#{{ $booking->id }}</td>
                                         <td>{{ $booking->customer->name }}</td>
-                                        <td>{{ $booking->hotel->name }}</td>
+
                                         <td>{{ \Carbon\Carbon::parse($booking->arrival_date)->format('d M Y') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($booking->leave_date)->format('d M Y') }}</td>
-                                        <td>{{ number_format($booking->total, 2) }} {{ $booking->currency }}</td>
+
                                         <td>
                                             <span class="badge badge-pill
                                                 @if($booking->status == 'pending') badge-warning
@@ -260,9 +243,7 @@
                                                 <a href="{{ route('admin.booking.show', $booking->id) }}" class="btn btn-sm btn-info action-btn" title="{{ __('view') }}">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('admin.booking.edit', $booking->id) }}" class="btn btn-sm btn-primary action-btn" title="{{ __('edit') }}">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
+
                                                 @endcan
 
                                                 {{-- @can('delete_booking')
@@ -281,9 +262,6 @@
                                                 </a>
                                                 @endcan
 
-                                                <a href="{{ route('admin.customer.show', $booking->customer_id) }}" class="btn btn-sm btn-light action-btn" title="{{ __('customer_profile') }}">
-                                                    <i class="fas fa-user"></i>
-                                                </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -321,206 +299,67 @@
 <!-- SweetAlert2 for confirm dialogs -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-{{-- <script>
-$(document).ready(function() {
-    // Initialize DataTable without server-side processing since we're using Laravel pagination
-    $('table').DataTable({
-        responsive: true,
-        paging: false, // Disable DataTables pagination since we're using Laravel's
-        searching: false, // Disable DataTables search since we have our own filters
-        info: false, // Disable "Showing X of Y entries"
-        order: [[1, 'desc']],
-        columnDefs: [
-            { orderable: false, targets: [0, 8] }
-        ]
-    });
 
-    // Select all checkbox
-    $('#selectAll').click(function() {
-        $('input[name="bulk_ids[]"]').prop('checked', this.checked);
-    });
-
-    // Show/hide status dropdown based on bulk action selection
-    $('#bulkAction').change(function() {
-        if ($(this).val() === 'update_status') {
-            $('#statusContainer').show();
-        } else {
-            $('#statusContainer').hide();
-        }
-    });
-
-    // Delete confirmation for single items
-    $('.delete-confirm').click(function(e) {
-        e.preventDefault();
-        const form = $(this).closest('form');
-
-        Swal.fire({
-            title: '{{ __("are_you_sure") }}',
-            text: '{{ __("you_wont_be_able_to_revert_this") }}',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '{{ __("yes_delete_it") }}'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                form.submit();
-            }
-        });
-    });
-
-    // Bulk action form submission
-    $('#bulkActionForm').submit(function(e) {
-        const action = $('#bulkAction').val();
-        const checkedCount = $('input[name="bulk_ids[]"]:checked').length;
-
-        if (!action) {
-            e.preventDefault();
-            Swal.fire({
-                icon: 'error',
-                title: '{{ __("error") }}',
-                text: '{{ __("please_select_an_action") }}'
-            });
-            return false;
-        }
-
-        if (checkedCount === 0) {
-            e.preventDefault();
-            Swal.fire({
-                icon: 'error',
-                title: '{{ __("error") }}',
-                text: '{{ __("please_select_at_least_one_item") }}'
-            });
-            return false;
-        }
-
-        if (action === 'delete') {
-            e.preventDefault();
-            Swal.fire({
-                title: '{{ __("are_you_sure") }}',
-                text: '{{ __("you_wont_be_able_to_revert_this") }}',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: '{{ __("yes_delete_it") }}'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit the form
-                    this.submit();
-                }
-            });
-        }
-    });
-});
-</script> --}}
 <script>
-  $(document).ready(function() {
-    // Toggle status dropdown visibility
-    $('#bulkAction').change(function() {
-        $('#statusContainer').toggle($(this).val() === 'update_status');
+$(document).ready(function() {
+    // تطبيق الفلاتر عند تغيير أي من الحقول
+    $('#filter_status, #filter_date_range, #filter_date_from, #filter_date_to, #filter_customer').change(function() {
+        applyFilters();
     });
 
-    // Select/Deselect all checkboxes
-    $('#selectAll').change(function() {
-        $('input[name="bulk_ids[]"]').prop('checked', this.checked);
-    });
+    // دالة لتطبيق الفلاتر
+    function applyFilters() {
+        const status = $('#filter_status').val();
+        const dateRange = $('#filter_date_range').val();
+        const dateFrom = $('#filter_date_from').val();
+        const dateTo = $('#filter_date_to').val();
+        const customer = $('#filter_customer').val();
 
-    // Handle form submission
-    $('#bulkActionForm').submit(function(e) {
-        e.preventDefault();
-
-        const action = $('#bulkAction').val();
-        const selectedCount = $('input[name="bulk_ids[]"]:checked').length;
-
-        // Validate action selection
-        if (!action) {
-            showAlert('error', 'Error', 'Please select an action to perform');
-            return false;
-        }
-
-        // Validate at least one item is selected
-        if (selectedCount === 0) {
-            showAlert('error', 'Error', 'Please select at least one booking');
-            return false;
-        }
-
-        // Confirm before destructive actions
-        if (action === 'delete') {
-            confirmAction(
-                'Are you sure?',
-                'You won\'t be able to recover these bookings!',
-                'warning',
-                submitBulkAction
-            );
-        } else {
-            submitBulkAction();
-        }
-    });
-
-    // Submit bulk action via AJAX
-    function submitBulkAction() {
-        const $submitBtn = $('#applyBulkAction');
-        const originalText = $submitBtn.html();
-
-        // Show loading state
-        $submitBtn.prop('disabled', true).html(
-            '<i class="fas fa-spinner fa-spin"></i> Processing...'
-        );
+        // عرض مؤشر التحميل
+        $('#bookingsTable tbody').html('<tr><td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
 
         $.ajax({
-            url: $('#bulkActionForm').attr('action'),
-            method: 'POST',
-            data: $('#bulkActionForm').serialize(),
+            url: '{{ route("admin.booking") }}',
+            type: 'GET',
+            data: {
+                status: status,
+                date_range: dateRange,
+                date_from: dateFrom,
+                date_to: dateTo,
+                customer: customer
+            },
             success: function(response) {
-                if (response.success) {
-                    showAlert(
-                        'success',
-                        'Success',
-                        response.message || 'Action completed successfully',
-                        true
-                    );
-                } else {
-                    showAlert('error', 'Error', response.message || 'Action failed');
-                }
+                $('#bookingsTable tbody').html($(response).find('#bookingsTable tbody').html());
+                $('.pagination').html($(response).find('.pagination').html());
+
+                // تحديث URL بدون إعادة تحميل الصفحة
+                const newUrl = updateUrlParameters({
+                    status: status,
+                    date_range: dateRange,
+                    date_from: dateFrom,
+                    date_to: dateTo,
+                    customer: customer
+                });
+                history.pushState(null, '', newUrl);
             },
             error: function(xhr) {
-                const errorMsg = xhr.responseJSON?.message ||
-                               'Server communication error';
-                showAlert('error', 'Error', errorMsg);
-            },
-            complete: function() {
-                $submitBtn.prop('disabled', false).html(originalText);
+                $('#bookingsTable tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
             }
         });
     }
 
-    // Helper function to show SweetAlert
-    function showAlert(icon, title, text, reload = false) {
-        Swal.fire({
-            icon: icon,
-            title: title,
-            text: text,
-            confirmButtonColor: '#3085d6'
-        }).then(() => {
-            if (reload) location.reload();
-        });
-    }
+    // دالة لتحديث معلمات URL
+    function updateUrlParameters(params) {
+        const url = new URL(window.location.href);
+        url.search = '';
 
-    // Helper function for confirmation dialogs
-    function confirmAction(title, text, icon, callback) {
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: icon,
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) callback();
-        });
+        for (const key in params) {
+            if (params[key]) {
+                url.searchParams.set(key, params[key]);
+            }
+        }
+
+        return url.toString();
     }
 });
 </script>

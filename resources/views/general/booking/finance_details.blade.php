@@ -11,14 +11,14 @@
         <div class="row">
 
             <!-- Buy Price -->
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
                     <label>{{ __('booking.buy_price') }}</label>
                     <input type="number" onkeyup="calculate_earn()" name="buy_price" class="form-control">
                     @error('buy_price') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
                     <label>{{ __('booking.buy_price') }} {{ __('booking.currency') }}</label>
                     <div class="currency-toggle">
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <!-- Sale Price -->
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
                     <label>{{ __('booking.sale_price') }}</label>
                     <input type="number" onkeyup="calculate_earn()" name="price" class="form-control">
@@ -49,8 +49,8 @@
             </div>
 
             <!-- Currency Toggle -->
-            <div class="col-12">
-            <<div class="form-group">
+            <div class="col-6">
+            <div class="form-group">
                 <label>{{ __('booking.currency') }} <span class="text-danger">*</span></label>
                 <div class="currency-toggle">
                     <input type="radio" id="currency_euro" name="currency" value="euro" checked>
@@ -69,7 +69,7 @@
         </div>
 
             <!-- Commission Toggle -->
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
                     <label>{{ __('booking.commission') }} <span class="text-danger">*</span></label>
                     <div class="btn-group btn-group-toggle w-100">
@@ -81,10 +81,10 @@
                     </div>
                     @error('commission') <span class="text-danger small">{{ $message }}</span> @enderror
                 </div>
-            </div>
+
 
             <!-- Commission Type -->
-            <div class="col-12 commission_html">
+            <div class=" commission_html">
                 <div class="form-group">
                     <label for="">{{ __('booking.commission_type') }} <span class="text-danger">*</span></label>
                     <select name="commission_type" onchange="toggleCommissionFields()" id="commission_type" class="form-control js-select2-custom">
@@ -98,7 +98,7 @@
             </div>
 
             <!-- Percentage Input Field -->
-            <div class="col-12 commission_html percentage_html" style="display:none;">
+            <div class=" commission_html percentage_html" style="display:none;">
                 <div class="form-group">
                     <label for="">{{ __('booking.commission_percentage') }} <span class="text-danger">*</span></label>
                     <input type="number" name="commission_percentage" onkeyup="calculate_earn()" class="form-control">
@@ -109,7 +109,7 @@
             </div>
 
             <!-- Night Input Field -->
-            <div class="col-12 commission_html night_html" style="display:none;">
+            <div class=" commission_html night_html" style="display:none;">
                 <div class="form-group">
                     <label for="">{{ __('booking.days_count') }} <span class="text-danger">*</span></label>
                     <input type="number" name="commission_night" onkeyup="calculate_earn()" class="form-control">
@@ -118,9 +118,9 @@
                     @enderror
                 </div>
             </div>
-
+            </div>
             <!-- Broker Toggle -->
-            <div class="col-12">
+            <div class="col-6">
                 <div class="form-group">
                     <label>{{ __('booking.broker') }} <span class="text-danger">*</span></label>
                     <div class="btn-group btn-group-toggle w-100">
@@ -132,10 +132,10 @@
                     </div>
                     @error('broker') <span class="text-danger small">{{ $message }}</span> @enderror
                 </div>
-            </div>
+
 
             <!-- Broker Name -->
-            <div class="col-12 broker_html">
+            <div class="broker_html">
                 <div class="form-group">
                     <label>{{ __('booking.broker_name') }} <span class="text-danger">*</span></label>
                     <select name="broker_id" class="form-control js-select2-custom">
@@ -149,47 +149,31 @@
             </div>
 
             <!-- Broker Amount -->
-            <div class="col-12 broker_html">
+            <div class="broker_html">
                 <div class="form-group">
                     <label>{{ __('booking.broker_amount') }}</label>
                     <input type="number" name="broker_amount" onkeyup="calculate_earn()" class="form-control">
                     @error('broker_amount') <span class="error text-danger">{{ $message }}</span> @enderror
                 </div>
             </div>
+        </div>
 
-            <!-- Earn -->
-            <div class="col-12">
-                <div class="form-group">
-                    <label>{{ __('booking.earn') }}</label>
-                    <input type="number" name="earn" class="form-control" readonly>
-                    @error('earn') <span class="error text-danger">{{ $message }}</span> @enderror
-                </div>
-            </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                        <label class="form-label">{{ __('Extra service') }}</label><br>
+                        <div class="btn-group btn-group-toggle w-100" role="group">
+                            <input type="radio" class="btn-check" name="toggle_service" id="service_yes" autocomplete="off" value="yes">
+                            <label class="btn btn-outline-success" for="service_yes">Yes</label>
 
-            <!-- Total -->
-            <div class="col-12">
-                <div class="form-group">
-                    <label>{{ __('booking.total') }}</label>
-                    <input type="number" name="total" class="form-control" readonly>
-                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="form-group">
-                <label class="form-label">{{ __('Extra service') }}</label><br>
-                <div class="btn-group btn-group-toggle w-100" role="group">
-                    <input type="radio" class="btn-check" name="toggle_service" id="service_yes" autocomplete="off" value="yes">
-                    <label class="btn btn-outline-success" for="service_yes">Yes</label>
+                            <input type="radio" class="btn-check" name="toggle_service" id="service_no" autocomplete="off" value="no" checked>
+                            <label class="btn btn-outline-danger" for="service_no">No</label>
+                        </div>
+                         </div>
 
-                    <input type="radio" class="btn-check" name="toggle_service" id="service_no" autocomplete="off" value="no" checked>
-                    <label class="btn btn-outline-danger" for="service_no">No</label>
-                </div>
-          </div>
-
-                     <div id="serviceFormContainer" style="display: none;">
+                              <div id="serviceFormContainer" style="display: none;">
 
 
-                                <div class="col-md-6 col-lg-4 col-xl-6">
+                                <div class="3">
                                     <div class="form-group">
                                         <label for="clientName">{{ __('roles.name') }} <span class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control" id="clientName" style="text-transform:uppercase;" />
@@ -197,8 +181,8 @@
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                </div>
-                     </div>
+
+
                                 <div class="form-group">
                                     <label>{{ __('Price') }} <span class="text-danger">*</span></label>
                                     <input type="number" name="service_price" class="form-control" id="price" />
@@ -212,7 +196,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>{{ __('booking.total') }}</label>
+                                    <label>{{ __('Services Price') }}</label>
                                     <input type="number" name="total_price" class="form-control" id="total_price" readonly />
                                     @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -223,8 +207,31 @@
 
                         </div>
 
+            </div>
+             <!-- Earn -->
+            <div class="col-3">
+                <div class="form-group">
+                    <label>{{ __('booking.earn') }}</label>
+                    <input type="number" name="earn" class="form-control" readonly>
+                    @error('earn') <span class="error text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
 
-
+            <!-- Total -->
+            <div class="col-3">
+                <div class="form-group">
+                    <label>{{ __('Booking Amount') }}</label>
+                    <input type="number" name="total" class="form-control" readonly>
+                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
+                </div>
+                    </div>
+                    <div class="col-3">
+                <div class="form-group">
+                    <label>{{ __('Sub total ') }}</label>
+                    <input type="number" name="sub_total" class="form-control" readonly>
+                    @error('sub_total') <span class="error text-danger">{{ $message }}</span> @enderror
+                </div>
+            </div>
 
     </div>
 </div>

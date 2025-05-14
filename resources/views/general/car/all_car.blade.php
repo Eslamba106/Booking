@@ -1,13 +1,28 @@
+
 @extends('layouts.dashboard')
 
-@section('title', 'Car Bookings Management')
+@section('title')
+    {{ __('roles.booking_management') }}
+@endsection
 
 @section('css')
 <!-- Font Awesome -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 <!-- DataTables -->
-<link href="https://cdn.datatables.net/1.11.4/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+
 <style>
+    /* تحسين مظهر حقول التاريخ */
+.form-control[type="date"] {
+    padding: 0.375rem 0.75rem;
+    line-height: 1.5;
+}
+
+/* جعل الفلتر متجاوبًا */
+@media (max-width: 768px) {
+    .filter-section .col-md-3 {
+        margin-bottom: 15px;
+    }
+}
     .status-badge {
         font-size: 0.8rem;
         padding: 5px 10px;
@@ -64,6 +79,56 @@
     .dropdown-item {
         padding: 5px 15px;
     }
+
+    .badge-pill {
+        font-size: 0.85rem;
+        padding: 5px 10px;
+    }
+    /* تغيير حجم الأيقونات */
+.pagination .page-item a {
+    font-size: 1rem; /* الحجم المناسب */
+    padding: 8px 16px; /* زيادة مساحة الأزرار */
+}
+
+/* تخصيص السهم */
+.pagination .page-item:first-child a,
+.pagination .page-item:last-child a {
+    font-size: 1.2rem; /* زيادة حجم الأسهم */
+}
+
+/* تغيير الشكل العام للـ pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* تحسين الألوان والحدود */
+.pagination .page-item.active a {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}
+
+.pagination .page-item:hover a {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* تغيير شكل الأسهم */
+.pagination .page-item .page-link {
+    color: #007bff;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* تعديل شكل الأزرار عند التمرير فوقها */
+.pagination .page-item:hover .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
 </style>
 @endsection
 
@@ -88,52 +153,54 @@
                 </div>
 
                 <div class="card-body">
-                    <!-- Filter Section -->
-                    <div class="filter-section mb-4">
-                        <form id="filterForm">
-                            <div class="row">
-                                <div class="col-md-3">
+                  <!-- Filter Section -->
+<div class="filter-section mb-4">
+    <form id="filterForm" method="GET" action="{{ route('car.index') }}">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="filter_status">Status</label>
+                    <select name="status" id="filter_status" class="form-control">
+                        <option value="">All Statuses</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        {{-- <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option> --}}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="filter_status">Status</label>
-                                        <select name="status" id="filter_status" class="form-control">
-                                            <option value="">All Statuses</option>
-                                            <option value="pending">Pending</option>
-                                            <option value="confirmed">Confirmed</option>
-                                            <option value="cancelled">Cancelled</option>
-                                            <option value="completed">Completed</option>
-                                        </select>
+                                        <label for="filter_date_from">{{ __('From Date') }}</label>
+                                        <input type="date" name="date_from" id="filter_date_from" class="form-control"
+                                            value="{{ request('date_from') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="filter_date">Date Range</label>
-                                        <select name="date_range" id="filter_date" class="form-control">
-                                            <option value="">All Dates</option>
-                                            <option value="today">Today</option>
-                                            <option value="this_week">This Week</option>
-                                            <option value="this_month">This Month</option>
-                                            <option value="next_month">Next Month</option>
-                                        </select>
+                                        <label for="filter_date_to">{{ __('To Date') }}</label>
+                                        <input type="date" name="date_to" id="filter_date_to" class="form-control"
+                                            value="{{ request('date_to') }}">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="filter_customer">Customer</label>
-                                        <input type="text" name="customer" id="filter_customer" class="form-control" placeholder="Search customer...">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 d-flex align-items-end">
-                                    <button type="button" id="applyFilter" class="btn btn-primary mr-2">
-                                        <i class="fas fa-filter mr-1"></i> Filter
-                                    </button>
-                                    <button type="button" id="resetFilter" class="btn btn-outline-secondary">
-                                        <i class="fas fa-redo mr-1"></i> Reset
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="filter_customer">Customer</label>
+                    <input type="text" name="customer" id="filter_customer" class="form-control"
+                           placeholder="Search customer..." value="{{ request('customer') }}">
+                </div>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" id="applyFilter" class="btn btn-primary mr-2">
+                    <i class="fas fa-filter mr-1"></i> Filter
+                </button>
+                <a href="{{ route('car.index') }}" id="resetFilter" class="btn btn-outline-secondary">
+                    <i class="fas fa-redo mr-1"></i> Reset
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
                     <!-- Bookings Table -->
                     <div class="table-responsive">
                         <table id="bookingsTable" class="table table-bordered table-hover" style="width:100%">
@@ -144,52 +211,73 @@
                                     <th>Car</th>
                                     <th>Pickup Date</th>
                                     <th>Return Date</th>
-                                    <th>Total (SAR)</th>
+                                    <th>Total </th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($cars as $booking)
-                                <tr>
-                                    <td>#{{ $booking->id }}</td>
-                                    <td>{{ $booking->customer->name }}</td>
-                                    <td>{{ $booking->category->category }} ({{ $booking->category->model }})</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->arrival_date)->format('d M Y') }} at {{ $booking->arrival_time }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($booking->leave_date)->format('d M Y') }} at {{ $booking->leave_time }}</td>
-                                    <td>{{ number_format($booking->total, 2) }}</td>
-                                    <td>
-                                        <span class="status-badge status-{{ $booking->status }}">
-                                            {{ ucfirst($booking->status) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <a href="{{ route('car.show', $booking->id) }}" class="btn btn-sm btn-info action-btn" title="View">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('car.edit', $booking->id) }}" class="btn btn-sm btn-primary action-btn" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('car.updateStatus', $booking->id) }}" method="POST" class="form-inline d-inline-block">
-    @csrf
-    @method('PUT')
-    <div class="form-group">
-        <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
-            <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Pending</option>
-            <option value="approved" {{ $booking->status == 'approved' ? 'selected' : '' }}>Approved</option>
-            <option value="rejected" {{ $booking->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-        </select>
-    </div>
-</form>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
+                           @foreach($cars as $booking)
+<tr>
+    <td>#{{ $booking->id }}</td>
+    <td>{{ $booking->customer->name }}</td>
+    <td>{{ $booking->category->category }} ({{ $booking->category->model }})</td>
+    <td>{{ \Carbon\Carbon::parse($booking->arrival_date)->format('d M Y') }} at {{ $booking->arrival_time }}</td>
+    <td>{{ \Carbon\Carbon::parse($booking->leave_date)->format('d M Y') }} at {{ $booking->leave_time }}</td>
+    <td>{{ number_format($booking->total, 2) }}  $</td>
+    <td>
+        <span class="badge badge-pill
+                                                @if($booking->status == 'pending') badge-warning
+                                                @elseif($booking->status == 'approved') badge-success
+                                                @elseif($booking->status == 'rejected') badge-danger
+                                                @else badge-info @endif">
+                                                {{ ucfirst($booking->status) }}
+                                            </span>
+    </td>
+    <td>
+        <div class="d-flex">
+            <a href="{{ route('car.show', $booking->id) }}" class="btn btn-sm btn-info action-btn" title="View">
+                <i class="fas fa-eye"></i>
+            </a>
+            <a href="{{ route('car.edit', $booking->id) }}" class="btn btn-sm btn-primary action-btn" title="Edit">
+                <i class="fas fa-edit"></i>
+            </a>
+            <form action="{{ route('car.updateStatus', $booking->id) }}" method="POST" class="form-inline d-inline-block">
+                @csrf
+                @method('PUT')
+                <div class="form-group">
+                    <select name="status" class="form-control form-control-sm" onchange="this.form.submit()">
+                        <option value="pending" {{ $booking->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="approved" {{ $booking->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ $booking->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                        {{-- <option value="completed" {{ $booking->status == 'completed' ? 'selected' : '' }}>Completed</option> --}}
+                    </select>
+                </div>
+            </form>
+        </div>
+    </td>
+</tr>
+@endforeach
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $cars->previousPageUrl() }}">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $cars->nextPageUrl() }}">
+                                    <i class="fas fa-arrow-right"></i> Next
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -199,126 +287,72 @@
 
 @section('js')
 <!-- DataTables -->
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- SweetAlert2 for confirm dialogs -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
 $(document).ready(function() {
-    // Initialize DataTable
-    const table = $('#bookingsTable').DataTable({
-        responsive: true,
-        order: [[0, 'desc']],
-        columnDefs: [
-            { responsivePriority: 1, targets: 0 },
-            { responsivePriority: 2, targets: 6 },
-            { responsivePriority: 3, targets: 7 }
-        ]
+    // تطبيق الفلاتر عند تغيير أي من الحقول
+    $('#filter_status, #filter_date_range, #filter_date_from, #filter_date_to, #filter_customer').change(function() {
+        applyFilters();
     });
 
-    // Apply filters
-    $('#applyFilter').click(function() {
+    // دالة لتطبيق الفلاتر
+    function applyFilters() {
         const status = $('#filter_status').val();
-        const dateRange = $('#filter_date').val();
-        const customer = $('#filter_customer').val().toLowerCase();
+        const dateRange = $('#filter_date_range').val();
+        const dateFrom = $('#filter_date_from').val();
+        const dateTo = $('#filter_date_to').val();
+        const customer = $('#filter_customer').val();
 
-        table.column(6).search(status).draw();
+        // عرض مؤشر التحميل
+        $('#bookingsTable tbody').html('<tr><td colspan="8" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>');
 
-        if (dateRange) {
-            const today = new Date();
-            table.rows().every(function() {
-                const row = this;
-                const dateStr = $(row.node()).find('td:eq(3)').text();
-                const rowDate = new Date(dateStr);
+        $.ajax({
+            url: '{{ route("admin.booking") }}',
+            type: 'GET',
+            data: {
+                status: status,
+                date_range: dateRange,
+                date_from: dateFrom,
+                date_to: dateTo,
+                customer: customer
+            },
+            success: function(response) {
+                $('#bookingsTable tbody').html($(response).find('#bookingsTable tbody').html());
+                $('.pagination').html($(response).find('.pagination').html());
 
-                let showRow = false;
-
-                switch(dateRange) {
-                    case 'today':
-                        showRow = rowDate.toDateString() === today.toDateString();
-                        break;
-                    case 'this_week':
-                        const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
-                        const weekEnd = new Date(today.setDate(today.getDate() - today.getDay() + 6));
-                        showRow = rowDate >= weekStart && rowDate <= weekEnd;
-                        break;
-                    case 'this_month':
-                        showRow = rowDate.getMonth() === today.getMonth() &&
-                                 rowDate.getFullYear() === today.getFullYear();
-                        break;
-                    case 'next_month':
-                        const nextMonth = today.getMonth() + 1;
-                        showRow = rowDate.getMonth() === nextMonth &&
-                                 rowDate.getFullYear() === today.getFullYear();
-                        break;
-                }
-
-                if (!showRow) {
-                    $(row.node()).hide();
-                } else {
-                    $(row.node()).show();
-                }
-            });
-        } else {
-            table.rows().every(function() {
-                $(this.node()).show();
-            });
-        }
-
-        if (customer) {
-            table.column(1).search(customer).draw();
-        }
-    });
-
-    // Reset filters
-    $('#resetFilter').click(function() {
-        $('#filterForm')[0].reset();
-        table.search('').columns().search('').draw();
-        table.rows().every(function() {
-            $(this.node()).show();
+                // تحديث URL بدون إعادة تحميل الصفحة
+                const newUrl = updateUrlParameters({
+                    status: status,
+                    date_range: dateRange,
+                    date_from: dateFrom,
+                    date_to: dateTo,
+                    customer: customer
+                });
+                history.pushState(null, '', newUrl);
+            },
+            error: function(xhr) {
+                $('#bookingsTable tbody').html('<tr><td colspan="8" class="text-center text-danger">Error loading data</td></tr>');
+            }
         });
-    });
+    }
 
-    // Status change handler
-    $('.status-option').click(function(e) {
-        e.preventDefault();
-        const bookingId = $(this).data('id');
-        const newStatus = $(this).data('status');
+    // دالة لتحديث معلمات URL
+    function updateUrlParameters(params) {
+        const url = new URL(window.location.href);
+        url.search = '';
 
-        if (confirm(`Are you sure you want to change this booking status to ${newStatus}?`)) {
-            $.ajax({
-                url: `/car/${bookingId}/status`,
-                method: 'PUT',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    status: newStatus
-                },
-                success: function(response) {
-                    if (response.success) {
-                        // Update status badge
-                        const badge = $(`tr:contains('#${bookingId}') .status-badge`);
-                        badge.removeClass('status-pending status-confirmed status-cancelled status-completed')
-                             .addClass(`status-${newStatus}`)
-                             .text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
-
-                        // Show success message
-                        toastr.success('Booking status updated successfully');
-                    }
-                },
-                error: function(xhr) {
-                    toastr.error('Error updating booking status');
-                }
-            });
+        for (const key in params) {
+            if (params[key]) {
+                url.searchParams.set(key, params[key]);
+            }
         }
-    });
 
-    // Toastr notifications
-    @if(session('success'))
-        toastr.success('{{ session('success') }}');
-    @endif
-
-    @if(session('error'))
-        toastr.error('{{ session('error') }}');
-    @endif
+        return url.toString();
+    }
 });
 </script>
 @endsection

@@ -179,14 +179,31 @@
                     <div class="table-responsive">
                         <table class="table table-borderless mb-0">
                             <tbody>
-                                <tr>
-                                    <th width="30%">Subtotal:</th>
-                                    <td>{{ number_format($booking->sub_total, 2) }} {{ $booking->currency }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Commission ({{ $booking->commission_type }}):</th>
-                                    <td>{{ number_format($booking->commission_amount, 2) }} {{ $booking->currency }}</td>
-                                </tr>
+                               @php
+                                    if ($booking->commission_type == 'percentage') {
+                                        $commission_total = ($booking->commission_percentage / 100) * $booking->buy_price;
+                                    } elseif ($booking->commission_type == 'night') {
+                                        $commission_total = $booking->commission_night * $booking->days_count;
+                                    } else {
+                                        $commission_total = 0;
+                                    }
+
+                                    $service_price = $booking->service->price * $booking->service->qyt
+
+                                @endphp
+
+                                    <tr>
+                                        <th>sales price :</th>
+                                        <td>{{ number_format($booking->price, 2) }} {{ $booking->currency }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>buy price :</th>
+                                        <td>{{ number_format($booking->buy_price, 2) }} {{ $booking->currency }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Commission ({{ $booking->commission_type }}):</th>
+                                        <td>{{ number_format($commission_total, 2) }} {{ $booking->currency }}</td>
+                                    </tr>
                                 <tr>
                                     <th>Broker Amount:</th>
                                     <td>{{ number_format($booking->broker_amount, 2) }} {{ $booking->currency }}</td>
@@ -195,9 +212,14 @@
                                     <th>Total Earned:</th>
                                     <td>{{ number_format($booking->earned, 2) }} {{ $booking->currency }}</td>
                                 </tr>
+                                <tr>
+                                    <th>Servies price:</th>
+                                    <td>{{ number_format($service_price , 2) }} {{ $booking->currency }}</td>
+                                </tr>
+
                                 <tr class="fw-bold">
                                     <th>Grand Total:</th>
-                                    <td>{{ number_format($booking->total, 2) }} {{ $booking->currency }}</td>
+                                    <td>{{ number_format($booking->sub_total, 2) }} {{ $booking->currency }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -214,9 +236,9 @@
                 <a href="{{ route('admin.booking.edit', $booking->id) }}" class="btn btn-warning">
                     <i class="ri-edit-line align-bottom me-1"></i> Edit Booking
                 </a>
-                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                {{-- <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
                     <i class="ri-close-circle-line align-bottom me-1"></i> Cancel Booking
-                </button>
+                </button> --}}
                 {{-- <a href="{{ route('admin.booking.invoice', $booking->id) }}" class="btn btn-info">
                     <i class="ri-file-text-line align-bottom me-1"></i> Generate Invoice
                 </a> --}}
@@ -225,7 +247,7 @@
     </div>
 </div>
 
-<!-- Cancel Booking Modal -->
+{{-- <!-- Cancel Booking Modal -->
 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -246,7 +268,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
 
 @push('styles')

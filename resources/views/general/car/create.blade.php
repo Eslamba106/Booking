@@ -181,6 +181,7 @@
                                     <div class="form-group">
                                         <label for="category_id">Car Category <span class="text-danger">*</span></label>
                                         <select name="category_id" id="category_id" class="form-control" required>
+                                            <option value="">Select category</option>
                                             @foreach($categories as $category)
                                                 <option value="{{ $category->id }}"
                                                         data-model="{{ $category->model }}"
@@ -217,13 +218,14 @@
                             <div class="row">
                                 <!-- Pickup Date -->
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="arrival_date">Pickup Date <span class="text-danger">*</span></label>
-                                        <input type="date" id="arrival_date" name="arrival_date" class="form-control"
-                                               min="{{ \Carbon\Carbon::today()->toDateString() }}" required>
-                                        <div class="invalid-feedback">Please select a valid pickup date</div>
-                                    </div>
-                                </div>
+    <div class="form-group">
+        <label for="arrival_date">Pickup Date <span class="text-danger">*</span></label>
+        <input type="date" id="arrival_date" name="arrival_date" class="form-control"
+               min="{{ \Carbon\Carbon::today()->toDateString() }}" onchange="validateDate()" required>
+        <span id="arrivalDateError" style="color:red; display:none;">Pickup date cannot be in the past</span>
+        <div class="invalid-feedback">Please select a valid pickup date</div>
+    </div>
+</div>
 
                                 <!-- Pickup Time -->
                                 <div class="col-md-6">
@@ -235,14 +237,15 @@
                                 </div>
 
                                 <!-- Return Date -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="leave_date">Return Date <span class="text-danger">*</span></label>
-                                        <input type="date" id="leave_date" name="leave_date" class="form-control"
-                                               min="{{ \Carbon\Carbon::tomorrow()->toDateString() }}" required>
-                                        <div class="invalid-feedback">Please select a valid return date</div>
-                                    </div>
-                                </div>
+                               <div class="col-md-6">
+    <div class="form-group">
+        <label for="leave_date">Return Date <span class="text-danger">*</span></label>
+        <input type="date" id="leave_date" name="leave_date" class="form-control"
+               min="{{ \Carbon\Carbon::tomorrow()->toDateString() }}" onchange="validateDate()" required>
+        <span id="leaveDateError" style="color:red; display:none;">Return date must be after pickup date</span>
+        <div class="invalid-feedback">Please select a valid return date</div>
+    </div>
+</div>
 
                                 <!-- Return Time -->
                                 <div class="col-md-6">
@@ -333,10 +336,8 @@
                                     <div class="form-group">
                                         <label for="days_count">Rental Days <span class="text-danger">*</span></label>
                                         <div class="input-group">
-                                            <button type="button" class="btn btn-outline-third" onclick="decrease('days_count')">-</button>
                                             <input type="number" id="days_count" name="days_count" class="form-control text-center"
-                                                   value="1" min="1" required>
-                                            <button type="button" class="btn btn-outline-third" onclick="increase('days_count')">+</button>
+                                                   value="1" min="1" required readonly>
                                         </div>
                                         <div class="invalid-feedback">Please enter valid number of days</div>
                                     </div>
@@ -374,6 +375,41 @@
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+function validateDate() {
+    const arrivalInput = document.getElementById('arrival_date');
+    const leaveInput = document.getElementById('leave_date');
+
+    const arrivalError = document.getElementById('arrivalDateError');
+    const leaveError = document.getElementById('leaveDateError');
+
+    const arrivalDate = new Date(arrivalInput.value);
+    const leaveDate = new Date(leaveInput.value);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Reset error messages
+    arrivalError.style.display = 'none';
+    leaveError.style.display = 'none';
+
+    let hasError = false;
+
+    if (!arrivalInput.value || arrivalDate < today) {
+        arrivalError.style.display = 'inline';
+        hasError = true;
+    }
+
+    if (!leaveInput.value || leaveDate <= arrivalDate) {
+        leaveError.style.display = 'inline';
+        hasError = true;
+    }
+
+    return !hasError;
+}
+</script>
+
+<script>
+
 $(document).ready(function() {
     // Initialize elements
     initSelect2();
@@ -484,14 +520,14 @@ function calculateTotal() {
     const price = parseFloat($('#car_price').val()) || 0;
     const days = parseInt($('#days_count').val()) || 1;
 
-
+    // Check if extra service is selected (Yes or No)
     let servicePrice = 0;
-    let tourId = $('#tour_id').val();
+    let tourId = $('#tour_id').val();  // Get selected tour ID
 
-
+    // If No Services is selected, set tourId to null
     if ($('#service_none').is(':checked') || tourId === "null") {
         tourId = null;
-        $('#tour_id').val(null);
+        $('#tour_id').val(null); // Ensure the input value is set to null
     }
 
     if ($('#service_yes').is(':checked')) {
@@ -503,7 +539,7 @@ function calculateTotal() {
     // Display the total
     $('#total_display').text(total.toFixed(2));
     $('#total').val(total.toFixed(2));
-    $('#tour_id').val(tourId);
+    $('#tour_id').val(tourId);  // Ensure the correct value of tour_id is set
 }
 
 function updateServiceFormVisibility() {

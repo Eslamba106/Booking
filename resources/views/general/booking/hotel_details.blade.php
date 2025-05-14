@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('general.hotel') }}<button type="button"
                         data-target="#add_hotel" data-add_hotel="" data-toggle="modal"
@@ -25,7 +25,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('general.country') }} <span
                             class="text-danger">*</span></label>
@@ -36,7 +36,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('general.city') }} </label>
                     <input type="text" name="city" readonly class="form-control">
@@ -45,7 +45,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('booking.booking_no') }}<span class="text-danger">
                             *</span> </label>
@@ -55,7 +55,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('roles.all_unit_types') }} <span
                             class="text-danger">*</span></label>
@@ -70,7 +70,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('Meals') }} <span
                             class="text-danger">*</span></label>
@@ -87,7 +87,7 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6 col-lg-4 col-xl-6">
+            <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('booking.number_of_units') }} <span
                             class="text-danger">*</span></label>

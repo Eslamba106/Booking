@@ -131,7 +131,7 @@
                             <div class="d-flex gap-2">
                                 <h4 class="mb-0">{{ __('booking.guest_details') }}</h4>
                             </div>
-                        </div> 
+                        </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 col-lg-4 col-xl-6">
@@ -403,6 +403,47 @@
                                         @enderror
                                     </div>
                                 </div>
+                                 <div class="col-12">
+                        <div class="form-group">
+                        <label class="form-label">{{ __('Extra service') }}</label><br>
+
+
+
+
+
+                                <div class="3">
+                                    <div class="form-group">
+                                        <label for="clientName">{{ __('roles.name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control" id="clientName" style="text-transform:uppercase;" />
+                                        @error('name')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+
+                                <div class="form-group">
+                                    <label>{{ __('Price') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="service_price" class="form-control" id="price" />
+                                    @error('price') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('Quantity') }} <span class="text-danger">*</span></label>
+                                    <input type="number" name="qyt" class="form-control" id="qty" />
+                                    @error('qty') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{{ __('Services Price') }}</label>
+                                    <input type="number" name="total_price" class="form-control" id="total_price" readonly />
+                                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
+                                </div>
+
+                            </div>
+
+
+
+                        </div>
                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
                                         <label for="">{{ __('booking.earn') }} </label>
@@ -550,12 +591,12 @@
                         },
                         dataType: "json",
                         success: function(response) {
-                            $('select[name="country"]').empty(); 
-                            $('input[name="city"]').empty(); 
+                            $('select[name="country"]').empty();
+                            $('input[name="city"]').empty();
                             // console.log(response.city);
-                            $('input[name="city"]').val(response.city); 
+                            $('input[name="city"]').val(response.city);
                             $('select[name="country"]').append('<option value="' + response.country.id +
-                                '">' + response.country.name + '</option>'); 
+                                '">' + response.country.name + '</option>');
                         },
                         error: function(xhr, status, error) {
                             console.error("Error occurred:", error);

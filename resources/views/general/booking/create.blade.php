@@ -9,6 +9,10 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <!-- Link to Bootstrap 5 CSS -->
+{{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJzQd5R2E4v6l3mY7E3B1s6cS2rC0vN1OiwVwC0Fjz5Vc6T9Frr2bWvnm+2T" crossorigin="anonymous"> --}}
+
+<!-- Link to Bootstrap 5 JS (Optional, for JavaScript components) -->
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0hXr8rxzNkdyh0I7l2zH2Lz7g/ti1Hpc5OgPUb5fX38pkhB4" crossorigin="anonymous"></script> --}}
 
     <style>
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -594,38 +598,96 @@ input[name="canceled_period"] {
 
 
     </script>
-    <script>
-        function calculate_earn() {
-            var buyPrice = parseFloat($('input[name="buy_price"]').val()) || 0;
-            var salePrice = parseFloat($('input[name="price"]').val()) || 0;
-            var night_count = parseFloat($('input[name="days_count"]').val()) || 0;
-            var commission_percentage = parseFloat($('input[name="commission_percentage"]').val()) || 0;
-            var commission_night = parseFloat($('input[name="commission_night"]').val()) || 0;
-            var broker_amount = parseFloat($('input[name="broker_amount"]').val()) || 0;
-            var commission_type = $('#commission_type').val();
-            if (commission_type === 'percentage') {
-                var commission = (buyPrice * commission_percentage) / 100;
-                var earn = ((salePrice - (buyPrice - commission) - broker_amount) * night_count);
-                var total = (salePrice * night_count);
-            } else if (commission_type == 'night') {
-                var commission = commission_night;
-                var earn = ((salePrice - (buyPrice - commission)  - broker_amount) * night_count)
-                var total = (salePrice * night_count) ;
-            } else {
-                var commission = 0;
-            }
+   <script>
+    function calculateServiceTotal() {
+        const service_price = parseFloat($('#price').val()) || 0;
+        const qty = parseFloat($('#qty').val()) || 0;
+        const total_price = service_price * qty;
+        $('#total_price').val(total_price.toFixed(2));
+        return total_price;
+    }
 
-            $('input[name="total"]').empty();
-            $('input[name="earn"]').empty();
-            $('input[name="total"]').val(total.toFixed(2));
-            $('input[name="earn"]').val(earn.toFixed(2));
+    function calculate_earn() {
+        const buyPrice = parseFloat($('input[name="buy_price"]').val()) || 0;
+        const salePrice = parseFloat($('input[name="price"]').val()) || 0;
+        const night_count = parseFloat($('input[name="days_count"]').val()) || 0;
+        const commission_percentage = parseFloat($('input[name="commission_percentage"]').val()) || 0;
+        const commission_night = parseFloat($('input[name="commission_night"]').val()) || 0;
+        const broker_amount = parseFloat($('input[name="broker_amount"]').val()) || 0;
+        const commission_type = $('#commission_type').val();
+
+        let commission = 0;
+        let earn = 0;
+        const total = salePrice * night_count;
+
+        if (commission_type === 'percentage') {
+            // عمولة كنسبة مئوية من سعر الشراء
+            commission = (buyPrice * commission_percentage) / 100;
+            earn = (salePrice - (buyPrice - commission) - broker_amount) * night_count;
+        } else if (commission_type === 'night') {
+            // عمولة ثابتة لكل ليلة
+            commission = commission_night * night_count;
+            earn = (salePrice - (buyPrice - commission / night_count) - broker_amount) * night_count;
+        } else {
+            earn = (salePrice - buyPrice - broker_amount) * night_count;
         }
-        $(document).ready(function() {
-            $('input[name="buy_price"], input[name="price"]').on('keyup change', function() {
+
+        // حساب تكلفة الخدمة الإضافية إن وجدت
+        const extraServiceTotal = calculateServiceTotal();
+
+        const sub_total = total + extraServiceTotal;
+
+        $('input[name="total"]').val(total.toFixed(2));
+        $('input[name="earn"]').val(earn.toFixed(2));
+        $('input[name="sub_total"]').val(sub_total.toFixed(2));
+    }
+
+    $(document).ready(function() {
+        // أول مرة تحميل الصفحة
+        toggleCommissionFields();
+        toggleServiceFields();
+
+        // عند تغيير أي مدخل له تأثير على الحساب
+        $('input[name="buy_price"], input[name="price"], input[name="days_count"], input[name="commission_percentage"], input[name="commission_night"], input[name="broker_amount"], #price, #qty')
+            .on('keyup change', function() {
                 calculate_earn();
             });
+
+        $('#commission_type').on('change', function() {
+            toggleCommissionFields();
+            calculate_earn();
         });
-    </script>
+
+        $('input[name="toggle_service"]').on('change', function () {
+            toggleServiceFields();
+            calculate_earn();
+        });
+    });
+
+    function toggleCommissionFields() {
+        const type = $('#commission_type').val();
+        if (type === 'percentage') {
+            $('.percentage_html').show();
+            $('.night_html').hide();
+        } else if (type === 'night') {
+            $('.percentage_html').hide();
+            $('.night_html').show();
+        } else {
+            $('.percentage_html, .night_html').hide();
+        }
+    }
+
+    function toggleServiceFields() {
+        const toggle = $('input[name="toggle_service"]:checked').val();
+        if (toggle === 'yes') {
+            $('#serviceFormContainer').show();
+        } else {
+            $('#serviceFormContainer').hide();
+            $('#total_price').val('0');
+        }
+    }
+</script>
+
     <script>
         function calculateNights() {
             const checkIn = new Date($('#arrival_date').val());

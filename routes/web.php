@@ -181,3 +181,6 @@ Route::put('/car/{id}/status', [CarController::class, 'updateStatus'])
 
 Route::post('bookings/bulk_action', [BookingController::class, 'bulkAction'])
     ->name('admin.booking.bulk_action');
+Route::get('bookings/reports', [BookingController::class, 'reports'])
+    ->name('admin.booking.reports');
+

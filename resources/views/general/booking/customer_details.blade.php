@@ -80,17 +80,18 @@
                                         <div class="d-flex flex-column">
                                             <label class="mb-1" for="canceled_period">{{ __('booking.cancellation_period') }} <span class="text-danger">*</span></label>
                                             <div class="">
-                                                <select required name="canceled_period" class="form-control js-select2-custom ">
+                                                <select  name="canceled_period" class="form-control js-select2-custom " required>
                                                     <option value="">{{ __('general.select') }}</option>
                                                     @foreach ($cancels as $cancel)
                                                         <option value="{{ $cancel->period }}">{{ $cancel->period }}</option>
                                                     @endforeach
                                                 </select>
-                                            </div>
-
-                                            @error('canceled_period')
+                                                 @error('canceled_period')
                                                 <span class="error text-danger">{{ $message }}</span>
                                             @enderror
+                                            </div>
+
+
                                         </div>
 
                                         <div class="d-flex flex-column">
