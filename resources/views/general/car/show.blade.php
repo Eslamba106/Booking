@@ -245,6 +245,13 @@
                             </div>
                         </div>
                     </div>
+                    <hr>
+                     <div class="detail-row">
+                                <div class="detail-label">Note</div>
+                                <div class="detail-value">
+                                    {{ $booking->note }}
+                                </div>
+                            </div>
                 </div>
             </div>
         </div>

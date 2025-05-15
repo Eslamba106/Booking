@@ -101,6 +101,10 @@ public function index(Request $request)
     }
     public function show($id)
     {
+
+
+
+
         $booking = Car::findOrFail($id);
 
 
@@ -110,22 +114,25 @@ public function index(Request $request)
 
     public function store(Request $request)
     {
-        $fields = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'category_id' => 'required|exists:car_categories,id',
-            'arrival_date' => 'required|date|after:today',
-            'arrival_time' => 'required',
-            'leave_date' => 'required|date|after:today',
-            'leave_time' => 'required',
-            'from_location' => 'required|string|max:255',
-            'to_location' => 'required|string|max:255',
-            'days_count' => 'required|integer|min:1',
 
-            'total' => 'required|numeric|min:0',
-            'tour_id' => 'nullable|exists:tours,id',
-            'note' => 'nullable|string'
+
+        $fields = $request->validate([
+           'customer_id' => 'required|exists:customers,id',
+        'category_id' => 'required|exists:car_categories,id',
+        'arrival_date' => 'required|date|after_or_equal:today',
+        'arrival_time' => 'required',
+        'leave_date' => 'required|date|after:arrival_date',
+        'leave_time' => 'required',
+        'from_location' => 'required|string|max:255',
+        'to_location' => 'required|string|max:255',
+        'days_count' => 'required|integer|min:1',
+        // 'car_price' => 'required|numeric|min:0',
+        'total' => 'required|numeric|min:0',
+        'tour_id' => 'nullable',
+        'note' => 'required|string'
         ]);
 
+        //  dd($fields);
         Car::create($fields);
 
         return redirect()->route('car.index')->with('success', 'Car has been added successfully');
@@ -142,6 +149,7 @@ public function index(Request $request)
     }
 
     public function update(Request $request,$id){
+
         $car = Car::findOrFail($id);
          $fields = $request->validate([
             'customer_id' => 'required|exists:customers,id',
@@ -156,10 +164,11 @@ public function index(Request $request)
 
             'total' => 'required|numeric|min:0',
             'tour_id' => 'nullable|exists:tours,id',
-            'note' => 'nullable|string'
+            'note' => 'required|string'
         ]);
-
+        // dd($fields);
         $car->update($fields);
+
         return redirect()->route('car.index')->with('success', 'Car has been updated successfully');
     }
         public function updateStatus(Request $request, $id)

@@ -218,14 +218,14 @@
                             <div class="row">
                                 <!-- Pickup Date -->
                                 <div class="col-md-6">
-    <div class="form-group">
-        <label for="arrival_date">Pickup Date <span class="text-danger">*</span></label>
-        <input type="date" id="arrival_date" name="arrival_date" class="form-control"
-               min="{{ \Carbon\Carbon::today()->toDateString() }}" onchange="validateDate()" required>
-        <span id="arrivalDateError" style="color:red; display:none;">Pickup date cannot be in the past</span>
-        <div class="invalid-feedback">Please select a valid pickup date</div>
-    </div>
-</div>
+                        <div class="form-group">
+                            <label for="arrival_date">Pickup Date <span class="text-danger">*</span></label>
+                            <input type="date" id="arrival_date" name="arrival_date" class="form-control"
+                                min="{{ \Carbon\Carbon::today()->toDateString() }}" onchange="validateDate()" required>
+                            <span id="arrivalDateError" style="color:red; display:none;">Pickup date cannot be in the past</span>
+                            <div class="invalid-feedback">Please select a valid pickup date</div>
+                        </div>
+                    </div>
 
                                 <!-- Pickup Time -->
                                 <div class="col-md-6">
@@ -238,14 +238,14 @@
 
                                 <!-- Return Date -->
                                <div class="col-md-6">
-    <div class="form-group">
-        <label for="leave_date">Return Date <span class="text-danger">*</span></label>
-        <input type="date" id="leave_date" name="leave_date" class="form-control"
-               min="{{ \Carbon\Carbon::tomorrow()->toDateString() }}" onchange="validateDate()" required>
-        <span id="leaveDateError" style="color:red; display:none;">Return date must be after pickup date</span>
-        <div class="invalid-feedback">Please select a valid return date</div>
-    </div>
-</div>
+                                <div class="form-group">
+                                    <label for="leave_date">Return Date <span class="text-danger">*</span></label>
+                                    <input type="date" id="leave_date" name="leave_date" class="form-control"
+                                        min="{{ \Carbon\Carbon::tomorrow()->toDateString() }}" onchange="validateDate()" required>
+                                    <span id="leaveDateError" style="color:red; display:none;">Return date must be after pickup date</span>
+                                    <div class="invalid-feedback">Please select a valid return date</div>
+                                </div>
+                            </div>
 
                                 <!-- Return Time -->
                                 <div class="col-md-6">
@@ -360,7 +360,7 @@
                                         <label for="note">Note <span class="text-danger">*</span></label>
                                         <textarea
                                             name="note"
-                                            id="note"
+                                            id="note" required
                                             rows="4"
                                             class="form-control @error('note') is-invalid @enderror"
                                             placeholder="Write your note here..."

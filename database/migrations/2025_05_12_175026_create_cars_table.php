@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('to_location');
             $table->string('note');
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('category_id')->constrained('car_categories')->cascadeOnDelete();
             $table->foreignId('tour_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
