@@ -254,6 +254,54 @@
                             </div>
                 </div>
             </div>
+            <div class="card booking-details-card mt-4">
+                <div class="detail-header">
+                    <h4 class="mb-0">Financial Details</h4>
+                </div>
+                <div class="detail-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="detail-row">
+                                <div class="detail-label">Car Category</div>
+                                <div class="detail-value">{{ $booking->category->category }}</div>
+                            </div>
+
+
+                            <div class="detail-row">
+                                <div class="detail-label">Daily Rate</div>
+                                <div class="detail-value">{{ number_format($booking->category->price_per_day, 2) }} $</div>
+                            </div>
+                        </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Total</div>
+                                <div class="detail-value">{{ number_format($booking->total, 2) }}  $</div>
+                            </div>
+                        </div>
+
+
+                            <div class="detail-row">
+                                <div class="detail-label">Rental Duration</div>
+                                <div class="detail-value">
+                                    {{ $booking->days_count }} days
+                                </div>
+                            </div>
+                            <hr>
+                              <div class="detail-row">
+                                <div class="detail-label">Additional Service</div>
+                                <div class="detail-value">
+                                    @if($booking->tour)
+                                    {{ $booking->tour->tour }} ({{ number_format($booking->tour->price, 2) }} $)
+                                    @else
+                                    <p>No Additional Service</p>
+                                @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                </div>
+            </div>
         </div>
 
 
