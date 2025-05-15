@@ -266,12 +266,10 @@ input[name="canceled_period"] {
                     </div>
 
                   <div class="card-footer d-flex justify-content-between">
-    <!-- الزر على اليسار -->
+
     <div>
         <button type="button" id="prevBtn" class="btn btn-secondary" onclick="nextPrev(-1)">Previous</button>
     </div>
-
-    <!-- الأزرار على اليمين -->
     <div>
         <button type="button" id="nextBtn" class="btn btn-primary" onclick="nextPrev(1)">Next</button>
         <button type="submit" id="submitBtn" class="btn btn-success d-none">{{ __('dashboard.save') }}</button>
