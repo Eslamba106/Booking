@@ -10,8 +10,8 @@
                     </div>
 
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-4 col-xl-6">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-6 col-lg-4 col-xl-3">
                                     <div class="form-group">
                                         <label for="">{{ __('booking.customer_name') }} <button type="button"
                                                 data-target="#add_tenant" data-add_tenant="" data-toggle="modal"
@@ -24,45 +24,49 @@
                                                 </option>
                                             @endforeach
                                         </select>
+
+                                    </div>
                                         @error('customer_id')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
-                                    </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3">
                                     <input type="hidden" name="user_id" value="{{auth()->id()}}">
                                     <div class="form-group">
                                         <label for="">{{ __('booking.check_in_date') }} <span
-                                                class="text-danger">*</span></label>
+                                                class="text-danger">*  <span id="arrivalDateError" style="color:red; display:none;">Invalid date</span></span></label>
                                                 <input type="date" id="arrival_date" name="arrival_date"
                                                 onchange="calculate_earn(); validateDate()" class="form-control"
                                                 min="{{ \Carbon\Carbon::today()->toDateString() }}"required>
-                                            <span id="arrivalDateError" style="color:red; display:none;">Invalid date</span>
 
 
+
+                                        </div>
                                         @error('arrival_date')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
-                                    </div>
                                 </div>
                                 <div class="col-md-6 col-lg-4 col-xl-3">
 
                                     <div class="form-group">
+
                                         <label for="">{{ __('booking.check_out_date') }} <span
-                                                class="text-danger">*</span></label>
+                                           id="checkoutDateError" style="color:red; display:none;"
+                                                class="text-danger">*Invalid date</span></span></label>
                                                 <input type="date" id="check_out_date" name="check_out_date"
                                                 onchange="calculate_earn(); validateDate()" class="form-control"
                                                 min="{{ \Carbon\Carbon::tomorrow()->toDateString() }}" required>
-                                            <span id="checkoutDateError" style="color:red; display:none;">Invalid date</span>
+
+                                        </div>
                                         @error('check_out_date')
-                                            <span class="error text-danger">{{ $message }}</span>
+                                        <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
-                                </div>
 
 
 
 
+                                    <br>
                                 <div class="col-12">
                                     <div class="form-group d-flex flex-wrap gap-4 justify-content-between align-items-end">
 

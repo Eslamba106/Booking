@@ -5,7 +5,7 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="row">
+        <div class="row g-3 align-items-end">
             <div class="col-3">
                 <div class="form-group">
                     <label for="">{{ __('general.hotel') }}<button type="button"
