@@ -8,7 +8,7 @@
     <div class="page-breadcrumb">
         <div class="row">
             <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __(' Meals management') }}</h4>
+                <h4 class="page-title">{{ __(' Tour management') }}</h4>
 
                 <div class="d-flex align-items-center">
 
@@ -32,7 +32,7 @@
     {{ dd(session()->get('locale') ) }}
 @endif --}}
 
-    <form action="" method="get">
+
 
         <div class="col-12">
             <div class="card">
@@ -44,7 +44,7 @@
 
 
 
-                        <a href="{{ route('category.create') }}" class="btn btn-secondary mt-3 mr-2">
+                        <a href="{{ route('tour.create') }}" class="btn btn-secondary mt-3 mr-2">
                             <i class="la la-refresh"></i> {{ __('dashboard.create') }}
                         </a>
 
@@ -79,10 +79,7 @@
 
 
                               <td class="text-center">
-                                    <a href="{{ route('tour.show', $tour->id) }}"
-                                       class="btn btn-outline-info btn-sm" title="@lang('Show')">
-                                        <i class="mdi mdi-eye"></i>
-                                    </a>
+
                                     <a href="{{ route('tour.edit', $tour->id) }}"
                                        class="btn btn-outline-info btn-sm" title="@lang('Edit')">
                                         <i class="mdi mdi-pencil"></i>
@@ -108,7 +105,7 @@
             </div>
         </div>
         </div>
-    </form>
+
 
 
 

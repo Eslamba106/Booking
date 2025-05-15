@@ -4,18 +4,10 @@
 @endsection
 @section('css')
     {{-- <link href="{{ asset('css/tags-input.min.css') }}" rel="stylesheet"> --}}
-    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"> --}}
 
     <style>
-        .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #dedede;
-            border: 1px solid #dedede;
-            border-radius: 2px;
-            color: #222;
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
+
     </style>
 @endsection
 @section('content')
@@ -128,7 +120,7 @@
                                         <label for="">{{ __('roles.all_unit_types') }} <span
                                                 class="text-danger">*</span></label>
                                         <select name="unit_type_ids[]" class="form-control js-select2-custom " multiple>
-                                            <option disabled selected hidden>{{ __('general.select_unit_type') }}</option>
+                                            <option value="" disabled>{{ __('general.select_unit_type') }}</option>
                                             @foreach ($unit_types as $unit_types_item)
                                                 <option value="{{ $unit_types_item->id }}">{{ $unit_types_item->name }}
                                                 </option>
@@ -152,7 +144,7 @@
     </div>
 @endsection
 @section('js')
-    <script src="{{ asset('js/select2.min.js') }}"></script>
+    {{-- <script src="{{ asset('js/select2.min.js') }}"></script> --}}
 
 <script>
     $(document).ready(function () {

@@ -138,7 +138,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">{{ __('all_bookings') }}</h4>
+                    <h4 class="mb-0">{{ __('All bookings') }}</h4>
                 </div>
 
                 <div class="card-body">
@@ -225,12 +225,12 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th width="50"><input type="checkbox" id="selectAll"></th>
-                                        <th>{{ __('booking_id') }}</th>
+                                        <th>{{ __('Booking NO') }}</th>
                                         <th>{{ __('booking.customer_name') }}</th>
                                         <th>{{ __('booking.hotel_name') }}</th>
-                                        <th>{{ __('pickup_date') }}</th>
-                                        <th>{{ __('return_date') }}</th>
-                                        <th>{{ __('total') }}</th>
+                                        <th>{{ __('Pickup date') }}</th>
+                                        <th>{{ __('Return_date') }}</th>
+                                        <th>{{ __('Total') }}</th>
                                         <th>{{ __('roles.status') }}</th>
                                         <th>{{ __('roles.Actions') }}</th>
                                     </tr>

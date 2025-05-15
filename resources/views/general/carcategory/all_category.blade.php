@@ -32,7 +32,7 @@
     {{ dd(session()->get('locale') ) }}
 @endif --}}
 
-    <form action="" method="get">
+
 
         <div class="col-12">
             <div class="card">
@@ -81,10 +81,7 @@
 
 
                                 <td class="text-center">
-                                    <a href="{{ route('category.show', $category->id) }}"
-                                       class="btn btn-outline-info btn-sm" title="@lang('Show')">
-                                        <i class="mdi mdi-eye"></i>
-                                    </a>
+
                                     <a href="{{ route('category.edit', $category->id) }}"
                                        class="btn btn-outline-info btn-sm" title="@lang('Edit')">
                                         <i class="mdi mdi-pencil"></i>
@@ -110,7 +107,7 @@
             </div>
         </div>
         </div>
-    </form>
+
 
 
 

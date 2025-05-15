@@ -119,7 +119,7 @@
                         @endcan
                     </li>
                 @endcan
-                @can('service_management')
+                {{-- @can('service_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
@@ -148,7 +148,7 @@
                             </ul>
                         @endcan
                     </li>
-                @endcan
+                @endcan --}}
                 @can('customer_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"

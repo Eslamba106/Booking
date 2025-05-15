@@ -32,32 +32,13 @@
     {{ dd(session()->get('locale') ) }}
 @endif --}}
 
-    <form action="" method="get">
+
 
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="input-group mb-3 d-flex justify-content-end">
-                        @can('change_hotels_status')
-                            <div class="remv_control mr-2">
-                                <select name="status" class="mr-3 mt-3 form-control ">
-                                    <option value="">{{ __('dashboard.set_status') }}</option>
-                                    <option value="1">{{ __('dashboard.active') }}</option>
-                                    <option value="2">{{ __('dashboard.disactive') }}</option>
-                                </select>
-                            </div>
-                        @endcan
 
-
-                        <button type="submit" name="bulk_action_btn" value="update_status"
-                            class="btn btn-primary mt-3 mr-2">
-                            <i class="la la-refresh"></i> {{ __('dashboard.update') }}
-                        </button>
-                        @can('delete_hotel')
-                        <button type="submit" name="bulk_action_btn" value="delete"
-                            class="btn btn-danger delete_confirm mt-3 mr-2"> <i class="la la-trash"></i>
-                            {{ __('dashboard.delete') }}</button>
-                            @endcan
                         @can('create_hotel')
                         <a href="{{ route('cancel.create') }}" class="btn btn-secondary mt-3 mr-2">
                             <i class="la la-refresh"></i> {{ __('dashboard.create') }}
@@ -112,7 +93,6 @@
             </div>
         </div>
         </div>
-    </form>
 
 
 

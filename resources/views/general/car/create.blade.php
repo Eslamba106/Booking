@@ -187,7 +187,7 @@
                                                         data-model="{{ $category->model }}"
                                                         data-price="{{ $category->price_per_day }}"
                                                         data-car_number="{{ $category->car_number }}">
-                                                    {{ $category->category }} ({{ number_format($category->price_per_day, 2) }} SAR/day)
+                                                    {{ $category->category }} ({{ number_format($category->price_per_day, 2) }} $/day)
                                                 </option>
                                             @endforeach
                                         </select>
@@ -198,7 +198,7 @@
                                     <div class="form-group">
                                         <label>Category details</label>
                                         <div class="category-description p-2 bg-light rounded">
-                                            <div class="mb-1"><strong>Daily Rate:</strong> <span id="daily-rate-text">0.00</span> SAR</div>
+                                            <div class="mb-1"><strong>Daily Rate:</strong> <span id="daily-rate-text">0.00</span> $</div>
                                             <div class="mb-1"><strong>Model:</strong> <span id="category-model" class="text-primary">Not selected</span></div>
                                             <div><strong>Plate Number:</strong> <span id="category-car_number" class="text-secondary">Not selected</span></div>
                                         </div>
@@ -208,7 +208,7 @@
                         </div>
 
                         {{-- <input type="hidden" name="tour_id" value="1"> --}}
-                        <input type="hidden" name="note" value="ok">
+                        {{-- <input type="hidden" name="note" value="ok"> --}}
 
                         <!-- Rental Period Section -->
                         <div class="form-section">
@@ -306,7 +306,7 @@
                                             <option value="null" selected>No Services</option>  <!-- الخيار الجديد No Services -->
                                             @foreach($tours as $tour)
                                                 <option value="{{ $tour->id }}" data-price="{{ $tour->price }}">
-                                                    {{ $tour->tour }} ({{ number_format($tour->price, 2) }} SAR)
+                                                    {{ $tour->tour }} ({{ number_format($tour->price, 2) }} $)
                                                 </option>
                                             @endforeach
                                         </select>
@@ -324,7 +324,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Daily Rate (SAR)</label>
+                                        <label>Daily Rate ($)</label>
                                         <div class="price-display">
                                             <div id="daily_rate_display" class="h5 mb-0">0.00</div>
                                             <input type="hidden" name="car_price" id="car_price">
@@ -345,7 +345,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label>Total Amount (SAR)</label>
+                                        <label>Total Amount ($)</label>
                                         <div class="total-display">
                                             <div id="total_display" class="h5 mb-0">0.00</div>
                                             <input type="hidden" name="total" id="total">
@@ -354,6 +354,26 @@
                                 </div>
                             </div>
                         </div>
+                      <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group w-100">
+                                        <label for="note">Note <span class="text-danger">*</span></label>
+                                        <textarea
+                                            name="note"
+                                            id="note"
+                                            rows="4"
+                                            class="form-control @error('note') is-invalid @enderror"
+                                            placeholder="Write your note here..."
+                                        ></textarea>
+
+                                        @error('note')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                                <hr>
 
                         <div class="form-group text-right mt-4">
                             <button type="submit" class="btn btn-primary px-4">

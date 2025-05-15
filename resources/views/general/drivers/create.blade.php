@@ -61,9 +61,9 @@
                                     <div class="form-group">
                                         <label for="">{{ __('roles.name') }} <span
                                                 class="text-danger">*</span></label>
-                                                <input type="text" name="name" class="form-control" id="clientName" 
+                                                <input type="text" name="name" class="form-control" id="clientName"
                                                 oninput="validateName(this)" style="text-transform:uppercase;" />
-                                         
+
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
@@ -78,25 +78,12 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-lg-4 col-xl-2">
+                              <div class="col-md-6 col-lg-4 col-xl-6">
                                     <div class="form-group">
-                                        <label for="phone_dail_code" class="title-color">{{ __('general.dial_code') }}</label>
-                                        <select class="js-select2-custom form-control" name="phone_dial_code">
-                                            <option selected>{{ __('general.select') }}</option>
-                                            @foreach ($dail_code_main as $item_dail_code)
-                                                <option value="{{ '+' . $item_dail_code->dial_code }}">
-                                                    {{ '+' . $item_dail_code->dial_code }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-    
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 col-xl-4">
-                                    <div class="form-group">
-                                        <label for="">{{ __('login.phone') }}</label>
-                                        <input type="text" name="phone" class="form-control">
-                                        @error('phone')
+                                        <label>{{ __('login.phone') }}</label>
+                                        <br>
+                                        <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">
+                                      @error('phone')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -130,15 +117,46 @@
 @endsection
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
+
+
     <script>
+        // دالة التحقق من الاسم
         function validateName(input) {
-             let regex = /^[A-Za-z\s]*$/;
+            const regex = /^[A-Za-z\s]*$/;
             if (!regex.test(input.value)) {
                 input.value = input.value.replace(/[^A-Za-z\s]/g, '');
             }
-    
-             input.value = input.value.toUpperCase();
+            input.value = input.value.toUpperCase();
         }
+
+        // إعداد الهاتف الدولي
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.querySelector("#phone");
+
+            const iti = window.intlTelInput(input, {
+                nationalMode: false,
+                autoHideDialCode: false,
+                separateDialCode: false,
+                utilsScript: "{{ asset('intel/js/utils.js') }}"
+            });
+
+            input.addEventListener('input', function () {
+                const val = input.value;
+                const countryData = window.intlTelInputGlobals.getCountryData();
+
+                for (let i = 0; i < countryData.length; i++) {
+                    const code = '+' + countryData[i].dialCode;
+                    if (val.startsWith(code)) {
+                        iti.setCountry(countryData[i].iso2);
+                        break;
+                    }
+                }
+            });
+        });
+        function keepPlusSign(input) {
+    if (!input.value.startsWith("+")) {
+        input.value = "+" + input.value.replace(/[^0-9]/g, '');
+    }
+}
     </script>
-    
 @endsection

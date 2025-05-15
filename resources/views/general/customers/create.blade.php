@@ -78,7 +78,8 @@
                                     <div class="form-group">
                                         <label>{{ __('login.phone') }}</label>
                                         <br>
-                                        <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">                                        @error('phone')
+                                        <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">
+                                      @error('phone')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -115,7 +116,7 @@
 
 @section('js')
     <script src="{{ asset('js/select2.min.js') }}"></script>
-    <script src="{{ asset('intel/js/utils.js') }}"></script>
+
 
     <script>
         // دالة التحقق من الاسم

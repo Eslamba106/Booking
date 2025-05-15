@@ -58,9 +58,13 @@ class TourController extends Controller
     public function destroy($id)
     {
 
-        $meal = Tour::findOrFail($id);
-        $meal->delete();
-        return redirect()->route('tour.index')->with('success', 'tour  has been successfully deleted');
+         try {
+        $tour = Tour::findOrFail($id);
+        $tour->delete();
+        return back()->with('success', 'Deleted: ' . $tour->id);
+    } catch (\Exception $e) {
+        return back()->with('error', $e->getMessage());
+    }
     }
 }
 

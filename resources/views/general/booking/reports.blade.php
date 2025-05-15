@@ -146,7 +146,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">{{ __('all_bookings') }}</h4>
+                    <h4 class="mb-0">{{ __('All bookings') }}</h4>
                 </div>
 
                 <div class="card-body">
@@ -159,7 +159,7 @@
                                     <div class="form-group">
                                         <label for="filter_status">{{ __('roles.status') }}</label>
                                         <select name="status" id="filter_status" class="form-control">
-                                            <option value="">{{ __('all_statuses') }}</option>
+                                            <option value="">{{ __('Status') }}</option>
                                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('pending') }}</option>
                                             <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>{{ __('confirmed') }}</option>
                                             <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>{{ __('cancelled') }}</option>
@@ -211,8 +211,8 @@
                                         <th>{{ __('booking_id') }}</th>
                                         <th>{{ __('booking.customer_name') }}</th>
 
-                                        <th>{{ __('pickup_date') }}</th>
-                                        <th>{{ __('return_date') }}</th>
+                                        <th>{{ __('Pickup date') }}</th>
+                                        <th>{{ __('Return date') }}</th>
                                         <th>{{ __('Status') }}</th>
 
                                         <th>{{ __('roles.Actions') }}</th>

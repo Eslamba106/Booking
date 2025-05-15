@@ -32,7 +32,7 @@
     {{ dd(session()->get('locale') ) }}
 @endif --}}
 
-    <form action="" method="get">
+
 
         <div class="col-12">
             <div class="card">
@@ -97,7 +97,7 @@
             </div>
         </div>
         </div>
-    </form>
+
 
 
 
