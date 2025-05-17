@@ -24,6 +24,18 @@
             gap: 4px;
             align-items: center;
         } */
+         .d-flex {
+  display: flex;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
         .card-body {
         padding: 10px;
     }

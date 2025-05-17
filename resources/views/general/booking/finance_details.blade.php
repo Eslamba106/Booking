@@ -50,7 +50,8 @@
                     </div>
                     @error('commission') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
-                     <div class=" commission_html">
+                    <div class=" row">
+                <div class=" col-md-6 commission_html">
                 <div class="form-group">
                     <label for="">{{ __('booking.commission_type') }} <span class="text-danger">*</span></label>
                     <select name="commission_type" onchange="toggleCommissionFields()" id="commission_type" class="form-control js-select2-custom">
@@ -64,7 +65,7 @@
             </div>
 
             <!-- Percentage Input Field -->
-            <div class=" commission_html percentage_html" style="display:none;">
+            <div class=" col-md-6 commission_html percentage_html" style="display:none;">
                 <div class="form-group">
                     <label for="">{{ __('booking.commission_percentage') }} <span class="text-danger">*</span></label>
                     <input type="number" name="commission_percentage" onkeyup="calculate_earn()" class="form-control">
@@ -73,7 +74,7 @@
                     @enderror
                 </div>
             </div>
-            <div class=" commission_html night_html" style="display:none;">
+            <div class="col-md-6 commission_html night_html" style="display:none;">
                 <div class="form-group">
                     <label for="">{{ __('booking.days_count') }} <span class="text-danger">*</span></label>
                     <input type="number" name="commission_night" onkeyup="calculate_earn()" class="form-control">
@@ -83,6 +84,7 @@
                 </div>
             </div>
                 </div>
+            </div>
             </div>
    <!-- Commission Type -->
 
@@ -133,8 +135,11 @@
                     </div>
                     @error('broker') <span class="text-danger small">{{ $message }}</span> @enderror
                     </div>
+                    <div class="row">
 
-                       <div class="broker_html">
+
+
+                       <div class=" col-md-6 broker_html">
                 <div class="form-group">
                     <label>{{ __('booking.broker_name') }} <span class="text-danger">*</span></label>
                     <select name="broker_id" class="form-control js-select2-custom">
@@ -148,7 +153,7 @@
             </div>
 
             <!-- Broker Amount -->
-            <div class="broker_html">
+            <div class=" col-md-6 broker_html">
                 <div class="form-group">
                     <label>{{ __('booking.broker_amount') }}</label>
                     <input type="number" name="broker_amount" onkeyup="calculate_earn()" class="form-control">
@@ -157,7 +162,7 @@
             </div>
                 </div>
             </div>
-
+</div>
             <!-- Financial Summary -->
             <div class="col-12">
                 <div class="border p-3">
