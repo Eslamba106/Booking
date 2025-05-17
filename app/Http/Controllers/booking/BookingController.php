@@ -318,7 +318,7 @@ public function reports(Request $request)
                 'babes_count' => 'nullable|integer',
                 'total_person_count' => 'required|integer',
                 'hotel_id' => 'required|exists:hotels,id',
-                'city' => 'required|string|max:255',
+                'city' => 'nullable|string|max:255',
                 'booking_no' => 'required|string|max:255',
                 'unit_type_id' => 'required',
                 'food_type' => 'required|string|max:255',
