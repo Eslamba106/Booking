@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Meals;
 use Illuminate\Http\Request;
+use Throwable;
 
 class MealController extends Controller
 {
@@ -28,6 +29,21 @@ class MealController extends Controller
         Meals::create($fields);
         return redirect()->route('meal.index')->with('success', 'Meal  has been successfully added');
 
+    }
+       public function store_for_any(Request $request){
+        // $this->authorize('create_hotel');
+
+        try{
+
+             $fields = $request->validate([
+            'name' => 'string|required'
+        ]);
+        Meals::create($fields);
+        return redirect()->back()->with("success", __('general.added_successfully'));
+    } catch (Throwable $e) {
+        return redirect()->back()->with("error", $e->getMessage());
+
+    }
     }
     public function destroy($id){
 

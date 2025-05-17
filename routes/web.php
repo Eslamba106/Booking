@@ -184,3 +184,5 @@ Route::post('bookings/bulk_action', [BookingController::class, 'bulkAction'])
 Route::get('bookings/reports', [BookingController::class, 'reports'])
     ->name('admin.booking.reports');
 
+    Route::post('/create/meal', [MealController::class , 'store_for_any'])->name('admin.meal.store_any');
+    Route::post('/create/cancel', [CancelController::class , 'store_for_any'])->name('admin.cancel.store_any');

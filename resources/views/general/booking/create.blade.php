@@ -7,7 +7,7 @@
 @endsection
 
 @section('css')
-    {{-- <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"> --}}
+    <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
     <!-- Link to Bootstrap 5 CSS -->
 {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJzQd5R2E4v6l3mY7E3B1s6cS2rC0vN1OiwVwC0Fjz5Vc6T9Frr2bWvnm+2T" crossorigin="anonymous"> --}}
 
@@ -270,6 +270,7 @@ input[name="canceled_period"] {
     <div>
         <button type="button" id="prevBtn" class="btn btn-secondary" onclick="nextPrev(-1)">Previous</button>
     </div>
+
     <div>
         <button type="button" id="nextBtn" class="btn btn-primary" onclick="nextPrev(1)">Next</button>
         <button type="submit" id="submitBtn" class="btn btn-success d-none">{{ __('dashboard.save') }}</button>
@@ -335,8 +336,9 @@ input[name="canceled_period"] {
 
                                                 <div class="col-md-6 col-lg-4 col-xl-6">
                                                     <div class="form-group">
-                                                        <label for="">{{ __('login.phone') }}</label>
-                                                        <br>
+                                                        <label for="">{{ __('login.phone') }}<span
+                                                                class="text-danger">*</span></label>
+
                                                         <input id="phone" name="phone" type="tel" class="form-control" value="+" oninput="keepPlusSign(this)">
                                                         @error('phone')
                                                             <span class="error text-danger">{{ $message }}</span>
@@ -347,14 +349,13 @@ input[name="canceled_period"] {
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.nationality') }} <span
                                                                 class="text-danger">*</span></label>
-                                                        <select name="nationality_id"
-                                                            class="form-control js-select2-custom ">
-                                                            @foreach ($countries as $countries_item)
-                                                                <option value="{{ $countries_item->id }}">
-                                                                    {{ $countries_item->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                        <select name="nationality_id" class="form-control js-select2-custom" data-placeholder="{{ __('general.select') }}">
+                                    <option value="">{{ __('general.select') }}</option>
+                                    @foreach ($countries as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                    @endforeach
+                                </select>
+
 
                                                         @error('nationality_id')
                                                             <span class="error text-danger">{{ $message }}</span>
@@ -377,7 +378,7 @@ input[name="canceled_period"] {
             </div>
         </div>
     </div>
-    <div class="modal fade" id="add_service" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="add_meal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
@@ -389,7 +390,7 @@ input[name="canceled_period"] {
                 </div>
                 <div class="modal-body">
                     <div class="card-body">
-           <form action="{{ route('admin.service.store_any') }}" method="post" enctype="multipart/form-data">
+                         <form action="{{ route('admin.meal.store_any') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="col-12">
@@ -397,53 +398,81 @@ input[name="canceled_period"] {
                         <div class="card-body">
                             <div class="row">
 
-                                <div class="col-md-6 col-lg-4 col-xl-6">
+
 
                                     <div class="form-group">
-                                        <label for="">{{ __('roles.name') }} <span
+                                        <label for="">{{ __('Name of meal') }} <span
                                                 class="text-danger">*</span></label>
-                                                <input type="text" name="name" class="form-control" id="clientName"
-                                                 style="text-transform:uppercase;" />
-
+                                        <input type="text" name="name" class="form-control">
                                         @error('name')
                                             <span class="error text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                 </div>
-                              <div class="form-group">
-                                    <label for="">{{ __('Price') }} <span class="text-danger">*</span></label>
-                                    <input type="number" name="price" class="form-control" id="price" style="text-transform:uppercase;" />
-                                    @error('price') <span class="error text-danger">{{ $message }}</span> @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">{{ __('Qunatity') }} <span class="text-danger">*</span></label>
-                                    <input type="number" name="qty" class="form-control" id="qty" style="text-transform:uppercase;" />
-                                    @error('qty') <span class="error text-danger">{{ $message }}</span> @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label>{{ __('booking.total') }}</label>
-                                    <input type="number" name="total_price" class="form-control" id="total_price" readonly />
-                                    @error('total') <span class="error text-danger">{{ $message }}</span> @enderror
-                                </div>
-
 
                             </div>
+
                             <div class="form-group mt-2"
                                 style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
                                 <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-    </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="modal fade" id="add_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{ __('create cancellation') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card-body">
+          <form action="{{ route('admin.cancel.store_any') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+
+
+
+                                    <div class="form-group m-3" >
+                                        <label for="">{{ __('Period') }} <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="period" class="form-control">
+                                        @error('name')
+                                            <span class="error text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group mt-2"
+                                style="text-align: {{ Session::get('locale') == 'en' ? 'right;margin-right:10px' : 'left;margin-left:10px' }}">
+                                <button type="submit" class="btn btn-primary mt-2">{{ __('dashboard.save') }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     </div>
     <div class="modal fade" id="add_hotel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -511,12 +540,13 @@ input[name="canceled_period"] {
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.country') }} <span
                                                                 class="text-danger">*</span></label>
-                                                        <select name="country_id" class="form-control js-select2-custom ">
-                                                            @foreach ($countries as $countries_item)
-                                                                <option value="{{ $countries_item->id }}">{{ $countries_item->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                      <select name="country_id" class="form-control js-select2-custom" data-control="select2" data-placeholder="{{ __('general.select') }}">
+                                                        <option value="">{{ __('general.select') }}</option>
+                                                        @foreach ($countries as $countries_item)
+                                                            <option value="{{ $countries_item->id }}">{{ $countries_item->name }}</option>
+                                                        @endforeach
+                                                    </select>
+
                                                         @error('country_id')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -1003,6 +1033,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 </script>
+
+<script>
+    function initializeSelect2(context = document) {
+        $(context).find('.js-select2-custom').each(function () {
+            const $select = $(this);
+
+            if ($select.hasClass("select2-hidden-accessible")) {
+                $select.select2('destroy');
+            }
+
+            $select.select2({
+                dropdownParent: $select.closest('.modal').length ? $select.closest('.modal') : $('body'),
+                width: '100%',
+                placeholder: $select.data('placeholder') || '{{ __("general.select") }}',
+                allowClear: true
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        initializeSelect2();
+
+        // عند فتح أي مودال
+        $('.modal').on('shown.bs.modal', function () {
+            initializeSelect2(this);
+        });
+    });
+</script>
+
+
+
 
 
 
