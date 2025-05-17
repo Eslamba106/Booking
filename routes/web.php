@@ -41,7 +41,11 @@ Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name(
 // Dashboard
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
-
+Route::get('/dashboard/charts', [DashboardController::class, 'bookingCharts'])->name('dashboard.charts');
+Route::prefix('car-dashboard')->group(function() {
+    Route::get('/', [DashboardController::class, 'car_index'])->name('car.dashboard');
+    Route::get('/charts', [DashboardController::class, 'carCharts'])->name('car.dashboard.charts');
+});
 // User Managment
 Route::group(['prefix' => 'user_management'], function () {
 

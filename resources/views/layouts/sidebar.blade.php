@@ -16,6 +16,34 @@
                             <i class="fas fa-ticket-alt"></i>
 
 
+                            <span class="hide-menu">Dashboard</span>
+                        </a>
+                        @can('all_bookings')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('dashboard') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">Booking Dashboard</span>
+                                    </a>
+                                </li> <li class="sidebar-item">
+                                    <a href="{{ route('car.dashboard') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">Cars Dashboard</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        @endcan
+
+                    </li>
+                @endcan
+                @can('booking_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fas fa-ticket-alt"></i>
+
+
                             <span class="hide-menu">{{ __('roles.booking_management') }} </span>
                         </a>
                         @can('all_bookings')

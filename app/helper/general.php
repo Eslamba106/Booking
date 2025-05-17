@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use App\Models\Folder;
 
@@ -67,5 +67,16 @@ if (!function_exists('__checked_selected_helper')) {
             echo $result;
 
         return $result;
+    }
+}
+if (!function_exists('getStatusColor')) {
+    function getStatusColor($status) {
+        switch(strtolower($status)) {
+            case 'confirmed': return '#1cc88a';
+            case 'pending': return '#f6c23e';
+            case 'cancelled': return '#e74a3b';
+            case 'completed': return '#36b9cc';
+            default: return '#858796';
+        }
     }
 }
