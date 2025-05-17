@@ -282,7 +282,7 @@
                                 <i class="fas fa-plus-circle"></i> Extra Services
                             </h5>
                             <div class="row">
-                                <div class="col-12">
+                                <div class="col-3">
                                     <div class="form-group">
                                         <label class="form-label">Extra service</label><br>
                                         <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
@@ -299,7 +299,7 @@
 
                             <div id="serviceFormContainer" style="display: none;">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="tour_id">Tour Package</label>
                                             <select name="tour_id" id="tour_id" class="form-control">

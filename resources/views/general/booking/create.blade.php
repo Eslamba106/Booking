@@ -657,7 +657,7 @@ function calculate_earn() {
         }
     }
 
-    const hotelTotalCost = totalBuyPrice + commission + broker_amount;
+    const hotelTotalCost = totalBuyPrice - commission + broker_amount;
     const earn = (totalBookingPrice + extraServiceTotal) - hotelTotalCost;
 
     const revenuePerRoom = salePrice - buyPrice;
