@@ -43,44 +43,25 @@
             to { opacity: 1; }
         }
         /* Currency Toggle Container */
-.currency-toggle {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-}
+ .currency-toggle .btn-check:checked + .btn {
+        background-color: #0d6efd;
+        color: #fff;
+        border-color: #0d6efd;
+    }
 
-/* Hide default radio buttons */
-.currency-toggle input[type="radio"] {
-    display: none;
-}
+    .currency-toggle .btn {
+        border-radius: 30px;
+        padding: 6px 16px;
+        margin: 0 4px 8px 0;
+        transition: all 0.3s ease;
+    }
 
-/* Styled labels as toggle buttons */
-.currency-toggle label {
-    flex: 1;
-    padding: 12px;
-    text-align: center;
-    background-color: #f1f1f1;
-    border: 2px solid #ccc;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    user-select: none;
-}
+    .currency-toggle {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
 
-/* Active (checked) state */
-.currency-toggle input[type="radio"]:checked + label {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Hover effect */
-.currency-toggle label:hover {
-    background-color: #e9ecef;
-}
 input[name="days_count"],
 input[name="canceled_period"] {
     border: 1px solid #ced4da;
@@ -634,94 +615,106 @@ input[name="canceled_period"] {
 
     </script>
    <script>
-    function calculateServiceTotal() {
-        const service_price = parseFloat($('#price').val()) || 0;
-        const qty = parseFloat($('#qty').val()) || 0;
-        const total_price = service_price * qty;
-        $('#total_price').val(total_price.toFixed(2));
-        return total_price;
-    }
+   function calculateServiceTotal() {
+    const service_price = parseFloat($('#price').val()) || 0;
+    const qty = parseFloat($('#qty').val()) || 0;
+    const total_price = service_price * qty;
+    $('#total_price').val(total_price.toFixed(2));
+    return total_price;
+}
 
-    function calculate_earn() {
-        const buyPrice = parseFloat($('input[name="buy_price"]').val()) || 0;
-        const salePrice = parseFloat($('input[name="price"]').val()) || 0;
-        const night_count = parseFloat($('input[name="days_count"]').val()) || 0;
-        const commission_percentage = parseFloat($('input[name="commission_percentage"]').val()) || 0;
-        const commission_night = parseFloat($('input[name="commission_night"]').val()) || 0;
-        const broker_amount = parseFloat($('input[name="broker_amount"]').val()) || 0;
-        const commission_type = $('#commission_type').val();
+function calculate_earn() {
+    const buyPrice = parseFloat($('input[name="buy_price"]').val()) || 0;
+    const salePrice = parseFloat($('input[name="price"]').val()) || 0;
+    const night_count = parseFloat($('input[name="days_count"]').val()) || 1;
+    const commission_percentage = parseFloat($('input[name="commission_percentage"]').val()) || 0;
+    const commission_night = parseFloat($('input[name="commission_night"]').val()) || 0;
+    const broker_amount = parseFloat($('input[name="broker_amount"]').val()) || 0;
+    const commission_type = $('#commission_type').val();
 
-        let commission = 0;
-        let earn = 0;
-        const total = salePrice * night_count;
+    const totalBookingPrice = salePrice * night_count;
+    const totalBuyPrice = buyPrice * night_count;
+    const extraServiceTotal = calculateServiceTotal();
 
+    let commission = 0;
+    if ($('#commission_yes').is(':checked')) {
         if (commission_type === 'percentage') {
-            // عمولة كنسبة مئوية من سعر الشراء
-            commission = (buyPrice * commission_percentage) / 100;
-            earn = (salePrice - (buyPrice - commission) - broker_amount) * night_count;
+            commission = (buyPrice * commission_percentage / 100) * night_count;
         } else if (commission_type === 'night') {
-            // عمولة ثابتة لكل ليلة
             commission = commission_night * night_count;
-            earn = (salePrice - (buyPrice - commission / night_count) - broker_amount) * night_count;
-        } else {
-            earn = (salePrice - buyPrice - broker_amount) * night_count;
         }
-
-        // حساب تكلفة الخدمة الإضافية إن وجدت
-        const extraServiceTotal = calculateServiceTotal();
-
-        const sub_total = total + extraServiceTotal;
-
-        $('input[name="total"]').val(total.toFixed(2));
-        $('input[name="earn"]').val(earn.toFixed(2));
-        $('input[name="sub_total"]').val(sub_total.toFixed(2));
     }
 
-    $(document).ready(function() {
-        // أول مرة تحميل الصفحة
+    const hotelTotalCost = totalBuyPrice + commission + broker_amount;
+    const earn = (totalBookingPrice + extraServiceTotal) - hotelTotalCost;
+
+    const revenuePerRoom = salePrice - buyPrice;
+
+    // تعبئة الحقول
+    $('input[name="revenue_per_room"]').val(revenuePerRoom.toFixed(2));
+    $('input[name="hotel_total_cost"]').val(hotelTotalCost.toFixed(2));
+    $('input[name="total"]').val((totalBookingPrice + extraServiceTotal).toFixed(2));
+    $('input[name="earn"]').val(earn.toFixed(2));
+    $('input[name="total_commission"]').val(commission.toFixed(2));
+    $('input[name="total_broker_commission"]').val(broker_amount.toFixed(2));
+}
+
+
+function toggleCommissionFields() {
+    const type = $('#commission_type').val();
+    if (type === 'percentage') {
+        $('.percentage_html').show();
+        $('.night_html').hide();
+    } else if (type === 'night') {
+        $('.percentage_html').hide();
+        $('.night_html').show();
+    } else {
+        $('.percentage_html, .night_html').hide();
+    }
+}
+
+function toggleServiceFields() {
+    const toggle = $('input[name="toggle_service"]:checked').val();
+    if (toggle === 'yes') {
+        $('#serviceFormContainer').show();
+    } else {
+        $('#serviceFormContainer').hide();
+        $('#total_price').val('0');
+    }
+}
+
+$(document).ready(function () {
+    toggleCommissionFields();
+    toggleServiceFields();
+    calculate_earn();
+
+    $('input[name="buy_price"], input[name="price"], input[name="days_count"], input[name="commission_percentage"], input[name="commission_night"], input[name="broker_amount"], #price, #qty')
+        .on('keyup change', function () {
+            calculate_earn();
+        });
+
+    $('#commission_type').on('change', function () {
         toggleCommissionFields();
-        toggleServiceFields();
-
-        // عند تغيير أي مدخل له تأثير على الحساب
-        $('input[name="buy_price"], input[name="price"], input[name="days_count"], input[name="commission_percentage"], input[name="commission_night"], input[name="broker_amount"], #price, #qty')
-            .on('keyup change', function() {
-                calculate_earn();
-            });
-
-        $('#commission_type').on('change', function() {
-            toggleCommissionFields();
-            calculate_earn();
-        });
-
-        $('input[name="toggle_service"]').on('change', function () {
-            toggleServiceFields();
-            calculate_earn();
-        });
+        calculate_earn();
     });
 
-    function toggleCommissionFields() {
-        const type = $('#commission_type').val();
-        if (type === 'percentage') {
-            $('.percentage_html').show();
-            $('.night_html').hide();
-        } else if (type === 'night') {
-            $('.percentage_html').hide();
-            $('.night_html').show();
-        } else {
-            $('.percentage_html, .night_html').hide();
-        }
-    }
+    $('input[name="toggle_service"]').on('change', function () {
+        toggleServiceFields();
+        calculate_earn();
+    });
 
-    function toggleServiceFields() {
-        const toggle = $('input[name="toggle_service"]:checked').val();
-        if (toggle === 'yes') {
-            $('#serviceFormContainer').show();
-        } else {
-            $('#serviceFormContainer').hide();
-            $('#total_price').val('0');
-        }
-    }
+    $('input[name="commission"]').on('change', function () {
+        calculate_earn();
+    });
+
+    $('input[name="broker"]').on('change', function () {
+        calculate_earn();
+    });
+});
+
 </script>
+
+
 
     <script>
         function calculateNights() {
@@ -968,25 +961,27 @@ toggleCommissionFields();
 
 </script>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function checkCurrencyMatch() {
+            const buyCurrency = document.querySelector('input[name="buy_currency"]:checked').value;
+            const sellCurrency = document.querySelector('input[name="currency"]:checked').value;
+            const errorBox = document.getElementById('currency-error');
 
-    function checkCurrencyMatch() {
-        const buyCurrency = document.querySelector('input[name="currency_buy"]:checked').value;
-    const saleCurrency = document.querySelector('input[name="currency"]:checked').value;
+            if (buyCurrency !== sellCurrency) {
+                errorBox.classList.remove('d-none');
+            } else {
+                errorBox.classList.add('d-none');
+            }
+        }
 
-    const errorSpan = document.getElementById('currency-error');
+        // Add event listeners to all currency radios
+        document.querySelectorAll('input[name="buy_currency"], input[name="currency"]').forEach(radio => {
+            radio.addEventListener('change', checkCurrencyMatch);
+        });
 
-    if (buyCurrency !== saleCurrency) {
-        errorSpan.classList.remove('d-none');
-    } else {
-        errorSpan.classList.add('d-none');
-    }
-}
-
-// في حال تغيّر العملة، نفذ التحقق أيضاً
-document.querySelectorAll('input[name="currency_buy"], input[name="currency"]').forEach((input) => {
-    input.addEventListener('change', checkCurrencyMatch);
-});
-
+        // تشغيل أولي عند تحميل الصفحة
+        checkCurrencyMatch();
+    });
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
