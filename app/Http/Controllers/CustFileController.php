@@ -93,7 +93,7 @@ public function create(){
     $bookingPricesJson = json_encode($bookingPrices);
     $carPrices = Car::pluck('total', 'id')->toArray();
     $carPricesJson = json_encode($carPrices);
-          return view('general.Cust_files.create', compact('customers','bookingPricesJson','carPricesJson'));
+          return view('general.cust_files.create', compact('customers','bookingPricesJson','carPricesJson'));
 }
     public function store(Request $request){
         $id = Auth::id();
