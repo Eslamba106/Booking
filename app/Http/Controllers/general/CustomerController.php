@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\CustFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -92,6 +93,14 @@ class CustomerController extends Controller
         $customerBookings = Booking::where('customer_id', $id)->latest()->paginate();
         return view('general.customers.customer_booking', compact('customerBookings'));
     }
+    public function show_file($id){
+         $file = CustFile::with(['customer', 'cust_file_items.related'])
+        ->where('customer_id', $id)
+        ->latest()
+        ->paginate();
+
+    return view('general.cust_files.show', compact('file'));
+    }
     public function edit($id){
         $this->authorize('edit_customer');
         $customer = Customer::findOrFail($id);
@@ -121,7 +130,7 @@ class CustomerController extends Controller
         $customer = Customer::create([
             'name' => $request->name,
             'phone' =>  $request->phone,
-            'dial_code' =>  $request->phone_dial_code,
+            // 'dial_code' =>  $request->phone_dial_code,
             'email' => $request->email ?? null,
             'country_id' =>  $request->nationality_id ,
         ]);
@@ -145,7 +154,7 @@ class CustomerController extends Controller
         $customer = Customer::create([
             'name' => $request->name,
             'phone' =>  $request->phone,
-            'dial_code' =>  $request->phone_dial_code,
+            // 'dial_code' =>  $request->phone_dial_code,
             'email' => $request->email ?? null,
             'country_id' =>  $request->nationality_id ,
         ]);
@@ -176,7 +185,7 @@ class CustomerController extends Controller
 
         $customer->update([
             'name' => $request->name,
-            'dial_code' =>  $request->phone_dial_code,
+            // 'dial_code' =>  $request->phone_dial_code,
             'phone' =>  $request->phone,
             'email' => $request->email ?? null,
             'country_id' =>  $request->nationality_id ,

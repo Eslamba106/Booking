@@ -21,6 +21,10 @@ class Booking extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    public function customers_file()
+    {
+        return $this->belongsTo(CustomersFile::class);
+    }
     public function booking_details()
     {
         return $this->hasOne(BookingDetails::class);
@@ -37,5 +41,12 @@ class Booking extends Model
     {
         return $this->hasOne(Service::class);
     }
-
+    public function cust_file_items()
+{
+    return $this->morphMany(CustFileItem::class, 'related');
+}
+    public function broker()
+    {
+        return $this->belongsTo(User::class, 'broker_id');
+    }
 }

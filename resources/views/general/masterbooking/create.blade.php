@@ -243,7 +243,7 @@ input[name="canceled_period"] {
 <div class="mb-5"></div>
 
 <div class="container-fluid">
-    <form action="{{ route('admin.booking.store') }}" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.store.master') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="row">
@@ -533,12 +533,13 @@ input[name="canceled_period"] {
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.country') }} <span
                                                                 class="text-danger">*</span></label>
-                                                                <select name="country_id" class="form-control js-select2-custom" id="country_select">
-                                                                    <option value="">{{ __('select country') }}</option>
-                                                                    @foreach ($countries as $countries_item)
-                                                                        <option value="{{ $countries_item->id }}">{{ $countries_item->name }}</option>
-                                                                    @endforeach
-                                                                </select>
+                                                      <select name="country_id" class="form-control js-select2-custom" data-control="select2" data-placeholder="{{ __('general.select') }}">
+                                                        <option value="">{{ __('general.select') }}</option>
+                                                        @foreach ($countries as $countries_item)
+                                                            <option value="{{ $countries_item->id }}">{{ $countries_item->name }}</option>
+                                                        @endforeach
+                                                    </select>
+
                                                         @error('country_id')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -548,9 +549,7 @@ input[name="canceled_period"] {
                                                     <div class="form-group">
                                                         <label for="">{{ __('general.city') }} <span
                                                                 class="text-danger">*</span></label>
-                                                                <select name="city" class="form-control" id="city_select">
-                                                                    <option value="">{{ __('select city') }}</option>
-                                                                </select>
+                                                        <input type="text" name="city" class="form-control">
                                                         @error('city')
                                                             <span class="error text-danger">{{ $message }}</span>
                                                         @enderror
@@ -920,28 +919,6 @@ function validateDate() {
 
 
     </script>
-    <script>
-    $(document).ready(function () {
-        $('#country_select').on('change', function () {
-            var countryId = $(this).val();
-            if (countryId) {
-                $.ajax({
-                    url: '/get-cities/' + countryId,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
-                        $.each(data, function (key, value) {
-                            $('#city_select').append('<option value="' + value.name + '">' + value.name + '</option>');
-                        });
-                    }
-                });
-            } else {
-                $('#city_select').empty().append('<option value="">{{ __('select city') }}</option>');
-            }
-        });
-    });
-</script>
  <script>
     document.addEventListener("DOMContentLoaded", function () {
         // إظهار أو إخفاء حقول العمولة بناءً على اختيار نعم أو لا

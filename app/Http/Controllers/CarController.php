@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Tour;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CarController extends Controller
 {
@@ -118,6 +119,7 @@ public function index(Request $request)
 
         $fields = $request->validate([
            'customer_id' => 'required|exists:customers,id',
+
         'category_id' => 'required|exists:car_categories,id',
         'arrival_date' => 'required|date|after_or_equal:today',
         'arrival_time' => 'required',
@@ -133,6 +135,7 @@ public function index(Request $request)
         ]);
 
         //  dd($fields);
+        $fields['user_id'] = Auth::id();
         Car::create($fields);
 
         return redirect()->route('car.index')->with('success', 'Car has been added successfully');

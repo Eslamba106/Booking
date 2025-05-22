@@ -9,11 +9,19 @@ class Customer extends Model
 {
     use HasFactory;
 
-    
+
     protected $guarded = [];
 
     public function country()
     {
         return $this->belongsTo(Countries::class);
+    }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+    public function cars()
+    {
+        return $this->hasMany(Car::class);
     }
 }

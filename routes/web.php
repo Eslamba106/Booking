@@ -17,10 +17,14 @@ use App\Http\Controllers\Admin\UserManagmentController;
 use App\Http\Controllers\CancelController;
 use App\Http\Controllers\CarCategoryController;
 use App\Http\Controllers\CarController;
+use App\Http\Controllers\CustFileController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\LoactionController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\MealController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TourController;
+use PHPUnit\TextUI\Configuration\FileCollection;
 
 // // Translation
 Route::get('language/{locale}', function ($locale) {
@@ -84,6 +88,7 @@ Route::group(['prefix' => 'customer'], function () {
     Route::patch('/update/{id}' , [CustomerController::class , 'update'])->name('admin.customer.update');
     Route::get('/delete/{id}', [CustomerController::class ,'destroy'])->name('admin.customer.delete');
     Route::get('/show/{id}', [CustomerController::class ,'show'])->name('admin.customer.show');
+    Route::get('/file/{id}', [CustomerController::class ,'show_file'])->name('admin.show.file');
 });
 
 // UnitType Managment
@@ -190,3 +195,18 @@ Route::get('bookings/reports', [BookingController::class, 'reports'])
 
     Route::post('/create/meal', [MealController::class , 'store_for_any'])->name('admin.meal.store_any');
     Route::post('/create/cancel', [CancelController::class , 'store_for_any'])->name('admin.cancel.store_any');
+
+   Route::group(['prefix' => 'file'], function () {
+
+       Route::get('/create', [CustFileController::class, 'create'])->name('admin.file.create');
+       Route::post('/store', [CustFileController::class, 'store'])->name('admin.store.file');
+    //    Route::get('/show/{$id}', [CustFileController::class, 'show'])->name('admin.show.file');
+    Route::put('/update/{setting}', [CustFileController::class, 'update'])->name('admin.settings.update');
+});
+Route::get('users/export/', [ReportController::class, 'export'])->name('monthly.report');
+Route::get('house/export/', [ReportController::class, 'MonthlyHouse'])->name('monthly.house.report');
+Route::get('comission/export/', [ReportController::class, 'ComissionExport'])->name('monthly.comission.report');
+Route::get('Accounting/export/', [ReportController::class, 'AccountingExport'])->name('monthly.Accounting.report');
+Route::get('broker/export/', [ReportController::class, 'BrokergExport'])->name('monthly.broker.report');
+Route::get('coming/export/', [ReportController::class, 'ComingSoonExport'])->name('monthly.comming.report');
+Route::get('payment/export/', [ReportController::class, 'PaymentExport'])->name('monthly.payment.report');

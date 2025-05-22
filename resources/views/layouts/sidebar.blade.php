@@ -56,9 +56,25 @@
                                 </li>
                                 @can('create_booking')
                                     <li class="sidebar-item">
+                                        <a href="{{ route('admin.file.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Master files') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_booking')
+                                    <li class="sidebar-item">
                                         <a href="{{ route('admin.booking.create') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
                                             <span class="hide-menu">{{ __('roles.create_booking') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_booking')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('car.create') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Create car booking') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -248,12 +264,7 @@
                                     </a>
                                 </li>
                                 @can('create_driver')
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('car.create') }}" class="sidebar-link">
-                                            <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">{{ __('car booking') }}</span>
-                                        </a>
-                                    </li>
+
                                     {{-- @can('all_drivers') --}}
                             {{-- <ul aria-expanded="false" class="collapse  first-level"> --}}
                                 <li class="sidebar-item">
@@ -339,6 +350,77 @@
                                         <a href="{{ route('admin.unit_type.create') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
                                             <span class="hide-menu">{{ __('roles.create_unit_type') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
+                @can('unit_type_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fas fa-th-large"></i>
+
+                            <span class="hide-menu">{{ __('Reports') }} </span>
+                        </a>
+                        @can('all_unit_types')
+                            <ul aria-expanded="false" class="collapse  first-level">
+
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Monthly Car Report') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.house.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Monthly House Report') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.broker.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Broker Report') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.comming.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Comming Soon Report') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.Accounting.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Accounting report') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.comission.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Comission Report') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_unit_type')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('monthly.payment.report') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Payment Report') }}</span>
                                         </a>
                                     </li>
                                 @endcan

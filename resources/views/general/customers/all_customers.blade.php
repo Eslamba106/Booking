@@ -141,6 +141,10 @@
                                     <a href="{{ route('admin.customer.show', $customer->id) }}"
                                         class="btn btn-outline-info btn-sm" title="@lang('dashboard.show')"><i
                                      class="mdi mdi-eye"></i> </a>
+
+                                    <a href="{{ route('admin.show.file',$customer->id) }}"
+                                        class="btn btn-outline-info btn-sm" title="@lang('dashboard.file')"><i
+                                     class="mdi mdi-file"></i> </a>
                                 </td>
                             </tr>
                         @empty
