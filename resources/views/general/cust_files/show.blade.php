@@ -107,7 +107,7 @@
                     @forelse($file as $custFile)
                     <div class="card file-card">
                         <div class="file-header">
-                            <h5 class="mb-0">{{ __('File') }} #{{ $custFile->id }}</h5>
+                            <h5 class="mb-0"> #{{ $custFile->name}}</h5>
                             <span class="badge badge-status
                                 @if($custFile->remain == 0) badge-success
                                 @elseif($custFile->paid > 0) badge-warning

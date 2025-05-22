@@ -24,8 +24,18 @@
     <div class="card-body">
         <form id="bookingForm" method="POST" action="{{route('admin.store.file')}}">
             @csrf
-
+                <div class="col-md-3">
+                        <div class="form-group">
+                            <label>{{ __('File`s Name') }} <span class="text-danger">*</span></label>
+                            <input type="text"  name="name" class="form-control">
+                            @error('name')
+                                <span class="error text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <hr>
             <div class="row">
+
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="customer_id">{{ __('Customer') }} <span class="text-danger">*</span></label>
