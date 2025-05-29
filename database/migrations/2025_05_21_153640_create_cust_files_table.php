@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
-             $table->decimal('total', 8, 2)->default(0);
-             $table->decimal('paid', 8, 2)->default(0);
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->decimal('total', 8, 2)->default(0);
+            $table->decimal('paid', 8, 2)->default(0);
             $table->decimal('remain', 8, 2)->default(0);
-
             $table->timestamps();
         });
     }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\booking;
 
-use Carbon\Carbon;
+use bookingbon\Carbon;
 use App\Models\Hotel;
 use App\Models\Broker;
 use App\Models\Driver;
@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Cancelation;
+use App\Models\CustFile;
+use App\Models\CustFileItem;
 use App\Models\Meals;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -48,165 +50,165 @@ class BookingController extends Controller
     //     return view("general.booking.all_bookings", compact("bookings"));
     // }
     public function index(Request $request)
-{
-    // التحقق من صلاحية المستخدم
-   $this->authorize('booking_management');
+    {
+        // التحقق من صلاحية المستخدم
+        $this->authorize('booking_management');
 
-    $query = Booking::query()->with(['customer', 'hotel']);
+        $query = Booking::query()->with(['customer', 'hotel']);
 
-    // فلترة حسب الحالة
-    if ($request->has('status') && $request->status != '') {
-        $query->where('status', $request->status);
-    }
-
-    // فلترة حسب النطاق الزمني المحدد يدوياً
-    if ($request->has('date_from') && $request->date_from != '') {
-        $query->whereDate('arrival_date', '>=', $request->date_from);
-    }
-
-    if ($request->has('date_to') && $request->date_to != '') {
-        $query->whereDate('arrival_date', '<=', $request->date_to);
-    }
-
-    // فلترة حسب النطاقات الزمنية المحددة مسبقاً
-    if ($request->has('date_range') && $request->date_range != '') {
-        $today = Carbon::today();
-
-        switch($request->date_range) {
-            case 'today':
-                $query->whereDate('arrival_date', $today);
-                break;
-            case 'this_week':
-                $query->whereBetween('arrival_date', [
-                    $today->copy()->startOfWeek(),
-                    $today->copy()->endOfWeek()
-                ]);
-                break;
-            case 'this_month':
-                $query->whereBetween('arrival_date', [
-                    $today->copy()->startOfMonth(),
-                    $today->copy()->endOfMonth()
-                ]);
-                break;
-            case 'next_month':
-                $query->whereBetween('arrival_date', [
-                    $today->copy()->addMonth()->startOfMonth(),
-                    $today->copy()->addMonth()->endOfMonth()
-                ]);
-                break;
+        // فلترة حسب الحالة
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
         }
-    }
 
-    // فلترة حسب اسم العميل
-    if ($request->has('customer') && $request->customer != '') {
-        $query->whereHas('customer', function($q) use ($request) {
-            $q->where('name', 'like', '%'.$request->customer.'%');
-        });
-    }
-
-    // معالجة الأوامر الجماعية
-    if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($request->bulk_ids) && count($request->bulk_ids)) {
-        $this->authorize('change_bookings_status');
-        $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
-        if (!empty($ids)) {
-            Booking::whereIn('id', $ids)->update(['status' => $request->status]);
-            return back()->with('success', __('general.updated_successfully'));
+        // فلترة حسب النطاق الزمني المحدد يدوياً
+        if ($request->has('date_from') && $request->date_from != '') {
+            $query->whereDate('arrival_date', '>=', $request->date_from);
         }
-    }
 
-    if ($request->bulk_action_btn === 'delete' && is_array($request->bulk_ids) && count($request->bulk_ids)) {
-        $this->authorize('delete_booking');
-        $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
-        if (!empty($ids)) {
-            Booking::whereIn('id', $ids)->delete();
-            return back()->with('success', __('general.deleted_successfully'));
+        if ($request->has('date_to') && $request->date_to != '') {
+            $query->whereDate('arrival_date', '<=', $request->date_to);
         }
-    }
 
-    $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
+        // فلترة حسب النطاقات الزمنية المحددة مسبقاً
+        if ($request->has('date_range') && $request->date_range != '') {
+            $today = Carbon::today();
 
-    // إرسال البيانات إلى الواجهة
-    return view("general.booking.all_bookings", compact("bookings"));
-}
-public function reports(Request $request)
-{
-    $this->authorize('booking_management');
-
-    $query = Booking::query()->with(['customer', 'hotel']);
-
-    // فلترة حسب الحالة
-    if ($request->has('status') && $request->status != '') {
-        $query->where('status', $request->status);
-    }
-
-    // فلترة حسب النطاق الزمني المحدد يدوياً
-    if ($request->has('date_from') && $request->date_from != '') {
-        $query->whereDate('arrival_date', '>=', $request->date_from);
-    }
-
-    if ($request->has('date_to') && $request->date_to != '') {
-        $query->whereDate('arrival_date', '<=', $request->date_to);
-    }
-
-    // فلترة حسب النطاقات الزمنية المحددة مسبقاً
-    if ($request->has('date_range') && $request->date_range != '') {
-        $today = Carbon::today();
-
-        switch($request->date_range) {
-            case 'today':
-                $query->whereDate('arrival_date', $today);
-                break;
-            case 'this_week':
-                $query->whereBetween('arrival_date', [
-                    $today->copy()->startOfWeek(),
-                    $today->copy()->endOfWeek()
-                ]);
-                break;
-            case 'this_month':
-                $query->whereBetween('arrival_date', [
-                    $today->copy()->startOfMonth(),
-                    $today->copy()->endOfMonth()
-                ]);
-                break;
-            case 'next_month':
-                $query->whereBetween('arrival_date', [
-                    $today->copy()->addMonth()->startOfMonth(),
-                    $today->copy()->addMonth()->endOfMonth()
-                ]);
-                break;
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('arrival_date', $today);
+                    break;
+                case 'this_week':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfWeek(),
+                        $today->copy()->endOfWeek()
+                    ]);
+                    break;
+                case 'this_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfMonth(),
+                        $today->copy()->endOfMonth()
+                    ]);
+                    break;
+                case 'next_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->addMonth()->startOfMonth(),
+                        $today->copy()->addMonth()->endOfMonth()
+                    ]);
+                    break;
+            }
         }
-    }
 
-    // فلترة حسب اسم العميل
-    if ($request->has('customer') && $request->customer != '') {
-        $query->whereHas('customer', function($q) use ($request) {
-            $q->where('name', 'like', '%'.$request->customer.'%');
-        });
-    }
-
-    // معالجة الأوامر الجماعية
-    if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($request->bulk_ids) && count($request->bulk_ids)) {
-        $this->authorize('change_bookings_status');
-        $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
-        if (!empty($ids)) {
-            Booking::whereIn('id', $ids)->update(['status' => $request->status]);
-            return back()->with('success', __('general.updated_successfully'));
+        // فلترة حسب اسم العميل
+        if ($request->has('customer') && $request->customer != '') {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
         }
-    }
 
-    if ($request->bulk_action_btn === 'delete' && is_array($request->bulk_ids) && count($request->bulk_ids)) {
-        $this->authorize('delete_booking');
-        $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
-        if (!empty($ids)) {
-            Booking::whereIn('id', $ids)->delete();
-            return back()->with('success', __('general.deleted_successfully'));
+        // معالجة الأوامر الجماعية
+        if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($request->bulk_ids) && count($request->bulk_ids)) {
+            $this->authorize('change_bookings_status');
+            $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
+            if (!empty($ids)) {
+                Booking::whereIn('id', $ids)->update(['status' => $request->status]);
+                return back()->with('success', __('general.updated_successfully'));
+            }
         }
+
+        if ($request->bulk_action_btn === 'delete' && is_array($request->bulk_ids) && count($request->bulk_ids)) {
+            $this->authorize('delete_booking');
+            $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
+            if (!empty($ids)) {
+                Booking::whereIn('id', $ids)->delete();
+                return back()->with('success', __('general.deleted_successfully'));
+            }
+        }
+
+        $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // إرسال البيانات إلى الواجهة
+        return view("general.booking.all_bookings", compact("bookings"));
     }
+    public function reports(Request $request)
+    {
+        $this->authorize('booking_management');
 
-    $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
+        $query = Booking::query()->with(['customer', 'hotel']);
 
-    return view('general.booking.reports', compact("bookings"));
-}
+        // فلترة حسب الحالة
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        // فلترة حسب النطاق الزمني المحدد يدوياً
+        if ($request->has('date_from') && $request->date_from != '') {
+            $query->whereDate('arrival_date', '>=', $request->date_from);
+        }
+
+        if ($request->has('date_to') && $request->date_to != '') {
+            $query->whereDate('arrival_date', '<=', $request->date_to);
+        }
+
+        // فلترة حسب النطاقات الزمنية المحددة مسبقاً
+        if ($request->has('date_range') && $request->date_range != '') {
+            $today = Carbon::today();
+
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('arrival_date', $today);
+                    break;
+                case 'this_week':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfWeek(),
+                        $today->copy()->endOfWeek()
+                    ]);
+                    break;
+                case 'this_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfMonth(),
+                        $today->copy()->endOfMonth()
+                    ]);
+                    break;
+                case 'next_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->addMonth()->startOfMonth(),
+                        $today->copy()->addMonth()->endOfMonth()
+                    ]);
+                    break;
+            }
+        }
+
+        // فلترة حسب اسم العميل
+        if ($request->has('customer') && $request->customer != '') {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
+        }
+
+        // معالجة الأوامر الجماعية
+        if ($request->bulk_action_btn === 'update_status' && $request->status && is_array($request->bulk_ids) && count($request->bulk_ids)) {
+            $this->authorize('change_bookings_status');
+            $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
+            if (!empty($ids)) {
+                Booking::whereIn('id', $ids)->update(['status' => $request->status]);
+                return back()->with('success', __('general.updated_successfully'));
+            }
+        }
+
+        if ($request->bulk_action_btn === 'delete' && is_array($request->bulk_ids) && count($request->bulk_ids)) {
+            $this->authorize('delete_booking');
+            $ids = array_filter($request->bulk_ids, fn($id) => is_numeric($id));
+            if (!empty($ids)) {
+                Booking::whereIn('id', $ids)->delete();
+                return back()->with('success', __('general.deleted_successfully'));
+            }
+        }
+
+        $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('general.booking.reports', compact("bookings"));
+    }
 
     public function live_booking(Request $request)
     {
@@ -234,7 +236,7 @@ public function reports(Request $request)
         }
 
         $bookings = Booking::where('arrival_date', '<=', $today)
-        ->where('check_out_date', '>=', $today)->where('status' , '!=' ,'cancel')->orderBy("created_at", "desc")->paginate(10);
+            ->where('check_out_date', '>=', $today)->where('status', '!=', 'cancel')->orderBy("created_at", "desc")->paginate(10);
         return view("general.booking.all_bookings", compact("bookings"));
     }
     public function coming_soon(Request $request)
@@ -262,10 +264,11 @@ public function reports(Request $request)
             return back()->with('success', __('general.deleted_successfully'));
         }
 
-        $bookings = Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->where('status' , '!=' ,'cancel')->orderBy("created_at", "desc")->paginate(10);
+        $bookings = Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->where('status', '!=', 'cancel')->orderBy("created_at", "desc")->paginate(10);
         return view("general.booking.all_bookings", compact("bookings"));
     }
-    public function show($id){
+    public function show($id)
+    {
         $booking = Booking::where('id', $id)->with('booking_details')->first();
         $hotels = Hotel::select('id', 'name')->with('unit_types')->get();
         $unit_types = UnitType::select('id', 'name')->get();
@@ -273,7 +276,6 @@ public function reports(Request $request)
         $drivers = Driver::select('id', 'name')->get();
         $customers = Customer::select('id', 'name')->get();
         return view('general.booking.show', compact("booking", "hotels", "unit_types", "brokers", "drivers", "customers"));
-
     }
     public function create()
     {
@@ -285,7 +287,7 @@ public function reports(Request $request)
         $brokers = Broker::select('id', 'name')->get();
         $drivers = Driver::select('id', 'name')->get();
         $customers = Customer::select('id', 'name')->get();
-        $countries = Countries::select('id', 'name' , 'nationality')->get();
+        $countries = Countries::select('id', 'name', 'nationality')->get();
         $dail_code_main = Countries::select('id', 'dial_code')->get();
         $date = [
             'hotels' => $hotels,
@@ -295,20 +297,22 @@ public function reports(Request $request)
             'customers' => $customers,
             'countries' => $countries,
             'dail_code_main' => $dail_code_main,
-            'cancels'=>$cancels,
-            'meals'=>$meals
+            'cancels' => $cancels,
+            'meals' => $meals
         ];
         return view("general.booking.create", $date);
     }
 
     public function store(Request $request)
     {
+        // dd('file_id:', $request->file_id, $request->all());
         $this->authorize('create_booking');
 
         DB::beginTransaction();
         try {
             $request->validate([
                 'customer_id' => 'required',
+                'file_id' => 'nullable|exists:cust_files,id',
                 'arrival_date' => 'required|date',
                 'check_out_date' => 'required|date|after:today',
                 'days_count' => 'required|integer',
@@ -330,6 +334,7 @@ public function reports(Request $request)
             $booking = Booking::create([
                 'customer_id' => $request->customer_id,
                 'user_id' => auth()->id(),
+                // 'file_id' => $request->file_id,
                 'arrival_date' => $request->arrival_date,
                 'check_out_date' => $request->check_out_date,
                 'days_count' => $request->days_count,
@@ -366,13 +371,22 @@ public function reports(Request $request)
                 'currency' => $request->currency,
             ]);
             $booking->service()->create([
-                    'name' => $request->name ?? 0,
-                    'qyt' => $request->qyt ?? 0,
-                    'price' => $request->service_price ?? 0,
+                'name' => $request->name ?? 0,
+                'qyt' => $request->qyt ?? 0,
+                'price' => $request->service_price ?? 0,
             ]);
-            // dd($booking);
+            if ($request->file_id) {
+                CustFileItem::create([
+                    'cust_file_id' => $request->file_id,
+                    'related_id' => $booking->id,
+                    'related_type' => Booking::class,
+                ]);
+            }
             DB::commit();
-            return redirect()->route('admin.booking')->with('success', __('general.added_successfully'));
+
+            return $request->file_id
+                ? redirect()->route('add.items.file', $request->file_id)->with('success', __('general.added_successfully'))
+                : redirect()->route('admin.booking')->with('success', __('general.added_successfully'));
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -458,15 +472,15 @@ public function reports(Request $request)
                 'price' => $request->price,
                 'currency' => $request->currency,
             ]);
-             $booking->service()->update([
-                    'name' => $request->name ?? 0,
-                    'qyt' => $request->qyt ?? 0,
-                    'price' => $request->service_price ?? 0,
+            $booking->service()->update([
+                'name' => $request->name ?? 0,
+                'qyt' => $request->qyt ?? 0,
+                'price' => $request->service_price ?? 0,
             ]);
+
             // dd($booking);
             DB::commit();
             return redirect()->route('admin.booking')->with('success', __('general.updated_successfully'));
-
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', $e->getMessage());
@@ -503,13 +517,13 @@ public function reports(Request $request)
         }
     }
     public function generateVoucherPdf($id)
-{
-    $booking = Booking::with('hotel.unit_types', 'customer', 'booking_details')->find($id);
+    {
+        $booking = Booking::with('hotel.unit_types', 'customer', 'booking_details')->find($id);
 
-    $pdf = Pdf::loadView('general.booking.voucher_pdf', compact('booking'));
+        $pdf = Pdf::loadView('general.booking.voucher_pdf', compact('booking'));
 
-    return $pdf->download('hotel-voucher-' . $booking->id . '.pdf');
-}
+        return $pdf->download('hotel-voucher-' . $booking->id . '.pdf');
+    }
     public function get_country($id)
     {
         $this->authorize('create_booking');
@@ -518,40 +532,51 @@ public function reports(Request $request)
         return response()->json($hotel);
     }
 
-public function bulkAction(Request $request)
-{
-    $validated = $request->validate([
-        'bulk_action' => 'required|in:update_status,delete',
-        'bulk_ids' => 'required|array|min:1',
-        'bulk_ids.*' => 'exists:bookings,id',
-        'status' => 'required_if:bulk_action,update_status|in:pending,confirmed,cancelled,completed'
-    ]);
-
-    try {
-        $bookings = Booking::whereIn('id', $validated['bulk_ids']);
-
-        if ($validated['bulk_action'] === 'delete') {
-            $bookings->delete();
-            $message = 'Selected bookings have been deleted successfully';
-        } else {
-            $bookings->update(['status' => $validated['status']]);
-            $message = 'Booking statuses updated successfully';
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'updated_count' => $bookings->count()
+    public function bulkAction(Request $request)
+    {
+        $validated = $request->validate([
+            'bulk_action' => 'required|in:update_status,delete',
+            'bulk_ids' => 'required|array|min:1',
+            'bulk_ids.*' => 'exists:bookings,id',
+            'status' => 'required_if:bulk_action,update_status|in:pending,confirmed,cancelled,completed'
         ]);
 
-    } catch (\Exception $e) {
-        \log::error("Bulk action failed: " . $e->getMessage());
+        try {
+            $bookings = Booking::whereIn('id', $validated['bulk_ids']);
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Operation failed: ' . $e->getMessage()
-        ], 500);
+            if ($validated['bulk_action'] === 'delete') {
+                $bookings->delete();
+                $message = 'Selected bookings have been deleted successfully';
+            } else {
+                $bookings->update(['status' => $validated['status']]);
+                $message = 'Booking statuses updated successfully';
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'updated_count' => $bookings->count()
+            ]);
+        } catch (\Exception $e) {
+            \log::error("Bulk action failed: " . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Operation failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
-}
+    public function bookingupdateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required',
+        ]);
 
+        $booking = Booking::findOrFail($id);
+        $booking->status = $request->status;
+        $booking->save();
+
+
+        return redirect()->back()->with('success', 'Status updated successfully');
+    }
 }

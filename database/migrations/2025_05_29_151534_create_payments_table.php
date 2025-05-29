@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cust_file_items', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cust_file_id')->constrained('cust_files')->cascadeOnDelete();
-            $table->morphs('related');
+            $table->foreignId('cust_file_id')->constrained()->cascadeOnDelete();
+            $table->decimal('amount', 8, 2);
+            $table->date('payment_date');
+            $table->string('payment_method');
+            $table->text('notes')->nullable();
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cust_file_items');
+        Schema::dropIfExists('payments');
     }
 };

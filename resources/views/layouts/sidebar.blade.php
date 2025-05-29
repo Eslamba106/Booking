@@ -25,7 +25,8 @@
                                         <i class="mdi mdi-email"></i>
                                         <span class="hide-menu">Booking Dashboard</span>
                                     </a>
-                                </li> <li class="sidebar-item">
+                                </li>
+                                <li class="sidebar-item">
                                     <a href="{{ route('car.dashboard') }}" class="sidebar-link">
                                         <i class="mdi mdi-email"></i>
                                         <span class="hide-menu">Cars Dashboard</span>
@@ -128,36 +129,36 @@
                                     </li>
                                 @endcan
                                 {{-- @can('all_meal') --}}
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('meal.index') }}" class="sidebar-link">
-                                            <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">All Meals</span>
-                                        </a>
-                                    </li>
+                                <li class="sidebar-item">
+                                    <a href="{{ route('meal.index') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">All Meals</span>
+                                    </a>
+                                </li>
                                 {{-- @endcan --}}
                                 {{-- @can('create_meal') --}}
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('meal.create') }}" class="sidebar-link">
-                                            <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">create meal</span>
-                                        </a>
-                                    </li>
+                                <li class="sidebar-item">
+                                    <a href="{{ route('meal.create') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">create meal</span>
+                                    </a>
+                                </li>
                                 {{-- @endcan --}}
                                 {{-- @can('cancel_periods') --}}
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('cancel.index') }}" class="sidebar-link">
-                                            <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">ALL Canecelation</span>
-                                        </a>
-                                    </li>
+                                <li class="sidebar-item">
+                                    <a href="{{ route('cancel.index') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">ALL Canecelation</span>
+                                    </a>
+                                </li>
                                 {{-- @endcan --}}
                                 {{-- @can('create_cancel_periods') --}}
-                                    <li class="sidebar-item">
-                                        <a href="{{ route('cancel.create') }}" class="sidebar-link">
-                                            <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">Ceate Cancel Period</span>
-                                        </a>
-                                    </li>
+                                <li class="sidebar-item">
+                                    <a href="{{ route('cancel.create') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">Ceate Cancel Period</span>
+                                    </a>
+                                </li>
                                 {{-- @endcan --}}
                             </ul>
                         @endcan
@@ -221,6 +222,27 @@
                         @endcan
                     </li>
                 @endcan
+                @can('user_management')
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
+                            <i class="fa fa-file"></i>
+
+                            <span class="hide-menu">{{ __('Files') }} </span>
+                        </a>
+                        @can('all_users')
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a href="{{ route('show.all.file') }}" class="sidebar-link">
+                                        <i class="mdi mdi-email"></i>
+                                        <span class="hide-menu">{{ __('Show files') }}</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        @endcan
+                    </li>
+                @endcan
                 @can('driver_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
@@ -264,29 +286,28 @@
                                     </a>
                                 </li>
                                 @can('create_driver')
-
                                     {{-- @can('all_drivers') --}}
-                            {{-- <ul aria-expanded="false" class="collapse  first-level"> --}}
-                                <li class="sidebar-item">
-                                    <a href="{{ route('category.index') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('Cars Categories') }}</span>
-                                    </a>
-                                </li>
-                                 {{-- @can('create_driver') --}}
+                                    {{-- <ul aria-expanded="false" class="collapse  first-level"> --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('category.index') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Cars Categories') }}</span>
+                                        </a>
+                                    </li>
+                                    {{-- @can('create_driver') --}}
                                     <li class="sidebar-item">
                                         <a href="{{ route('category.create') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
                                             <span class="hide-menu">{{ __('Create Category') }}</span>
                                         </a>
                                     </li>
-                                <li class="sidebar-item">
-                                    <a href="{{ route('tour.index') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('Cars tours') }}</span>
-                                    </a>
-                                </li>
-                                 {{-- @can('create_driver') --}}
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('tour.index') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Cars tours') }}</span>
+                                        </a>
+                                    </li>
+                                    {{-- @can('create_driver') --}}
                                     <li class="sidebar-item">
                                         <a href="{{ route('tour.create') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
@@ -449,6 +470,7 @@
                         @endcan
                     </li>
                 @endcan
+
                 @can('admin_roles')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
