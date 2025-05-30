@@ -21,8 +21,10 @@ class PaymentController extends Controller
 
         $payment = new Payment();
         $payment->cust_file_id = $fileId;
-        $payment->amount = $request->amount;
         $payment->payment_date = $request->payment_date;
+        $payment->amount = $request->amount;
+        $payment->user_id = $request->user_id;
+        $payment->customer_id = $request->customer_id;
         $payment->payment_method = $request->payment_method;
         $payment->notes = $request->notes;
         $payment->save();

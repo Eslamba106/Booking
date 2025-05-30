@@ -9,8 +9,16 @@ class Payment extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function payment()
+    public function custFile()
     {
-        $this->belongsTo(CustFile::class);
+        return $this->belongsTo(CustFile::class, 'cust_file_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 }

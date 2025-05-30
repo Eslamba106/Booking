@@ -24,4 +24,8 @@ class Customer extends Model
     {
         return $this->hasMany(Car::class);
     }
+    public function files()
+    {
+        return $this->hasMany(CustFile::class);
+    }
 }

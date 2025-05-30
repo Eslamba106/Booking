@@ -61,9 +61,9 @@ class ReportController extends Controller
 
         return Excel::download(new ComissionExport($filters), 'comission_report_' . now()->format('Y-m-d') . '.xlsx');
     }
-    public function AccountingExport()
+    public function AccountingExport($id)
     {
-        return Excel::download(new AccountingExport, 'Accounting.xlsx');
+        return Excel::download(new AccountingExport($id), 'accounting_customer_' . $id . '.xlsx');
     }
     public function index()
     {
@@ -124,8 +124,8 @@ class ReportController extends Controller
 
         return Excel::download(new ComingSoonExport($filters), 'coming_soon_report_' . now()->format('Y-m-d') . '.xlsx');
     }
-    public function PaymentExport()
+    public function PaymentExport($id)
     {
-        return Excel::download(new PaymentExport, 'Payment.xlsx');
+        return Excel::download(new PaymentExport($id), 'payment_report_' . now()->format('Y-m-d') . '.xlsx');
     }
 }

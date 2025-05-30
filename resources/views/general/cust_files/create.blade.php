@@ -507,7 +507,9 @@
                 <form action="{{ route('payments.store', $file->id) }}" method="POST">
                     @csrf
                     <input type="hidden" name="file_id" value="{{ $file->id }}">
-                    <input type="hidden" name="remain" value="{{ number_format($balance, 2) }}">
+                    <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                    <input type="hidden" name="customer_id" value="{{ $file->customer->id }}">
+                    {{-- <input type="hidden" name="remain" value="{{ number_format($balance, 2) }}"> --}}
                     <input type="hidden" name="remain" value="{{ number_format($balance, 2) }}"> </input>
                     <input type="hidden" name="total" value="{{ number_format($grandTotal, 2) }}"> </input>
                     <div class="modal-body">

@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cust_file_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 8, 2);
+
             $table->date('payment_date');
             $table->string('payment_method');
             $table->text('notes')->nullable();

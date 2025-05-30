@@ -207,17 +207,12 @@ Route::group(['prefix' => 'file'], function () {
     Route::get('/show/allfiles/', [CustFileController::class, 'show_all'])->name('show.all.file');
     Route::delete('/destroy/{id}]/', [CustFileController::class, 'destroy'])->name('destroy.file');
 });
-Route::get('users/export/', [ReportController::class, 'export'])->name('monthly.report');
-Route::get('house/export/', [ReportController::class, 'MonthlyHouse'])->name('monthly.house.report');
-Route::get('comission/export/', [ReportController::class, 'ComissionExport'])->name('monthly.comission.report');
-Route::get('Accounting/export/', [ReportController::class, 'AccountingExport'])->name('monthly.Accounting.report');
-Route::get('broker/export/', [ReportController::class, 'BrokergExport'])->name('monthly.broker.report');
-Route::get('coming/export/', [ReportController::class, 'ComingSoonExport'])->name('monthly.comming.report');
-Route::get('payment/export/', [ReportController::class, 'PaymentExport'])->name('monthly.payment.report');
 
 
+//payments
 Route::post('cust_files/{file}/payments', [PaymentController::class, 'store'])->name('payments.store');
 Route::delete('payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+//reports
 Route::prefix('reports')->group(function () {
     Route::get('broker', [ReportController::class, 'index'])->name('reports.broker');
     Route::get('broker/filter', [ReportController::class, 'filter'])->name('reports.broker.filter');
@@ -225,3 +220,10 @@ Route::prefix('reports')->group(function () {
 });
 Route::get('cars/export', [ReportController::class, 'export'])->name('car.export');
 Route::get('bookings/export', [ReportController::class, 'MonthlyHouse'])->name('booking.export');
+Route::get('users/export/', [ReportController::class, 'export'])->name('monthly.report');
+Route::get('house/export/', [ReportController::class, 'MonthlyHouse'])->name('monthly.house.report');
+Route::get('comission/export/', [ReportController::class, 'ComissionExport'])->name('monthly.comission.report');
+Route::get('Accounting/export/{id}', [ReportController::class, 'AccountingExport'])->name('monthly.Accounting.report');
+// Route::get('broker/export/', [ReportController::class, 'BrokergExport'])->name('monthly.broker.report');
+Route::get('coming/export/', [ReportController::class, 'ComingSoonExport'])->name('monthly.comming.report');
+Route::get('payment/export/{id}', [ReportController::class, 'PaymentExport'])->name('monthly.payment.report');
