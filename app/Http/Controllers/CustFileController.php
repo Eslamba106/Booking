@@ -148,4 +148,12 @@ class CustFileController extends Controller
         $files = CustFile::where('customer_id', $id)->latest()->paginate();
         return view('general.cust_files.show', compact('files'));
     }
+
+    public function destroy($id)
+    {
+        $file = CustFile::findOrFail($id);
+
+        $file->delete();
+        return redirect()->back()->with('success', 'file has deleted succeffully');
+    }
 }

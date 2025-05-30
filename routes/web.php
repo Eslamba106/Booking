@@ -205,6 +205,7 @@ Route::group(['prefix' => 'file'], function () {
     //    Route::get('/show/{$id}', [CustFileController::class, 'show'])->name('admin.show.file');
     Route::put('/update/{setting}', [CustFileController::class, 'update'])->name('admin.settings.update');
     Route::get('/show/allfiles/', [CustFileController::class, 'show_all'])->name('show.all.file');
+    Route::delete('/destroy/{id}]/', [CustFileController::class, 'destroy'])->name('destroy.file');
 });
 Route::get('users/export/', [ReportController::class, 'export'])->name('monthly.report');
 Route::get('house/export/', [ReportController::class, 'MonthlyHouse'])->name('monthly.house.report');

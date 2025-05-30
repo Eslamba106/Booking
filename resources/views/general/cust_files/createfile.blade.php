@@ -71,7 +71,7 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-4">
                             <p class="mb-1"><strong>{{ __('Total booking price') }}:</strong></p>
                             <input type="number" class="form-control" name="total" readonly>
@@ -84,7 +84,7 @@
                             <p class="mb-1"><strong>{{ __('remain') }}:</strong></p>
                             <input type="number" class="form-control" name="remain" readonly>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <div class="form-group mt-4">

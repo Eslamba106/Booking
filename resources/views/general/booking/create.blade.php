@@ -14,14 +14,14 @@
 
     <style>
         /* .select2-container--default .select2-selection--multiple .select2-selection__choice {
-                background-color: #dedede;
-                border: 1px solid #dedede;
-                border-radius: 2px;
-                color: #222;
-                display: flex;
-                gap: 4px;
-                align-items: center;
-            } */
+                                    background-color: #dedede;
+                                    border: 1px solid #dedede;
+                                    border-radius: 2px;
+                                    color: #222;
+                                    display: flex;
+                                    gap: 4px;
+                                    align-items: center;
+                                } */
         .d-flex {
             display: flex;
         }
@@ -387,7 +387,7 @@
     </div>
     <div class="modal fade" id="add_meal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog " role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{ __('roles.create_customer') }}</h5>
@@ -407,7 +407,7 @@
 
 
 
-                                                <div class="form-group">
+                                                <div class="form-group m-2">
                                                     <label for="">{{ __('Name of meal') }} <span
                                                             class="text-danger">*</span></label>
                                                     <input type="text" name="name" class="form-control">
@@ -435,7 +435,7 @@
     </div>
     <div class="modal fade" id="add_cancel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">{{ __('create cancellation') }}</h5>
@@ -453,8 +453,6 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
-
-
 
                                                 <div class="form-group m-3">
                                                     <label for="">{{ __('Period') }} <span

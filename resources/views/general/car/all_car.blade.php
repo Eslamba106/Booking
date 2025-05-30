@@ -84,54 +84,6 @@
             font-size: 0.85rem;
             padding: 5px 10px;
         }
-
-        /* تغيير حجم الأيقونات */
-        .pagination .page-item a {
-            font-size: 1rem;
-            /* الحجم المناسب */
-            padding: 8px 16px;
-            /* زيادة مساحة الأزرار */
-        }
-
-        /* تخصيص السهم */
-        .pagination .page-item:first-child a,
-        .pagination .page-item:last-child a {
-            font-size: 1.2rem;
-            /* زيادة حجم الأسهم */
-        }
-
-        /* تغيير الشكل العام للـ pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* تحسين الألوان والحدود */
-        .pagination .page-item.active a {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: #fff;
-        }
-
-        .pagination .page-item:hover a {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-        /* تغيير شكل الأسهم */
-        .pagination .page-item .page-link {
-            color: #007bff;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        /* تعديل شكل الأزرار عند التمرير فوقها */
-        .pagination .page-item:hover .page-link {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
     </style>
 @endsection
 
@@ -291,7 +243,7 @@
 
                         <!-- Pagination -->
                         <div class="pagination">
-                            <ul class="pagination">
+                            {{-- <ul class="pagination">
                                 <li class="page-item">
                                     <a class="page-link" href="{{ $cars->previousPageUrl() }}">
                                         <i class="fas fa-arrow-left"></i> Previous
@@ -302,7 +254,8 @@
                                         <i class="fas fa-arrow-right"></i> Next
                                     </a>
                                 </li>
-                            </ul>
+                            </ul> --}}
+                            {{ $cars->links() }}
                         </div>
 
                     </div>

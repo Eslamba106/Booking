@@ -20,10 +20,10 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <h4 class="mb-0">{{ __('Booking Details') }}</h4>
+            <h4 class="mb-0">{{ __('Files') }}</h4>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive mt-auto">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -54,18 +54,26 @@
                             <td class="text-center">{{ $file->customer->phone }} </td>
                             <td class="text-center">{{ $file->customer->country->name }} </td>
 
-                            < <td class="text-center">
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-1">
+                                    <form action="{{ route('destroy.file', $file->id) }}" method="post" class="me-1">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" title="@lang('dashboard.delete')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
 
-                                <a href="" class="btn btn-danger btn-sm" title="@lang('dashboard.delete')"><i
-                                        class="fa fa-trash"></i>delete</a>
-                                <a href="{{ route('add.items.file', $file->id) }}" class="btn btn-info btn-sm"
-                                    title="@lang('dashboard.show')"><i class="fa fa-eye"></i>show</a>
+                                    <a href="{{ route('add.items.file', $file->id) }}" class="btn btn-info btn-sm me-1"
+                                        title="@lang('dashboard.show')">
+                                        <i class="fa fa-eye"></i>
+                                    </a>
 
-
-                                <a href="" class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
-                                        class="mdi mdi-pencil"></i>edit </a>
-
-                                </td>
+                                    {{-- <a href="#" class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')">
+                                        <i class="mdi mdi-pencil"></i>
+                                    </a> --}}
+                                </div>
+                            </td>
                         </tr>
                     @empty
                     @endforelse
