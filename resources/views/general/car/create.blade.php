@@ -296,44 +296,40 @@
                                 <h5 class="form-section-title">
                                     <i class="fas fa-plus-circle"></i> Extra Services
                                 </h5>
-                                <div class="row">
-                                    <div class="col-3">
-                                        <div class="form-group">
-                                            <label class="form-label">Extra service</label><br>
-                                            <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
-                                                <label class="btn btn-outline-success">
-                                                    <input type="radio" name="toggle_service" id="service_yes"
-                                                        value="yes"> Yes
-                                                </label>
-                                                <label class="btn btn-outline-danger active">
-                                                    <input type="radio" name="toggle_service" id="service_no"
-                                                        value="no" checked> No
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div id="serviceFormContainer" style="display: none;">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="tour_id">Tour Package</label>
-                                                <select name="tour_id" id="tour_id" class="form-control">
-                                                    <option value="null" selected>No Services</option>
-                                                    <!-- الخيار الجديد No Services -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">Tour Packages</h6>
+                                                <div class="row">
                                                     @foreach ($tours as $tour)
-                                                        <option value="{{ $tour->id }}"
-                                                            data-price="{{ $tour->price }}">
-                                                            {{ $tour->tour }} ({{ number_format($tour->price, 2) }} $)
-                                                        </option>
+                                                        <div class="col-md-4 mb-3">
+                                                            <div class="custom-control custom-checkbox">
+                                                                <input type="radio" class="custom-control-input"
+                                                                    id="tour_{{ $tour->id }}" name="tour_id"
+                                                                    value="{{ $tour->id }}"
+                                                                    data-price="{{ $tour->price }}">
+                                                                <label
+                                                                    class="custom-control-label d-flex justify-content-between align-items-center"
+                                                                    for="tour_{{ $tour->id }}">
+                                                                    <span>{{ $tour->tour }}
+                                                                        <span
+                                                                            class="badge badge-primary">{{ number_format($tour->price, 2) }}
+                                                                            $</span>
+                                                                    </span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                     @endforeach
-                                                </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
 
                             <!-- Pricing Section -->
                             <div class="form-section">
@@ -550,64 +546,29 @@
             }
         }
 
+
         function calculateTotal() {
             const price = parseFloat($('#car_price').val()) || 0;
             const days = parseInt($('#days_count').val()) || 1;
 
-            // Check if extra service is selected (Yes or No)
-            let servicePrice = 0;
-            let tourId = $('#tour_id').val(); // Get selected tour ID
+            let totalTourPrice = 0;
 
-            // If No Services is selected, set tourId to null
-            if ($('#service_none').is(':checked') || tourId === "null") {
-                tourId = null;
-                $('#tour_id').val(null); // Ensure the input value is set to null
-            }
+            $('input[name="tour_id"]:checked').each(function() {
+                totalTourPrice += parseFloat($(this).data('price')) || 0;
+            });
 
-            if ($('#service_yes').is(':checked')) {
-                servicePrice = parseFloat($('#tour_id').find(':selected').data('price')) || 0;
-            }
+            const total = (price * days) + totalTourPrice;
 
-            const total = (price * days) + servicePrice;
-
-            // Display the total
             $('#total_display').text(total.toFixed(2));
             $('#total').val(total.toFixed(2));
-            $('#tour_id').val(tourId); // Ensure the correct value of tour_id is set
-        }
-
-        function updateServiceFormVisibility() {
-            const formContainer = $('#serviceFormContainer');
-
-
-            if ($('#service_yes').is(':checked')) {
-                formContainer.show();
-            } else {
-                formContainer.hide();
-                $('#tour_id').val("null");
-            }
-            calculateTotal();
-        }
-
-        function updateTourPrice() {
-
-            calculateTotal();
         }
 
         $(document).ready(function() {
-
-            $('input[name="toggle_service"]').on('change', function() {
-                updateServiceFormVisibility();
-            });
-
-
-            updateServiceFormVisibility();
-
-
-            $('#tour_id').on('change', function() {
-                updateTourPrice();
-            });
+            $('input[name="tour_id"]').on('change', calculateTotal);
+            $('#car_price, #days_count').on('input', calculateTotal);
+            calculateTotal(); // حساب مبدئي عند فتح الصفحة
         });
+
 
 
 
