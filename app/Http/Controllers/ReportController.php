@@ -74,7 +74,7 @@ class ReportController extends Controller
             ->latest()
             ->paginate(20); // أو get() إذا كنت تريد جميع النتائج بدون pagination
 
-        return view('general.brokers.all_brokers', compact('brokers', 'hotels', 'bookings'));
+        return view('general.brokers.brokershow', compact('brokers', 'hotels', 'bookings'));
     }
     //broker report
     public function filter(Request $request)

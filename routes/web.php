@@ -67,7 +67,7 @@ Route::group(['prefix' => 'user_management'], function () {
 // Broker Managment
 Route::group(['prefix' => 'broker'], function () {
 
-    // Route::get('/', [BrokerController::class, 'index'])->name('admin.broker');
+    Route::get('/', [BrokerController::class, 'index'])->name('admin.broker');
     Route::get('/create', [BrokerController::class, 'create'])->name('admin.broker.create');
     Route::post('/create', [BrokerController::class, 'store'])->name('admin.broker.store');
     Route::get('/edit/{id}', [BrokerController::class, 'edit'])->name('admin.broker.edit');

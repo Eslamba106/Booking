@@ -321,7 +321,7 @@
                         @can('all_brokers')
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
-                                    <a href="{{ route('reports.broker') }}" class="sidebar-link">
+                                    <a href="{{ route('admin.broker') }}" class="sidebar-link">
                                         <i class="mdi mdi-email"></i>
                                         <span class="hide-menu">{{ __('roles.all_brokers') }}</span>
                                     </a>
@@ -331,6 +331,14 @@
                                         <a href="{{ route('admin.broker.create') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
                                             <span class="hide-menu">{{ __('roles.create_broker') }}</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('create_broker')
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('reports.broker') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Brokor Report') }}</span>
                                         </a>
                                     </li>
                                 @endcan
