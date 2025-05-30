@@ -79,6 +79,9 @@ Route::group(['prefix' => 'broker'], function () {
 Route::group(['prefix' => 'customer'], function () {
 
     Route::get('/', [CustomerController::class, 'index'])->name('admin.customer');
+    Route::get('/payment/{id}', [CustomerController::class, 'payment'])->name('admin.customer.payment');
+    Route::get('/accounting/{id}', [CustomerController::class, 'accounting'])->name('admin.customer.accounting');
+    Route::get('/', [CustomerController::class, 'index'])->name('admin.customer');
     Route::get('/create', [CustomerController::class, 'create'])->name('admin.customer.create');
     Route::post('/create', [CustomerController::class, 'store'])->name('admin.customer.store');
     Route::post('/store_for_any', [CustomerController::class, 'store_for_any'])->name('admin.customer.store_for_any');

@@ -139,13 +139,12 @@
                                     class="btn btn-outline-info btn-sm" title="@lang('dashboard.show')"><i
                                         class="mdi mdi-eye"></i> </a>
 
-                                <a href="{{ route('admin.show.file', $customer->id) }}" class="btn btn-outline-info btn-sm"
-                                    title="@lang('dashboard.file')"><i class="mdi mdi-file"></i> </a>
-                                <a href="{{ route('monthly.Accounting.report', $customer->id) }}"
+
+                                <a href="{{ route('admin.customer.accounting', $customer->id) }}"
                                     class="btn btn-outline-info btn-sm" title="@lang('accounting report')"><i
                                         class="mdi mdi-file"></i> </a>
                                 @if ($customer->files->isNotEmpty())
-                                    <a href="{{ route('monthly.payment.report', $customer->id) }}"
+                                    <a href="{{ route('admin.customer.payment', $customer->id) }}"
                                         class="btn btn-outline-info btn-sm" title="@lang('payment report')">
                                         <i class="mdi mdi-file"></i>
                                     </a>
