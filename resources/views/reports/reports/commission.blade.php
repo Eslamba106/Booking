@@ -163,7 +163,7 @@
             const form = document.getElementById('filterForm');
             const exportForm = document.createElement('form');
             exportForm.method = 'GET';
-            exportForm.action = "{{ route('monthly.comming.report') }}";
+            exportForm.action = "{{ route('monthly.comission.report') }}";
 
 
             const inputs = form.querySelectorAll('input, select');
