@@ -18,6 +18,23 @@
                 <form action="{{ route('car.export.index') }}" method="GET" id="filterForm">
                     <div class="row">
                         <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filter_status">Status</label>
+                                <select name="status" id="filter_status" class="form-control">
+                                    <option value="">All Statuses</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
+                                    </option>
+                                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>
+                                        Approved
+                                    </option>
+                                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>
+                                        Rejected
+                                    </option>
+                                    {{-- <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option> --}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <label for="date_from">From Date</label>
                             <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
                         </div>

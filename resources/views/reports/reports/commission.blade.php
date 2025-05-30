@@ -18,6 +18,22 @@
                 <form action="{{ route('comission.report') }}" method="GET" id="filterForm">
                     <div class="row">
                         <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filter_status">{{ __('roles.status') }}</label>
+                                <select name="status" id="filter_status" class="form-control">
+                                    <option value="">{{ __('roles.status') }}</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
+                                        {{ __('pending') }}</option>
+                                    <option value="confirmed" {{ request('status') == 'confirmed' ? 'selected' : '' }}>
+                                        {{ __('confirmed') }}</option>
+                                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>
+                                        {{ __('cancelled') }}</option>
+                                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
+                                        {{ __('completed') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <label for="date_from">From Date</label>
                             <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
                         </div>
@@ -88,6 +104,7 @@
                                 <th>Commission Type</th>
                                 <th>Commission Value</th>
                                 <th>Total Commission</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,6 +153,7 @@
                                     <td>{{ ucfirst($commissionType) }}</td>
                                     <td>{{ $commissionValue }}</td>
                                     <td>{{ number_format($commissionAmount, 2) }} {{ $booking->currency }}</td>
+                                    <td> {{ $booking->status }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
