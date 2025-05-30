@@ -1,126 +1,197 @@
 @extends('layouts.dashboard')
 @section('title')
-<?php $lang = Session::get('locale'); ?>
+    <?php $lang = Session::get('locale'); ?>
 
     {{ __('roles.broker_management') }}
 @endsection
-@section('content')
-    <div class="page-breadcrumb">
-        <div class="row">
-            <div class="col-5 align-self-center">
-                <h4 class="page-title">{{ __('roles.broker_management') }}</h4>
-                <div class="d-flex align-items-center">
 
-                </div>
+
+@section('content')
+    <div class="container-fluid">
+        <h2 class="mb-4">Broker Report</h2>
+
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title">Filter Options</h5>
             </div>
-            <div class="col-7 align-self-center">
-                <div class="d-flex no-block justify-content-end align-items-center">
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('dashboard') }}">{{ __('dashboard.home') }} </a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ __('dashboard.dashboard') }}</li>
-                        </ol>
-                    </nav>
+            <div class="card-body">
+                <form action="{{ route('reports.broker.filter') }}" method="GET" id="filterForm">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="date_from">From Date</label>
+                            <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="date_to">To Date</label>
+                            <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="broker_id">Broker</label>
+                            <select name="broker_id" class="form-control">
+                                <option value="">All Brokers</option>
+                                @foreach ($brokers as $broker)
+                                    <option value="{{ $broker->id }}"
+                                        {{ request('broker_id') == $broker->id ? 'selected' : '' }}>
+                                        {{ $broker->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="hotel_id">Hotel</label>
+                            <select name="hotel_id" class="form-control">
+                                <option value="">All Hotels</option>
+                                @foreach ($hotels as $hotel)
+                                    <option value="{{ $hotel->id }}"
+                                        {{ request('hotel_id') == $hotel->id ? 'selected' : '' }}>
+                                        {{ $hotel->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">Apply Filter</button>
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                            <button type="button" class="btn btn-success float-right" onclick="exportToExcel()">
+                                <i class="fas fa-file-excel"></i> Export to Excel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="card-title">Booking Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Booking #</th>
+                                <th>Customer</th>
+                                <th>Agent</th>
+                                <th>Hotel</th>
+                                <th>Room Type</th>
+                                <th>Arrival</th>
+                                <th>Departure</th>
+                                <th>Nights</th>
+                                <th>Rooms</th>
+                                <th>Room Cost</th>
+                                <th>Total Cost</th>
+                                <th>Selling Price</th>
+                                <th>Total Price</th>
+                                <th>Revenue</th>
+                                <th>Commission Type</th>
+                                <th>Commission</th>
+                                <th>Broker</th>
+                                <th>Broker Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($bookings as $booking)
+                                @php
+                                    $roomCost = $booking->buy_price ?? 0;
+                                    $sellingPrice = $booking->price ?? 0;
+                                    $totalCost =
+                                        $roomCost *
+                                        ($booking->booking_details->units_count ?? 1) *
+                                        ($booking->days_count ?? 1);
+                                    $totalPrice =
+                                        $sellingPrice *
+                                        ($booking->booking_details->units_count ?? 1) *
+                                        ($booking->days_count ?? 1);
+                                    $revenue = $totalPrice - $totalCost;
+
+                                    $commissionAmount = $booking->commission_amount ?? 0;
+                                    if ($booking->commission_type == 'percentage') {
+                                        $commissionAmount = $totalCost * ($booking->commission_percentage / 100);
+                                    } elseif ($booking->commission_type == 'night') {
+                                        $commissionAmount =
+                                            $booking->commission_night *
+                                            ($booking->days_count ?? 1) *
+                                            ($booking->booking_details->units_count ?? 1);
+                                    }
+
+                                    $total_broker = $booking->broker_amount
+                                        ? $booking->broker_amount *
+                                            $booking->days_count *
+                                            $booking->booking_details->units_count
+                                        : 0;
+                                @endphp
+                                <tr>
+                                    <td>{{ $booking->booking_no }}</td>
+                                    <td>{{ $booking->customer->name ?? 'N/A' }}</td>
+                                    <td>{{ $booking->user->name ?? 'N/A' }}</td>
+                                    <td>{{ $booking->hotel->name ?? 'N/A' }}</td>
+                                    <td>{{ $booking->booking_unit->unit_type ?? 'N/A' }}</td>
+                                    <td>{{ $booking->arrival_date }}</td>
+                                    <td>{{ $booking->check_out_date }}</td>
+                                    <td>{{ $booking->days_count }}</td>
+                                    <td>{{ $booking->booking_details->units_count ?? 0 }}</td>
+                                    <td>{{ number_format($roomCost, 2) }} {{ $booking->currency }}</td>
+                                    <td>{{ number_format($totalCost, 2) }} {{ $booking->currency }}</td>
+                                    <td>{{ number_format($sellingPrice, 2) }} {{ $booking->currency }}</td>
+                                    <td>{{ number_format($totalPrice, 2) }} {{ $booking->currency }}</td>
+                                    <td>{{ number_format($revenue, 2) }} {{ $booking->currency }}</td>
+                                    <td>
+                                        @if ($booking->commission_type == 'percentage')
+                                            {{ $booking->commission_percentage }}%
+                                        @elseif($booking->commission_type == 'night')
+                                            Per Night ({{ $booking->commission_night }})
+                                        @else
+                                            Fixed Amount
+                                        @endif
+                                    </td>
+                                    <td>{{ number_format($commissionAmount, 2) }} {{ $booking->currency }}</td>
+                                    <td>{{ $booking->broker->name ?? 'N/A' }}</td>
+                                    <td>{{ number_format($total_broker, 2) }} {{ $booking->currency }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="18" class="text-center">No bookings found</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
+
+                @if ($bookings->hasPages())
+                    <div class="mt-3">
+                        {{ $bookings->appends(request()->query())->links() }}
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-    {{-- @if (session()->has('locale'))
-    {{ dd(session()->get('locale') ) }}
-@endif --}}
 
-    <form action="" method="get">
+    <script>
+        function resetForm() {
+            document.getElementById('filterForm').reset();
+            window.location = "{{ route('reports.broker') }}";
+        }
 
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="input-group mb-3 d-flex justify-content-end">
-                        @can('change_brokers_status')
-                            <div class="remv_control mr-2">
-                                <select name="status" class="mr-3 mt-3 form-control ">
-                                    <option value="">{{ __('dashboard.set_status') }}</option>
-                                    <option value="1">{{ __('dashboard.active') }}</option>
-                                    <option value="2">{{ __('dashboard.disactive') }}</option>
-                                </select>
-                            </div>
-                        @endcan
-                    
-                        
-                        <button type="submit" name="bulk_action_btn" value="update_status"
-                            class="btn btn-primary mt-3 mr-2">
-                            <i class="la la-refresh"></i> {{ __('dashboard.update') }}
-                        </button>
-                        @can('delete_broker') 
-                        <button type="submit" name="bulk_action_btn" value="delete"
-                            class="btn btn-danger delete_confirm mt-3 mr-2"> <i class="la la-trash"></i>
-                            {{ __('dashboard.delete') }}</button>
-                            @endcan
-                        @can('create_broker')
-                        <a href="{{ route('admin.broker.create') }}" class="btn btn-secondary mt-3 mr-2">
-                            <i class="la la-refresh"></i> {{ __('dashboard.create') }}
-                        </a> 
-                        @endcan
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th><input class="bulk_check_all" type="checkbox" /></th>
-                            <th class="text-center" scope="col">{{ __('roles.name') }}</th>
-                            <th class="text-center" scope="col">{{ __('roles.email') }}</th>
-                            <th class="text-center" scope="col">@lang('login.phone')</th>
-                            <th class="text-center" scope="col">@lang('general.nationality')</th>
-                            <th class="text-center" scope="col">@lang('roles.status')</th>
-                            <th class="text-center" scope="col">{{ __('roles.Actions') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($brokers as $broker)
-                            <tr>
-                                <th scope="row">
-                                    <label>
-                                        <input class="check_bulk_item" name="bulk_ids[]" type="checkbox"
-                                            value="{{ $broker->id }}" />
-                                        <span class="text-muted">#{{ $broker->id }}</span>
-                                    </label>
-                                </th>
-                                <td class="text-center">{{ $broker->name }}</td>
-                                <td class="text-center">{{ $broker->email   }}</td>
-                                <td class="text-center">{{ $broker->phone }} </td>
-                                <td class="text-center">{{ $broker->country->nationality }} </td>
-                              
-                                <td class="text-center"> <span
-                                        class="badge badge-pill {{ $broker->status == 'active' ? 'badge-success' : 'badge-danger' }}">{{ $broker->status }}</span>
-                                </td>
-                               
-                                <td class="text-center">
-                                    @can('delete_broker') 
-                                        <a href="{{ route('admin.broker.delete', $broker->id) }}"
-                                            class="btn btn-danger btn-sm" title="@lang('dashboard.delete')"><i
-                                                class="fa fa-trash"></i></a>
-                                    @endcan
-                                    @can('edit_broker') 
-                                        <a href="{{ route('admin.broker.edit', $broker->id) }}"
-                                            class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')"><i
-                                                class="mdi mdi-pencil"></i> </a>
-                                    @endcan
-                                </td>
-                            </tr>
-                        @empty
-                        @endforelse
+        function exportToExcel() {
+
+            const form = document.getElementById('filterForm');
+            const exportForm = document.createElement('form');
+            exportForm.method = 'GET';
+            exportForm.action = "{{ route('reports.broker.export') }}";
 
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        </div>
-    </form>
+            const inputs = form.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                const clone = input.cloneNode(true);
+                exportForm.appendChild(clone);
+            });
 
-
-
+            document.body.appendChild(exportForm);
+            exportForm.submit();
+            document.body.removeChild(exportForm);
+        }
+    </script>
 @endsection

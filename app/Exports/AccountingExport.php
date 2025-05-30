@@ -11,19 +11,19 @@ use Maatwebsite\Excel\Concerns\FromView;
 class AccountingExport implements FromView
 {
 
-     public function View(): View
+    public function View(): View
     {
         return view('reports.accounting', [
-        "files" => CustFile::with([
-            'customer',
-            'user',
-            'cust_file_items.related' => function ($morphTo) {
-                $morphTo->morphWith([
-                    Booking::class => ['booking_details'],
-                    Car::class,
-                ]);
-            }
-        ])->latest()->get()
+            "files" => CustFile::with([
+                'customer',
+                'user',
+                'cust_file_items.related' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        Booking::class => ['booking_details'],
+                        Car::class,
+                    ]);
+                }
+            ])->latest()->get()
 
 
         ]);

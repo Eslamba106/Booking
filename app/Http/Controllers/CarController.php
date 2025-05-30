@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InvoicesExport;
 use App\Models\Car;
 use App\Models\CarCategory;
 use App\Models\CustFileItem;
@@ -10,6 +11,7 @@ use App\Models\Tour;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CarController extends Controller
 {

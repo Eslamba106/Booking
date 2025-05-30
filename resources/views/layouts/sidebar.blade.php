@@ -224,23 +224,12 @@
                 @endcan
                 @can('user_management')
                     <li class="sidebar-item">
-                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
-                            aria-expanded="false">
+                        <a class="sidebar-link" href="{{ route('show.all.file') }}" aria-expanded="false">
                             <i class="fa fa-file"></i>
 
                             <span class="hide-menu">{{ __('Files') }} </span>
                         </a>
-                        @can('all_users')
-                            <ul aria-expanded="false" class="collapse  first-level">
-                                <li class="sidebar-item">
-                                    <a href="{{ route('show.all.file') }}" class="sidebar-link">
-                                        <i class="mdi mdi-email"></i>
-                                        <span class="hide-menu">{{ __('Show files') }}</span>
-                                    </a>
-                                </li>
 
-                            </ul>
-                        @endcan
                     </li>
                 @endcan
                 @can('driver_management')
@@ -332,7 +321,7 @@
                         @can('all_brokers')
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
-                                    <a href="{{ route('admin.broker') }}" class="sidebar-link">
+                                    <a href="{{ route('reports.broker') }}" class="sidebar-link">
                                         <i class="mdi mdi-email"></i>
                                         <span class="hide-menu">{{ __('roles.all_brokers') }}</span>
                                     </a>
@@ -378,7 +367,7 @@
                         @endcan
                     </li>
                 @endcan
-                @can('unit_type_management')
+                {{-- @can('unit_type_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
                             aria-expanded="false">
@@ -448,7 +437,7 @@
                             </ul>
                         @endcan
                     </li>
-                @endcan
+                @endcan --}}
                 @can('user_management')
                     <li class="sidebar-item">
                         <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"

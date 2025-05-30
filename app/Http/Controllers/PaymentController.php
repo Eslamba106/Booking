@@ -11,6 +11,8 @@ class PaymentController extends Controller
 {
     public function store(Request $request,  $fileId)
     {
+
+        // dd($request->all());
         $request->validate([
             'amount' => 'required|numeric|min:0',
             'payment_date' => 'required|date',
@@ -28,7 +30,8 @@ class PaymentController extends Controller
 
         $file = CustFile::findOrFail($fileId);
         $file->paid += $request->amount;
-        $file->remain = max($file->total - $file->paid, 0);
+        $file->remain = $request->remain;
+        $file->total = $request->total;
         $file->save();
 
         return redirect()->back()->with('success', 'Payment added successfully');
@@ -37,7 +40,11 @@ class PaymentController extends Controller
     public function destroy($id)
     {
         $payment = Payment::findOrFail($id);
-        $file = $payment->custFile;
+
+
+
+        $file = CustFile::where('id', $payment->cust_file_id)->first();
+
 
 
         $file->paid -= $payment->amount;

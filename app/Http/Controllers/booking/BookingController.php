@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\booking;
 
-use bookingbon\Carbon;
+// use bookingbon\Carbon;
 use App\Models\Hotel;
 use App\Models\Broker;
 use App\Models\Driver;
@@ -18,6 +18,7 @@ use App\Models\CustFile;
 use App\Models\CustFileItem;
 use App\Models\Meals;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 
@@ -69,7 +70,10 @@ class BookingController extends Controller
         if ($request->has('date_to') && $request->date_to != '') {
             $query->whereDate('arrival_date', '<=', $request->date_to);
         }
-
+        $hotels = Hotel::select('id', 'name')->get();
+        if ($request->has('hotel_id')) {
+            $query->where('hotel_id', $request->hotel_id);
+        }
         // فلترة حسب النطاقات الزمنية المحددة مسبقاً
         if ($request->has('date_range') && $request->date_range != '') {
             $today = Carbon::today();
@@ -128,7 +132,7 @@ class BookingController extends Controller
         $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
 
         // إرسال البيانات إلى الواجهة
-        return view("general.booking.all_bookings", compact("bookings"));
+        return view("general.booking.all_bookings", compact("bookings", 'hotels'));
     }
     public function reports(Request $request)
     {
@@ -136,7 +140,11 @@ class BookingController extends Controller
 
         $query = Booking::query()->with(['customer', 'hotel']);
 
-        // فلترة حسب الحالة
+        $hotels = Hotel::select('id', 'name')->get();
+        if ($request->has('hotel_id')) {
+            $query->where('hotel_id', $request->hotel_id);
+        }
+
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
@@ -207,7 +215,7 @@ class BookingController extends Controller
 
         $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('general.booking.reports', compact("bookings"));
+        return view('general.booking.reports', compact("bookings", 'hotels'));
     }
 
     public function live_booking(Request $request)
@@ -234,10 +242,11 @@ class BookingController extends Controller
             Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->whereIn('id', $ids)->delete();
             return back()->with('success', __('general.deleted_successfully'));
         }
+        $hotels = Hotel::select('id', 'name')->get();
 
         $bookings = Booking::where('arrival_date', '<=', $today)
             ->where('check_out_date', '>=', $today)->where('status', '!=', 'cancel')->orderBy("created_at", "desc")->paginate(10);
-        return view("general.booking.all_bookings", compact("bookings"));
+        return view("general.booking.all_bookings", compact("bookings", 'hotels'));
     }
     public function coming_soon(Request $request)
     {
@@ -263,9 +272,10 @@ class BookingController extends Controller
             Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->whereIn('id', $ids)->delete();
             return back()->with('success', __('general.deleted_successfully'));
         }
+        $hotels = Hotel::select('id', 'name')->get();
 
         $bookings = Booking::whereBetween('arrival_date', [$today, $fiveDaysLater])->where('status', '!=', 'cancel')->orderBy("created_at", "desc")->paginate(10);
-        return view("general.booking.all_bookings", compact("bookings"));
+        return view("general.booking.all_bookings", compact("bookings", 'hotels'));
     }
     public function show($id)
     {

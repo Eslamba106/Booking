@@ -67,7 +67,7 @@ Route::group(['prefix' => 'user_management'], function () {
 // Broker Managment
 Route::group(['prefix' => 'broker'], function () {
 
-    Route::get('/', [BrokerController::class, 'index'])->name('admin.broker');
+    // Route::get('/', [BrokerController::class, 'index'])->name('admin.broker');
     Route::get('/create', [BrokerController::class, 'create'])->name('admin.broker.create');
     Route::post('/create', [BrokerController::class, 'store'])->name('admin.broker.store');
     Route::get('/edit/{id}', [BrokerController::class, 'edit'])->name('admin.broker.edit');
@@ -217,3 +217,10 @@ Route::get('payment/export/', [ReportController::class, 'PaymentExport'])->name(
 
 Route::post('cust_files/{file}/payments', [PaymentController::class, 'store'])->name('payments.store');
 Route::delete('payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+Route::prefix('reports')->group(function () {
+    Route::get('broker', [ReportController::class, 'index'])->name('reports.broker');
+    Route::get('broker/filter', [ReportController::class, 'filter'])->name('reports.broker.filter');
+    Route::get('broker/export', [ReportController::class, 'BrokergExport'])->name('reports.broker.export');
+});
+Route::get('cars/export', [ReportController::class, 'export'])->name('car.export');
+Route::get('bookings/export', [ReportController::class, 'MonthlyHouse'])->name('booking.export');

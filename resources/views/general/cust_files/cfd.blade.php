@@ -193,7 +193,12 @@
                                                 data-target="#addPaymentModal">
                                                 <i class="fas fa-money-bill-wave"></i> Add Payment
                                             </button>
-
+                                            @if ($balance > 0)
+                                                <button class="btn btn-info m-2" data-toggle="modal"
+                                                    data-target="#createInstallmentModal">
+                                                    <i class="fas fa-calendar-alt"></i> Create Installment Plan
+                                                </button>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +216,7 @@
                                             <th>{{ __('booking.customer_name') }}</th>
                                             <th>{{ __('booking.hotel_name') }}</th>
                                             <th>{{ __('Pickup date') }}</th>
-                                            <th>{{ __('Return date') }}</th>
+                                            <th>{{ __('Return_date') }}</th>
                                             <th>{{ __('Total') }}</th>
                                             <th>{{ __('roles.status') }}</th>
                                             <th>Change Status</th>
@@ -398,14 +403,17 @@
                                                     <tbody>
                                                         @foreach ($file->payments as $payment)
                                                             <tr>
-                                                                <td>{{ $payment->payment_date }}</td>
+                                                                <td>{{ $payment->payment_date->format('d M Y') }}</td>
                                                                 <td>{{ number_format($payment->amount, 2) }}</td>
                                                                 <td>{{ ucfirst($payment->payment_method) }}</td>
                                                                 <td>{{ $payment->notes ?? '-' }}</td>
                                                                 <td>
-
+                                                                    <a href="{{ route('payment.edit', $payment->id) }}"
+                                                                        class="btn btn-sm btn-primary">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
                                                                     <form
-                                                                        action="{{ route('payments.destroy', $payment->id) }}"
+                                                                        action="{{ route('payment.destroy', $payment->id) }}"
                                                                         method="POST" style="display:inline">
                                                                         @csrf
                                                                         @method('DELETE')
@@ -435,7 +443,7 @@
                                         <div class="card-body">
                                             <div class="form-group">
                                                 <label>Total Amount</label>
-                                                <input type="text" name="" class="form-control"
+                                                <input type="text" class="form-control"
                                                     value="{{ number_format($grandTotal, 2) }}" readonly>
                                             </div>
                                             <div class="form-group">
@@ -452,7 +460,7 @@
                                         </div>
                                     </div>
 
-                                    {{-- @if ($file->installments->count() > 0)
+                                    @if ($file->installments->count() > 0)
                                         <div class="card mt-3">
                                             <div class="card-header">
                                                 <h5>Installment Plan</h5>
@@ -483,7 +491,7 @@
                                                 @endforeach
                                             </div>
                                         </div>
-                                    @endif --}}
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -504,12 +512,9 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('payments.store', $file->id) }}" method="POST">
+                <form action="{{ route('payment.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="file_id" value="{{ $file->id }}">
-                    <input type="hidden" name="remain" value="{{ number_format($balance, 2) }}">
-                    <input type="hidden" name="remain" value="{{ number_format($balance, 2) }}"> </input>
-                    <input type="hidden" name="total" value="{{ number_format($grandTotal, 2) }}"> </input>
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="amount">Amount</label>
@@ -546,7 +551,7 @@
     </div>
 
     <!-- Create Installment Plan Modal -->
-    {{-- <div class="modal fade" id="createInstallmentModal" tabindex="-1" role="dialog"
+    <div class="modal fade" id="createInstallmentModal" tabindex="-1" role="dialog"
         aria-labelledby="createInstallmentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -592,7 +597,7 @@
                 </form>
             </div>
         </div>
-    </div> --}}
+    </div>
 @endsection
 
 @section('js')
@@ -630,3 +635,46 @@
         });
     </script>
 @endsection
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>{{ __('Add New Payment') }}</h5>
+    </div>
+    <div class="card-body">
+        <form action="{{ route('payments.store', $file->id) }}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="amount">{{ __('Amount') }}</label>
+                        <input type="number" step="0.01" class="form-control" name="amount"
+                            id="payment_amount" required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="payment_date">{{ __('Payment Date') }}</label>
+                        <input type="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}"
+                            required>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="payment_method">{{ __('Payment Method') }}</label>
+                        <select class="form-control" name="payment_method" required>
+                            <option value="cash">{{ __('Cash') }}</option>
+                            <option value="bank_transfer">{{ __('Bank Transfer') }}</option>
+                            <option value="credit_card">{{ __('Credit Card') }}</option>
+                            <option value="check">{{ __('Check') }}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="notes">{{ __('Notes') }}</label>
+                <textarea class="form-control" name="notes" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">{{ __('Add Payment') }}</button>
+        </form>
+    </div>
+</div>
