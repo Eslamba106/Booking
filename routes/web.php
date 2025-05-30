@@ -222,11 +222,15 @@ Route::prefix('reports')->group(function () {
     Route::get('broker/export', [ReportController::class, 'BrokergExport'])->name('reports.broker.export');
 });
 Route::get('cars/export', [ReportController::class, 'export'])->name('car.export');
+Route::get('cars/index', [CarController::class, 'report'])->name('car.export.index');
 Route::get('bookings/export', [ReportController::class, 'MonthlyHouse'])->name('booking.export');
+Route::get('bookings/report', [BookingController::class, 'monthlyReport'])->name('booking.export.index');
 Route::get('users/export/', [ReportController::class, 'export'])->name('monthly.report');
 Route::get('house/export/', [ReportController::class, 'MonthlyHouse'])->name('monthly.house.report');
 Route::get('comission/export/', [ReportController::class, 'ComissionExport'])->name('monthly.comission.report');
+Route::get('comission/report/', [ReportController::class, 'commissionReport'])->name('comission.report');
 Route::get('Accounting/export/{id}', [ReportController::class, 'AccountingExport'])->name('monthly.Accounting.report');
 // Route::get('broker/export/', [ReportController::class, 'BrokergExport'])->name('monthly.broker.report');
 Route::get('coming/export/', [ReportController::class, 'ComingSoonExport'])->name('monthly.comming.report');
+Route::get('coming/report/', [BookingController::class, 'coming_soon_report'])->name('comming.report');
 Route::get('payment/export/{id}', [ReportController::class, 'PaymentExport'])->name('monthly.payment.report');

@@ -103,6 +103,65 @@ class CarController extends Controller
 
         return view('general.car.edit', $data);
     }
+    public function report(Request $request)
+    {
+        $query = Car::with(['customer', 'category', 'user']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('arrival_date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('arrival_date', '<=', $request->date_to);
+        }
+
+        if ($request->filled('date_range')) {
+            $today = now();
+
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('arrival_date', $today);
+                    break;
+
+                case 'this_week':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfWeek(),
+                        $today->copy()->endOfWeek(),
+                    ]);
+                    break;
+
+                case 'this_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfMonth(),
+                        $today->copy()->endOfMonth(),
+                    ]);
+                    break;
+
+                case 'next_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->addMonth()->startOfMonth(),
+                        $today->copy()->addMonth()->endOfMonth(),
+                    ]);
+                    break;
+            }
+        }
+
+        if ($request->filled('customer')) {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
+        }
+
+        $cars = $query->latest()->paginate(10);  // <-- هنا التغيير
+
+        return view('reports.reports.car_report', compact('cars'));
+    }
+
+
     public function show($id)
     {
 

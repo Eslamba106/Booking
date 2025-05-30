@@ -12,6 +12,7 @@ use App\Exports\PaymentExport;
 use App\Models\Booking;
 use App\Models\Broker;
 use App\Models\Hotel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -45,6 +46,46 @@ class ReportController extends Controller
 
         return Excel::download(new MonthlyHouse($filters, $title), 'bookings_report_' . now()->format('Y-m-d') . '.xlsx');
     }
+    //comission
+    public function commissionReport(Request $request)
+    {
+        $query = Booking::with(['hotel', 'booking_details', 'booking_unit', 'customer']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('arrival_date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('arrival_date', '<=', $request->date_to);
+        }
+
+        if ($request->filled('hotel_id')) {
+            $query->where('hotel_id', $request->hotel_id);
+        }
+
+        if ($request->filled('customer')) {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
+        }
+
+        $bookings = $query->latest()->paginate();
+        $hotels = Hotel::select('id', 'name')->get();
+        return view('reports.reports.commission', [
+            'bookings' => $bookings,
+            'hotels' => $hotels
+        ]);
+    }
+
+
+
+
+
+
     public function ComissionExport(Request $request)
     {
         $filters = $request->only([

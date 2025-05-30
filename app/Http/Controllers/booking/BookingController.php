@@ -589,4 +589,155 @@ class BookingController extends Controller
 
         return redirect()->back()->with('success', 'Status updated successfully');
     }
+    public function monthlyReport(Request $request)
+    {
+
+        $this->authorize('booking_management');
+
+        $query = Booking::query()->with(['customer', 'hotel']);
+
+
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+
+        if ($request->has('date_from') && $request->date_from != '') {
+            $query->whereDate('arrival_date', '>=', $request->date_from);
+        }
+
+        if ($request->has('date_to') && $request->date_to != '') {
+            $query->whereDate('arrival_date', '<=', $request->date_to);
+        }
+        $hotels = Hotel::select('id', 'name')->get();
+        if ($request->has('hotel_id')) {
+            $query->where('hotel_id', $request->hotel_id);
+        }
+        if ($request->has('date_range') && $request->date_range != '') {
+            $today = Carbon::today();
+
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('arrival_date', $today);
+                    break;
+                case 'this_week':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfWeek(),
+                        $today->copy()->endOfWeek()
+                    ]);
+                    break;
+                case 'this_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfMonth(),
+                        $today->copy()->endOfMonth()
+                    ]);
+                    break;
+                case 'next_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->addMonth()->startOfMonth(),
+                        $today->copy()->addMonth()->endOfMonth()
+                    ]);
+                    break;
+            }
+        }
+
+
+        if ($request->has('customer') && $request->customer != '') {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
+        }
+
+
+
+        $bookings = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // إرسال البيانات إلى الواجهة
+        return view('reports.reports.monthly_booking', compact("bookings", 'hotels'));
+    }
+    public function coming_soon_report(Request $request)
+    {
+        $this->authorize('booking_management');
+
+        $query = Booking::query()->with(['customer', 'hotel']);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('date_from')) {
+            $query->whereDate('arrival_date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('arrival_date', '<=', $request->date_to);
+        }
+
+        if ($request->filled('hotel_id')) {
+            $query->where('hotel_id', $request->hotel_id);
+        }
+
+        if ($request->filled('date_range')) {
+            $today = Carbon::today();
+
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('arrival_date', $today);
+                    break;
+                case 'this_week':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfWeek(),
+                        $today->copy()->endOfWeek()
+                    ]);
+                    break;
+                case 'this_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->startOfMonth(),
+                        $today->copy()->endOfMonth()
+                    ]);
+                    break;
+                case 'next_month':
+                    $query->whereBetween('arrival_date', [
+                        $today->copy()->addMonth()->startOfMonth(),
+                        $today->copy()->addMonth()->endOfMonth()
+                    ]);
+                    break;
+            }
+        }
+
+        if ($request->filled('customer')) {
+            $query->whereHas('customer', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->customer . '%');
+            });
+        }
+
+        $ids = $request->bulk_ids ?? [];
+        $today = Carbon::today();
+        $startDate = $today->copy()->addDay();
+        $endDate = $today->copy()->addDays(5);
+
+        // الإجراءات الجماعية
+        if ($request->bulk_action_btn === 'update_status' && $request->filled('status') && count($ids)) {
+            $this->authorize('change_bookings_status');
+            Booking::whereIn('id', $ids)->update(['status' => $request->status]);
+            return back()->with('success', __('general.updated_successfully'));
+        }
+
+        if ($request->bulk_action_btn === 'delete' && count($ids)) {
+            Booking::whereBetween('arrival_date', [$startDate, $endDate])
+                ->whereIn('id', $ids)
+                ->delete();
+            return back()->with('success', __('general.deleted_successfully'));
+        }
+
+        // تنقية التقرير النهائي
+        $query->whereBetween('arrival_date', [$startDate, $endDate])
+            ->where('status', '!=', 'cancel')
+            ->orderBy("created_at", "desc");
+
+        $bookings = $query->paginate(10);
+        $hotels = Hotel::select('id', 'name')->get();
+
+        return view('reports.reports.comming_soon_report', compact("bookings", 'hotels'));
+    }
 }
