@@ -15,6 +15,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Exports\ClientFileReportExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CustFileController extends Controller
 {
@@ -103,6 +107,7 @@ class CustFileController extends Controller
             'paid' => 'nullable',
             'remain' => 'nullable',
             'total' => 'nullable',
+            'currency' => 'required|string|in:USD,EUR,TRY',
 
         ]);
         $files = CustFile::create([
@@ -111,6 +116,7 @@ class CustFileController extends Controller
             'paid' => $request->paid ?? 0,
             'total' => $request->total ?? 0,
             'remain' => $request->remain ?? 0,
+            'currency' => $request->currency ?? 'USD',
             'user_id' => $request->user_id,
         ]);
         return redirect()->route('show.all.file')->with('message', 'file successfully created');
@@ -155,5 +161,230 @@ class CustFileController extends Controller
 
         $file->delete();
         return redirect()->back()->with('success', 'file has deleted succeffully');
+    }
+
+    public function file_report(Request $request)
+    {
+        // If no filters are applied, show the index page
+        if (!$request->has('date_from') && !$request->has('date_to') &&
+            !$request->has('currency') && !$request->has('status')) {
+            return view('reports.file_report_index');
+        }
+
+        $query = CustFile::with(['customer', 'payments']);
+
+        // Apply filters
+        if ($request->has('date_from') && $request->date_from != '') {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->has('date_to') && $request->date_to != '') {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        if ($request->has('currency') && $request->currency != '') {
+            $query->where('currency', $request->currency);
+        }
+
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'paid') {
+                $query->whereRaw('total <= paid');
+            } elseif ($request->status == 'pending') {
+                $query->whereRaw('total > paid');
+            }
+        }
+
+        $files = $query->get();
+
+        // Calculate statistics
+        $totalRevenue = $files->sum('total');
+        $totalPaid = $files->sum('paid');
+        $totalBalance = $totalRevenue - $totalPaid;
+        $averageFileValue = $files->count() > 0 ? $totalRevenue / $files->count() : 0;
+
+        // Currency breakdown
+        $currencyBreakdown = $files->groupBy('currency')
+            ->map(function ($group) {
+                return $group->sum('total');
+            });
+
+        // Payment status counts
+        $paidFilesCount = $files->filter(function ($file) {
+            return $file->total <= $file->paid;
+        })->count();
+
+        $pendingFilesCount = $files->count() - $paidFilesCount;
+
+        // Currency formatting helper
+        $formatCurrency = function($amount, $currency = 'USD') {
+            $symbols = [
+                'USD' => '$',
+                'EUR' => '€',
+                'TRY' => '₺'
+            ];
+            $symbol = $symbols[$currency] ?? $currency;
+            return $symbol . ' ' . number_format($amount, 2);
+        };
+
+        $data = [
+            'files' => $files,
+            'totalRevenue' => $totalRevenue,
+            'totalPaid' => $totalPaid,
+            'totalBalance' => $totalBalance,
+            'averageFileValue' => $averageFileValue,
+            'currencyBreakdown' => $currencyBreakdown,
+            'paidFilesCount' => $paidFilesCount,
+            'pendingFilesCount' => $pendingFilesCount,
+            'formatCurrency' => $formatCurrency,
+            'dateFrom' => $request->date_from,
+            'dateTo' => $request->date_to,
+            'currency' => $request->currency,
+            'status' => $request->status,
+        ];
+
+        if ($request->ajax()) {
+            return view('reports.file_report', $data)->render();
+        }
+
+        return view('reports.file_report_index', $data);
+    }
+
+    public function client_file_report(Request $request, $customerId)
+    {
+        $customer = Customer::findOrFail($customerId);
+
+        $query = CustFile::with(['customer', 'payments', 'cust_file_items'])
+            ->where('customer_id', $customerId);
+
+        // Apply filters
+        if ($request->has('date_from') && $request->date_from != '') {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+
+        if ($request->has('date_to') && $request->date_to != '') {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
+
+        if ($request->has('currency') && $request->currency != '') {
+            $query->where('currency', $request->currency);
+        }
+
+        if ($request->has('status') && $request->status != '') {
+            if ($request->status == 'paid') {
+                $query->whereRaw('total <= paid');
+            } elseif ($request->status == 'pending') {
+                $query->whereRaw('total > paid');
+            }
+        }
+
+        $files = $query->get();
+
+        // Eager load nested polymorphic relationships
+        $files->loadMorph('cust_file_items.related', [
+            \App\Models\Booking::class => ['hotel', 'broker', 'booking_details', 'booking_unit.unit_type'],
+            \App\Models\Car::class => ['category', 'tour.from', 'tour.to'],
+        ]);
+
+        // Calculate statistics
+        $totalRevenue = $files->sum('total');
+        $totalPaid = $files->sum('paid');
+        $totalBalance = $totalRevenue - $totalPaid;
+        $averageFileValue = $files->count() > 0 ? $totalRevenue / $files->count() : 0;
+
+        // Currency breakdown
+        $currencyBreakdown = $files->groupBy('currency')
+            ->map(function ($group) {
+                return $group->sum('total');
+            });
+
+        // Payment status counts
+        $paidFilesCount = $files->filter(function ($file) {
+            return $file->total <= $file->paid;
+        })->count();
+
+        $pendingFilesCount = $files->count() - $paidFilesCount;
+
+        // Get all payments for this customer
+        $allPayments = Payment::where('customer_id', $customerId)->get();
+        $totalPaymentsReceived = $allPayments->sum('amount');
+
+        // Currency formatting helper
+        $formatCurrency = function($amount, $currency = 'USD') {
+            $symbols = [
+                'USD' => '$',
+                'EUR' => '€',
+                'TRY' => '₺'
+            ];
+            $symbol = $symbols[$currency] ?? $currency;
+            return $symbol . ' ' . number_format($amount, 2);
+        };
+
+        $data = [
+            'customer' => $customer,
+            'files' => $files,
+            'totalRevenue' => $totalRevenue,
+            'totalPaid' => $totalPaid,
+            'totalBalance' => $totalBalance,
+            'totalPaymentsReceived' => $totalPaymentsReceived,
+            'averageFileValue' => $averageFileValue,
+            'currencyBreakdown' => $currencyBreakdown,
+            'paidFilesCount' => $paidFilesCount,
+            'pendingFilesCount' => $pendingFilesCount,
+            'formatCurrency' => $formatCurrency,
+            'dateFrom' => $request->date_from,
+            'dateTo' => $request->date_to,
+            'currency' => $request->currency,
+            'status' => $request->status,
+        ];
+
+        return view('reports.client_file_report', $data);
+    }
+
+    public function exportClientFileReport($customerId)
+    {
+        $customer = \App\Models\Customer::findOrFail($customerId);
+        $fileName = 'client_file_report_' . $customer->name . '_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new \App\Exports\ClientFileReportExport($customerId), $fileName);
+    }
+
+    public function generate_pdf($id)
+    {
+        $file = CustFile::findOrFail($id);
+        $file->load(['customer', 'payments', 'cust_file_items.related', 'user']);
+
+        // Eager load nested polymorphic relationships correctly
+        $file->cust_file_items->loadMorph('related', [
+            \App\Models\Booking::class => ['hotel', 'broker', 'booking_details', 'booking_unit.unit_type'],
+            \App\Models\Car::class => ['category', 'tour.from', 'tour.to'],
+        ]);
+
+        // Get bookings and cars with proper filtering
+        $bookings = $file->cust_file_items
+            ->where('related_type', 'App\\Models\\Booking')
+            ->pluck('related')
+            ->filter()
+            ->values();
+
+        $cars = $file->cust_file_items
+            ->where('related_type', 'App\\Models\\Car')
+            ->pluck('related')
+            ->filter()
+            ->values();
+
+        // Debug: Log detailed information
+        Log::info("PDF Generation - File ID: $id");
+        Log::info("Total file items: " . $file->cust_file_items->count());
+        Log::info("Bookings count: " . $bookings->count());
+        Log::info("Cars count: " . $cars->count());
+
+        // Debug: Check booking data
+
+        $pdf = Pdf::loadView('general.cust_files.pdf', [
+            'file' => $file,
+            'bookings' => $bookings,
+            'cars' => $cars
+        ]);
+
+        return $pdf->stream('client_file_' . $file->id . '.pdf');
     }
 }

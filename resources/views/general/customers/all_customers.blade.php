@@ -148,6 +148,10 @@
                                         class="btn btn-outline-info btn-sm" title="@lang('payment report')">
                                         <i class="mdi mdi-file"></i>
                                     </a>
+                                    <a href="{{ route('reports.client.files', $customer->id) }}"
+                                        class="btn btn-outline-success btn-sm" title="@lang('client file report')">
+                                        <i class="mdi mdi-chart-line"></i>
+                                    </a>
                                 @endif
                             </td>
                         </tr>

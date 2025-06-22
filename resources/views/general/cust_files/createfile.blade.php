@@ -71,6 +71,19 @@
                             @enderror
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>{{ __('Currency') }} <span class="text-danger">*</span></label>
+                            <select name="currency" class="form-control" required>
+                                <option value="USD" selected>USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="TRY">TRY - Turkish Lira</option>
+                            </select>
+                            @error('currency')
+                                <span class="error text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
                     {{-- <div class="row">
                         <div class="col-md-4">
                             <p class="mb-1"><strong>{{ __('Total booking price') }}:</strong></p>

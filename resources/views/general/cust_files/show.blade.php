@@ -112,6 +112,13 @@
                                 <p><strong>{{ __('Email') }}:</strong> {{ $file->first()->customer->email ?? 'N/A' }}</p>
                                 <p><strong>{{ __('Phone') }}:</strong> {{ $file->first()->customer->phone ?? 'N/A' }}
                                 </p>
+
+                                <div class="mt-3">
+                                    <a href="{{ route('reports.client.files', $file->first()->customer_id) }}"
+                                       class="btn btn-success">
+                                        <i class="fas fa-chart-line"></i> {{ __('View Client File Report') }}
+                                    </a>
+                                </div>
                             </div>
                         @endif
 

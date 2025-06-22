@@ -90,6 +90,8 @@ Route::group(['prefix' => 'customer'], function () {
     Route::get('/delete/{id}', [CustomerController::class, 'destroy'])->name('admin.customer.delete');
     Route::get('/show/{id}', [CustomerController::class, 'show'])->name('admin.customer.show');
     Route::get('/file/{id}', [CustomerController::class, 'show_file'])->name('admin.show.file');
+    Route::get('/customers/{id}/bookings', [CustomerController::class, 'customer_booking'])->name('customer.booking');
+    Route::get('/customers/{id}/files', [CustomerController::class, 'customer_files'])->name('customer.files');
 });
 
 // UnitType Managment
@@ -209,6 +211,8 @@ Route::group(['prefix' => 'file'], function () {
     Route::put('/update/{setting}', [CustFileController::class, 'update'])->name('admin.settings.update');
     Route::get('/show/allfiles/', [CustFileController::class, 'show_all'])->name('show.all.file');
     Route::delete('/destroy/{id}]/', [CustFileController::class, 'destroy'])->name('destroy.file');
+    Route::post('update-file-info/{id}', [CustFileController::class, 'updateFileInfo'])->name('update.file.info');
+    Route::get('/{id}/pdf', [CustFileController::class, 'generate_pdf'])->name('file.pdf');
 });
 
 
@@ -220,6 +224,9 @@ Route::prefix('reports')->group(function () {
     Route::get('broker', [ReportController::class, 'index'])->name('reports.broker');
     Route::get('broker/filter', [ReportController::class, 'filter'])->name('reports.broker.filter');
     Route::get('broker/export', [ReportController::class, 'BrokergExport'])->name('reports.broker.export');
+    Route::get('files', [CustFileController::class, 'file_report'])->name('reports.files');
+    Route::get('client/{customer}/files', [CustFileController::class, 'client_file_report'])->name('reports.client.files');
+    Route::get('client/{customer}/files/export', [CustFileController::class, 'exportClientFileReport'])->name('reports.client.files.export');
 });
 Route::get('cars/export', [ReportController::class, 'export'])->name('car.export');
 Route::get('cars/index', [CarController::class, 'report'])->name('car.export.index');
@@ -234,3 +241,6 @@ Route::get('Accounting/export/{id}', [ReportController::class, 'AccountingExport
 Route::get('coming/export/', [ReportController::class, 'ComingSoonExport'])->name('monthly.comming.report');
 Route::get('coming/report/', [BookingController::class, 'coming_soon_report'])->name('comming.report');
 Route::get('payment/export/{id}', [ReportController::class, 'PaymentExport'])->name('monthly.payment.report');
+
+Route::get('/payments/create/{file_id}', 'PaymentController@create')->name('payments.create');
+Route::post('/payments/{file_id}', 'PaymentController@store')->name('payments.store');

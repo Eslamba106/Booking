@@ -14,14 +14,14 @@
 
     <style>
         /* .select2-container--default .select2-selection--multiple .select2-selection__choice {
-                                    background-color: #dedede;
-                                    border: 1px solid #dedede;
-                                    border-radius: 2px;
-                                    color: #222;
-                                    display: flex;
-                                    gap: 4px;
-                                    align-items: center;
-                                } */
+                                        background-color: #dedede;
+                                        border: 1px solid #dedede;
+                                        border-radius: 2px;
+                                        color: #222;
+                                        display: flex;
+                                        gap: 4px;
+                                        align-items: center;
+                                    } */
         .d-flex {
             display: flex;
         }

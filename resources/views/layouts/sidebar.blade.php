@@ -224,12 +224,26 @@
                 @endcan
                 @can('user_management')
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="{{ route('show.all.file') }}" aria-expanded="false">
+                        <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                            aria-expanded="false">
                             <i class="fa fa-file"></i>
-
                             <span class="hide-menu">{{ __('Files') }} </span>
                         </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a href="{{ route('show.all.file') }}" class="sidebar-link">
+                                    <i class="mdi mdi-email"></i>
+                                    <span class="hide-menu">{{ __('All Files') }}</span>
+                                </a>
+                            </li>
+                            {{--  <li class="sidebar-item">
+                                <a href="{{ route('reports.files') }}" class="sidebar-link">
+                                    <i class="mdi mdi-file-pdf-box"></i>
+                                    <span class="hide-menu">{{ __('File & PDF Reports') }}</span>
+                                </a>
+                            </li>  --}}
 
+                        </ul>
                     </li>
                 @endcan
                 @can('driver_management')
@@ -293,14 +307,14 @@
                                     <li class="sidebar-item">
                                         <a href="{{ route('tour.index') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">{{ __('Cars tours') }}</span>
+                                            <span class="hide-menu">{{ __('Extra services') }}</span>
                                         </a>
                                     </li>
                                     {{-- @can('create_driver') --}}
                                     <li class="sidebar-item">
                                         <a href="{{ route('tour.create') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
-                                            <span class="hide-menu">{{ __('Create tour') }}</span>
+                                            <span class="hide-menu">{{ __('Create Extra services') }}</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -413,6 +427,20 @@
                                         <a href="{{ route('comission.report') }}" class="sidebar-link">
                                             <i class="mdi mdi-email"></i>
                                             <span class="hide-menu">{{ __('Commission Report') }}</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('reports.files') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('File Report') }}</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="sidebar-item">
+                                        <a href="{{ route('admin.customer') }}" class="sidebar-link">
+                                            <i class="mdi mdi-email"></i>
+                                            <span class="hide-menu">{{ __('Client File Reports') }}</span>
                                         </a>
                                     </li>
 

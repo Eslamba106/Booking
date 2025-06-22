@@ -68,6 +68,10 @@
                                         title="@lang('dashboard.show')">
                                         <i class="fa fa-eye"></i>
                                     </a>
+                                    {{--  <a href="{{ route('file.pdf', $file->id) }}" class="btn btn-info btn-sm me-1"
+                                        title="@lang('dashboard.show')">
+                                        <i class="fa fa-eye"></i>
+                                    </a>  --}}
 
                                     {{-- <a href="#" class="btn btn-outline-info btn-sm" title="@lang('dashboard.edit')">
                                         <i class="mdi mdi-pencil"></i>

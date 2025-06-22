@@ -17,12 +17,14 @@ class PaymentController extends Controller
             'amount' => 'required|numeric|min:0',
             'payment_date' => 'required|date',
             'payment_method' => 'required|string',
+            'currency' => 'required|string|in:USD,EUR,TRY',
         ]);
 
         $payment = new Payment();
         $payment->cust_file_id = $fileId;
         $payment->payment_date = $request->payment_date;
         $payment->amount = $request->amount;
+        $payment->currency = $request->currency;
         $payment->user_id = $request->user_id;
         $payment->customer_id = $request->customer_id;
         $payment->payment_method = $request->payment_method;

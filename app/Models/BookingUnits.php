@@ -13,4 +13,9 @@ class BookingUnits extends Model
     {
         return $this->belongsTo(Booking::class);
     }
+
+    public function unit_type()
+    {
+        return $this->belongsTo(UnitType::class, 'unit_type_id');
+    }
 }

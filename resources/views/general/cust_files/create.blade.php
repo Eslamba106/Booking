@@ -103,13 +103,13 @@
             <div class="customer-details-box">
                 <div class="row">
                     <div class="col-md-4">
-                        <p><strong>{{ __('Customer Name') }}:</strong> {{ $file->customer->name }}</p>
+                        <p><strong>{{ __('Customer Name') }}:</strong> {{ $file->customer->name ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4">
-                        <p><strong>{{ __('Email') }}:</strong> {{ $file->customer->email }}</p>
+                        <p><strong>{{ __('Email') }}:</strong> {{ $file->customer->email ?? 'N/A' }}</p>
                     </div>
                     <div class="col-md-4">
-                        <p><strong>{{ __('Phone') }}:</strong> {{ $file->customer->phone }}</p>
+                        <p><strong>{{ __('Phone') }}:</strong> {{ $file->customer->phone ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
@@ -118,8 +118,22 @@
                 $bookingTotal = $bookings->sum('total');
                 $carTotal = $cars->sum('total');
                 $grandTotal = $bookingTotal + $carTotal;
-                $totalPaid = $file->payments->sum('amount');
-                $balance = $grandTotal - $totalPaid;
+
+                $paymentsByCurrency = $file->payments->groupBy('currency');
+                $totalPaidInFileCurrency = $paymentsByCurrency->get($file->currency, collect())->sum('amount');
+                $balance = $grandTotal - $totalPaidInFileCurrency;
+
+                // Currency formatting helper
+                $formatCurrency = function($amount, $currency = null) {
+                    $currency = $currency ?? $file->currency ?? 'USD';
+                    $symbols = [
+                        'USD' => '$',
+                        'EUR' => '€',
+                        'TRY' => '₺'
+                    ];
+                    $symbol = $symbols[$currency] ?? $currency;
+                    return $symbol . ' ' . number_format($amount, 2);
+                };
             @endphp
 
             <div class="row">
@@ -153,24 +167,21 @@
                                             Financial Summary
                                         </div>
                                         <div class="summary-card-body">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p><strong>Hotel Bookings Total:</strong></p>
-                                                    <p><strong>Car Bookings Total:</strong></p>
-                                                    <p><strong>Grand Total:</strong></p>
-                                                    <p><strong>Total Paid:</strong></p>
-                                                    <p><strong>Balance:</strong></p>
-                                                </div>
-                                                <div class="col-md-6 text-right">
-                                                    <p>{{ number_format($bookingTotal, 2) }}</p>
-                                                    <p>{{ number_format($carTotal, 2) }}</p>
-                                                    <p class="font-weight-bold">{{ number_format($grandTotal, 2) }}</p>
-                                                    <p class="text-success">{{ number_format($totalPaid, 2) }}</p>
-                                                    <p class="{{ $balance > 0 ? 'text-danger' : 'text-success' }}">
-                                                        {{ number_format($balance, 2) }}
-                                                    </p>
-                                                </div>
-                                            </div>
+                                            <p><strong>Hotel Bookings Total:</strong> <span class="float-right">{{ $formatCurrency($bookingTotal, $file->currency) }}</span></p>
+                                            <p><strong>Car Bookings Total:</strong> <span class="float-right">{{ $formatCurrency($carTotal, $file->currency) }}</span></p>
+                                            <p><strong>Grand Total:</strong> <span class="float-right font-weight-bold">{{ $formatCurrency($grandTotal, $file->currency) }}</span></p>
+                                            <hr>
+                                            <h6><strong>Total Paid:</strong></h6>
+                                            @forelse($paymentsByCurrency as $currency => $payments)
+                                                <p class="pl-3 mb-1">{{ $currency }}: <span class="float-right text-success">{{ $formatCurrency($payments->sum('amount'), $currency) }}</span></p>
+                                            @empty
+                                                <p class="pl-3 text-muted">No payments recorded.</p>
+                                            @endforelse
+                                            <hr>
+                                            <p><strong>Balance (in {{ $file->currency }}):</strong> <span class="float-right font-weight-bold {{ $balance > 0 ? 'text-danger' : 'text-success' }}">{{ $formatCurrency($balance, $file->currency) }}</span></p>
+                                            <small class="form-text text-muted">
+                                                Balance is calculated against the Grand Total using only payments made in the file's primary currency ({{ $file->currency }}).
+                                            </small>
                                         </div>
                                     </div>
                                 </div>
@@ -193,7 +204,12 @@
                                                 data-target="#addPaymentModal">
                                                 <i class="fas fa-money-bill-wave"></i> Add Payment
                                             </button>
-
+                                            <a href="{{ route('file.pdf', $file->id) }}" class="btn btn-secondary m-2" target="_blank">
+                                                <i class="fas fa-file-pdf"></i> Download PDF
+                                            </a>
+                                            <a href="{{ route('reports.client.files', $file->customer_id) }}" class="btn btn-success m-2" target="_blank">
+                                                    <i class="fas fa-file-excel"></i> Export to Excel
+                                                </a>
                                         </div>
                                     </div>
                                 </div>
@@ -224,12 +240,12 @@
                                                 <td><input type="checkbox" name="bulk_ids[]" value="{{ $booking->id }}">
                                                 </td>
                                                 <td>#{{ $booking->id }}</td>
-                                                <td>{{ $booking->customer->name }}</td>
-                                                <td>{{ $booking->hotel->name }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($booking->arrival_date)->format('d M Y') }}
+                                                <td>{{ $booking->customer?->name ?? 'N/A' }}</td>
+                                                <td>{{ $booking->hotel?->name ?? 'N/A' }}</td>
+                                                <td>{{ $booking->arrival_date ? \Carbon\Carbon::parse($booking->arrival_date)->format('d M Y') : 'N/A' }}
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($booking->leave_date)->format('d M Y') }}</td>
-                                                <td>{{ number_format($booking->total, 2) }} {{ $booking->currency }}</td>
+                                                <td>{{ $booking->leave_date ? \Carbon\Carbon::parse($booking->leave_date)->format('d M Y') : 'N/A' }}</td>
+                                                <td>{{ $formatCurrency($booking->total ?? 0) }}</td>
                                                 <td>
                                                     <span
                                                         class="badge badge-pill
@@ -237,7 +253,7 @@
                                                         @elseif($booking->status == 'confirmed') badge-success
                                                         @elseif($booking->status == 'cancelled') badge-danger
                                                         @else badge-info @endif">
-                                                        {{ ucfirst($booking->status) }}
+                                                        {{ ucfirst($booking->status ?? '') }}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -315,38 +331,38 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($cars as $booking)
+                                        @foreach ($cars as $car)
                                             <tr>
-                                                <td>#{{ $booking->id }}</td>
-                                                <td>{{ $booking->customer->name }}</td>
-                                                <td>{{ $booking->category->category }} ({{ $booking->category->model }})
+                                                <td>#{{ $car->id }}</td>
+                                                <td>{{ $car->customer?->name ?? 'N/A' }}</td>
+                                                <td>{{ $car->category?->category ?? 'N/A' }} ({{ $car->category?->model ?? 'N/A' }})
                                                 </td>
-                                                <td>{{ \Carbon\Carbon::parse($booking->arrival_date)->format('d M Y') }} at
-                                                    {{ $booking->arrival_time }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($booking->leave_date)->format('d M Y') }} at
-                                                    {{ $booking->leave_time }}</td>
-                                                <td>{{ number_format($booking->total, 2) }} $</td>
+                                                <td>{{ $car->arrival_date ? \Carbon\Carbon::parse($car->arrival_date)->format('d M Y') : '' }} at
+                                                    {{ $car->arrival_time ?? '' }}</td>
+                                                <td>{{ $car->leave_date ? \Carbon\Carbon::parse($car->leave_date)->format('d M Y') : '' }} at
+                                                    {{ $car->leave_time ?? '' }}</td>
+                                                <td>{{ $formatCurrency($car->total ?? 0) }}</td>
                                                 <td>
                                                     <span
                                                         class="badge badge-pill
-                                                        @if ($booking->status == 'pending') badge-warning
-                                                        @elseif($booking->status == 'approved') badge-success
-                                                        @elseif($booking->status == 'rejected') badge-danger
+                                                        @if ($car->status == 'pending') badge-warning
+                                                        @elseif($car->status == 'approved') badge-success
+                                                        @elseif($car->status == 'rejected') badge-danger
                                                         @else badge-info @endif">
-                                                        {{ ucfirst($booking->status) }}
+                                                        {{ ucfirst($car->status ?? '') }}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        <a href="{{ route('car.show', $booking->id) }}"
+                                                        <a href="{{ route('car.show', $car->id) }}"
                                                             class="btn btn-sm btn-info action-btn" title="View">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
-                                                        <a href="{{ route('car.edit', $booking->id) }}"
+                                                        <a href="{{ route('car.edit', $car->id) }}"
                                                             class="btn btn-sm btn-primary action-btn" title="Edit">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
-                                                        <form action="{{ route('car.updateStatus', $booking->id) }}"
+                                                        <form action="{{ route('car.updateStatus', $car->id) }}"
                                                             method="POST" class="form-inline d-inline-block">
                                                             @csrf
                                                             @method('PUT')
@@ -355,13 +371,13 @@
                                                                     class="form-control form-control-sm"
                                                                     onchange="this.form.submit()">
                                                                     <option value="pending"
-                                                                        {{ $booking->status == 'pending' ? 'selected' : '' }}>
+                                                                        {{ $car->status == 'pending' ? 'selected' : '' }}>
                                                                         Pending</option>
                                                                     <option value="approved"
-                                                                        {{ $booking->status == 'approved' ? 'selected' : '' }}>
+                                                                        {{ $car->status == 'approved' ? 'selected' : '' }}>
                                                                         Approved</option>
                                                                     <option value="rejected"
-                                                                        {{ $booking->status == 'rejected' ? 'selected' : '' }}>
+                                                                        {{ $car->status == 'rejected' ? 'selected' : '' }}>
                                                                         Rejected</option>
                                                                 </select>
                                                             </div>
@@ -390,6 +406,7 @@
                                                         <tr>
                                                             <th>Date</th>
                                                             <th>Amount</th>
+                                                            <th>Currency</th>
                                                             <th>Method</th>
                                                             <th>Notes</th>
                                                             <th>Action</th>
@@ -398,8 +415,9 @@
                                                     <tbody>
                                                         @foreach ($file->payments as $payment)
                                                             <tr>
-                                                                <td>{{ $payment->payment_date }}</td>
-                                                                <td>{{ number_format($payment->amount, 2) }}</td>
+                                                                <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
+                                                                <td>{{ $formatCurrency($payment->amount, $payment->currency) }}</td>
+                                                                <td><span class="badge badge-info">{{ $payment->currency }}</span></td>
                                                                 <td>{{ ucfirst($payment->payment_method) }}</td>
                                                                 <td>{{ $payment->notes ?? '-' }}</td>
                                                                 <td>
@@ -436,18 +454,28 @@
                                             <div class="form-group">
                                                 <label>Total Amount</label>
                                                 <input type="text" name="" class="form-control"
-                                                    value="{{ number_format($grandTotal, 2) }}" readonly>
+                                                    value="{{ $formatCurrency($grandTotal, $file->currency) }}" readonly>
                                             </div>
+                                            <hr>
+                                            <h6>Total Paid</h6>
+                                            @forelse($paymentsByCurrency as $currency => $payments)
                                             <div class="form-group">
-                                                <label>Total Paid</label>
+                                                    <label class="font-weight-normal">{{ $currency }}</label>
                                                 <input type="text" class="form-control"
-                                                    value="{{ number_format($totalPaid, 2) }}" readonly>
+                                                        value="{{ $formatCurrency($payments->sum('amount'), $currency) }}" readonly>
                                             </div>
+                                            @empty
+                                                <p>No payments recorded.</p>
+                                            @endforelse
+                                            <hr>
                                             <div class="form-group">
-                                                <label>Balance</label>
+                                                <label>Balance (in {{ $file->currency }})</label>
                                                 <input type="text"
                                                     class="form-control {{ $balance > 0 ? 'bg-danger text-white' : 'bg-success text-white' }}"
-                                                    value="{{ number_format($balance, 2) }}" readonly>
+                                                    value="{{ $formatCurrency($balance, $file->currency) }}" readonly>
+                                                <small class="form-text text-muted">
+                                                    Balance is calculated against payments made in the file's primary currency.
+                                                </small>
                                             </div>
                                         </div>
                                     </div>
@@ -517,6 +545,14 @@
                             <label for="amount">Amount</label>
                             <input type="number" step="0.01" class="form-control" id="amount" name="amount"
                                 required>
+                        </div>
+                        <div class="form-group">
+                            <label for="currency">Currency</label>
+                            <select class="form-control" id="currency" name="currency" required>
+                                <option value="USD" {{ $file->currency == 'USD' ? 'selected' : '' }}>USD - US Dollar</option>
+                                <option value="EUR" {{ $file->currency == 'EUR' ? 'selected' : '' }}>EUR - Euro</option>
+                                <option value="TRY" {{ $file->currency == 'TRY' ? 'selected' : '' }}>TRY - Turkish Lira</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="payment_date">Payment Date</label>

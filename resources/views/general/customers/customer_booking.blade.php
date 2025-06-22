@@ -63,6 +63,15 @@
                             <i class="la la-refresh"></i> {{ __('dashboard.create') }}
                         </a>
                         {{-- @endcan --}}
+
+                        @if($customerBookings->isNotEmpty())
+                            @php
+                                $customerId = $customerBookings->first()->customer_id;
+                            @endphp
+                            <a href="{{ route('reports.client.files', $customerId) }}" class="btn btn-success mt-3 mr-2">
+                                <i class="fas fa-chart-line"></i> {{ __('Client File Report') }}
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
