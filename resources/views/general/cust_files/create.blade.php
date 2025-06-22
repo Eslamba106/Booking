@@ -556,8 +556,8 @@
                         </div>
                         <div class="form-group">
                             <label for="payment_date">Payment Date</label>
-                            <input type="date" class="form-control" id="payment_date" name="payment_date"
-                                value="{{ now()->format('Y-m-d') }}" required>
+                         <input type="datetime-local" class="form-control" id="payment_date" name="payment_date"
+       value="{{ now()->format('Y-m-d\TH:i') }}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="payment_method">Payment Method</label>
@@ -565,7 +565,7 @@
                                 <option value="cash">Cash</option>
                                 <option value="credit_card">Credit Card</option>
                                 <option value="bank_transfer">Bank Transfer</option>
-                                <option value="check">Check</option>
+                                <option value="link">Link</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
