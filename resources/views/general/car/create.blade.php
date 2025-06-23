@@ -154,7 +154,8 @@
                                                 <option value="">Select Customer</option>
                                                 @foreach ($customers as $customer)
                                                     <option value="{{ $customer->id }}" data-phone="{{ $customer->phone }}"
-                                                        data-email="{{ $customer->email }}">
+                                                        data-email="{{ $customer->email }}"
+                                                        {{ request('customer_id') == $customer->id ? 'selected' : '' }}>
                                                         {{ $customer->name }} ({{ $customer->phone }})
                                                     </option>
                                                 @endforeach
@@ -448,6 +449,11 @@
 
             // Trigger initial calculations
             calculateTotal();
+
+            // Trigger initial customer details update if a customer is pre-selected
+            if ($('#customer_id').val()) {
+                updateCustomerDetails.call($('#customer_id'));
+            }
         });
 
         function initSelect2() {

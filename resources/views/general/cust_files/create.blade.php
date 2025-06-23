@@ -196,7 +196,7 @@
                                                 class="btn btn-primary m-2">
                                                 <i class="fas fa-hotel"></i> Create Hotel Booking
                                             </a>
-                                            <a href="{{ route('car.create', ['file_id' => $file->id]) }}"
+                                            <a href="{{ route('car.create', ['file_id' => $file->id, 'customer_id' => $file->customer_id]) }}"
                                                 class="btn btn-primary m-2">
                                                 <i class="fas fa-car"></i> Create Car Booking
                                             </a>
