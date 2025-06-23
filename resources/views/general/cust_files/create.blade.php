@@ -192,7 +192,7 @@
                                             Quick Actions
                                         </div>
                                         <div class="summary-card-body text-center">
-                                            <a href="{{ route('admin.booking.create', ['file_id' => $file->id]) }}"
+                                            <a href="{{ route('admin.booking.create', ['file_id' => $file->id, 'customer_id' => $file->customer_id]) }}"
                                                 class="btn btn-primary m-2">
                                                 <i class="fas fa-hotel"></i> Create Hotel Booking
                                             </a>

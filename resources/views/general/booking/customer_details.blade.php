@@ -21,7 +21,11 @@
                 </label>
                 <select name="customer_id" class="form-control js-select2-custom">
                     @foreach ($customers as $customers_item)
-                        <option value="{{ $customers_item->id }}">{{ $customers_item->name }}</option>
+                        <option value="{{ $customers_item->id }}"
+                            @if(request()->has('file_id') && request('customer_id') == $customers_item->id)
+                                selected
+                            @endif
+                        >{{ $customers_item->name }}</option>
                     @endforeach
                 </select>
                 @error('customer_id')
